@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>唯樂健康生活節 2026 | Wellous Wellness Fest Hong Kong</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --forest:#1E3A24;
+    --leaf:#3F8B4C;
+    --leaf-soft:#DCEBDD;
+    --cream:#F7F5EC;
+    --sky:#BFE1EE;
+    --sky-soft:#E4F2F6;
+    --rose:#E39CB2;
+    --rose-soft:#FBEBF0;
+    --gold:#D8A741;
+    --gold-soft:#FBF3E4;
+    --ink:#213024;
+    --line: rgba(30,58,36,0.14);
+    --radius: 20px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Noto Sans TC','Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    display:flex;
+    justify-content:center;
+  }
+  .page{
+    width:100%;
+    max-width:480px;
+    min-height:100vh;
+    background:
+      radial-gradient(120% 80% at 50% -10%, #eef6ec 0%, var(--cream) 55%);
+    position:relative;
+    overflow:hidden;
+    padding-bottom:56px;
+  }
+
+  /* ---------- hero poster ---------- */
+  .hero-wrap{
+    margin:6px 16px 0;
+    border-radius:24px;
+    overflow:hidden;
+    position:relative;
+    box-shadow:0 18px 34px -18px rgba(30,58,36,0.45);
+    border:1px solid rgba(255,255,255,0.6);
+  }
+  .hero-wrap img{
+    width:100%;
+    display:block;
+    height:auto;
+  }
+
+  /* ---------- title block ---------- */
+  .title-block{
+    padding:26px 22px 4px;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.1em;
+    color:var(--leaf);
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:10px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:16px;
+    height:1px;
+    background:var(--leaf);
+    display:inline-block;
+  }
+  h1.hero-zh{
+    font-family:'Noto Serif TC',serif;
+    font-weight:700;
+    font-size:32px;
+    line-height:1.25;
+    margin:0 0 8px;
+    color:var(--forest);
+    letter-spacing:-0.01em;
+  }
+  h1.hero-zh em{
+    font-style:normal;
+    color:var(--leaf);
+  }
+  .hero-en{
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    font-weight:500;
+    font-size:14px;
+    color:#5b6f5c;
+    margin:0 0 18px;
+  }
+  .meta-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:20px;
+  }
+  .meta-chip{
+    font-family:'Noto Sans TC','IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--forest);
+    background:#fff;
+    border:1px solid var(--line);
+    padding:7px 12px;
+    border-radius:100px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .meta-chip svg{width:13px;height:13px;flex:none;}
+
+  .intro{
+    font-size:15px;
+    line-height:1.85;
+    color:#3a473c;
+    margin:0 0 4px;
+  }
+  .intro strong{color:var(--forest);}
+
+  /* ---------- section headers ---------- */
+  .section{
+    padding:34px 22px 4px;
+  }
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    margin-bottom:16px;
+  }
+  .section-head h2{
+    font-family:'Noto Serif TC',serif;
+    font-weight:700;
+    font-size:22px;
+    color:var(--forest);
+    margin:0;
+  }
+  .section-head .count{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--leaf);
+  }
+  .section-sub{
+    font-size:13px;
+    color:#6a796b;
+    margin:-10px 0 18px;
+    line-height:1.6;
+  }
+
+  /* ---------- agenda timeline ---------- */
+  .agenda-section{
+    padding-left:14px;
+    padding-right:14px;
+  }
+  .agenda{
+    position:relative;
+    padding-left:2px;
+  }
+  .agenda-item{
+    position:relative;
+    display:grid;
+    grid-template-columns:16px 56px 1fr;
+    gap:10px;
+    padding:0 0 22px 0;
+  }
+  .agenda-item:last-child{padding-bottom:0;}
+  .rail{
+    position:relative;
+    display:flex;
+    justify-content:center;
+  }
+  .rail::before{
+    content:"";
+    position:absolute;
+    top:4px;
+    bottom:-22px;
+    left:50%;
+    width:1.5px;
+    background:var(--line);
+    transform:translateX(-50%);
+  }
+  .agenda-item:last-child .rail::before{display:none;}
+  .rail .dot{
+    width:9px;height:9px;
+    border-radius:50%;
+    background:var(--leaf);
+    margin-top:4px;
+    z-index:1;
+    box-shadow:0 0 0 4px var(--cream);
+  }
+  .agenda-item.highlight .rail .dot{
+    background:var(--rose);
+  }
+  .a-time{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13.5px;
+    font-weight:500;
+    color:var(--leaf);
+    text-align:left;
+    line-height:1.3;
+    padding-top:1px;
+    white-space:nowrap;
+  }
+  .a-card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:12px 13px;
+    min-width:0;
+  }
+  .agenda-item.highlight .a-card{
+    background:linear-gradient(135deg,#fff 60%, #fbeef2 100%);
+    border-color:rgba(227,156,178,0.5);
+  }
+  .a-zh{
+    font-size:14.5px;
+    font-weight:700;
+    color:var(--forest);
+    margin:0 0 3px;
+    line-height:1.4;
+  }
+  .a-en{
+    font-size:11.5px;
+    color:#8a998b;
+    margin:0;
+    line-height:1.4;
+  }
+  .a-tag{
+    display:inline-block;
+    margin-top:8px;
+    font-family:'Noto Sans TC',sans-serif;
+    font-size:10px;
+    font-weight:500;
+    letter-spacing:0.02em;
+    color:var(--leaf);
+    background:var(--leaf-soft);
+    padding:3px 9px;
+    border-radius:100px;
+  }
+  .agenda-item.highlight .a-tag{
+    color:#a34c68;
+    background:#fbeef2;
+  }
+  .agenda-item.rest .a-card{
+    background:#f2f4ee;
+    box-shadow:none;
+  }
+  .agenda-item.rest .a-zh{color:#7c8a7d;font-weight:600;}
+
+  /* ---------- Vic Teo spotlight ---------- */
+  .spotlight{
+    border-radius:22px;
+    overflow:hidden;
+    background:linear-gradient(150deg,var(--forest) 0%, #2c5539 55%, #3a6b47 100%);
+    color:#fff;
+    position:relative;
+    padding:20px 0 0;
+  }
+  .spotlight::after{
+    content:"";
+    position:absolute;
+    right:-40px; top:-50px;
+    width:160px;height:160px;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(255,255,255,0.14), transparent 70%);
+  }
+  .spotlight-tag{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:#cfe6d4;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin:0 20px 14px;
+    position:relative;
+    z-index:1;
+  }
+  .spotlight-tag::before{
+    content:"";
+    width:16px;height:1px;
+    background:#cfe6d4;
+  }
+  .spotlight-row{
+    display:flex;
+    align-items:stretch;
+    position:relative;
+    z-index:1;
+  }
+  .spotlight-photo{
+    flex:0 0 46%;
+    align-self:flex-end;
+    margin-left:-6px;
+    padding-top:10px;
+  }
+  .spotlight-photo img{
+    width:100%;
+    height:auto;
+    display:block;
+    filter:drop-shadow(0 14px 18px rgba(0,0,0,0.28));
+  }
+  .spotlight-content{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:6px 18px 22px 8px;
+    min-width:0;
+  }
+  .spotlight-name{
+    font-family:'Noto Serif TC',serif;
+    font-weight:700;
+    font-size:21px;
+    margin:0 0 2px;
+    line-height:1.3;
+  }
+  .spotlight-role{
+    font-size:12px;
+    color:rgba(255,255,255,0.75);
+    margin:0 0 10px;
+  }
+  .spotlight-time{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    background:rgba(255,255,255,0.14);
+    padding:5px 11px;
+    border-radius:100px;
+    width:fit-content;
+    margin-bottom:12px;
+  }
+  .spotlight-content .spotlight-desc{
+    font-size:12.5px;
+    line-height:1.8;
+    color:rgba(255,255,255,0.92);
+    margin:0;
+  }
+
+  /* ---------- Wellous story ---------- */
+  .story-list{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .story-card{
+    border-radius:18px;
+    padding:14px 16px 18px;
+    border:1px solid var(--line);
+  }
+  .story-card .s-photo{
+    width:100%;
+    aspect-ratio:900/332;
+    border-radius:12px;
+    overflow:hidden;
+    margin-bottom:14px;
+  }
+  .story-card .s-photo img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+  .story-card h3{
+    font-family:'Noto Serif TC',serif;
+    font-weight:700;
+    font-size:16.5px;
+    margin:0 0 8px;
+    color:var(--forest);
+  }
+  .story-card p{
+    font-size:13px;
+    line-height:1.85;
+    margin:0 0 12px;
+    color:#3a473c;
+  }
+  .story-card .s-badges{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+  }
+  .story-card .s-badge{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:9.5px;
+    letter-spacing:0.02em;
+    padding:4px 9px;
+    border-radius:100px;
+    background:rgba(255,255,255,0.6);
+    border:1px solid var(--line);
+    color:#5c6a5d;
+  }
+  .story-card.c-products{ background:var(--leaf-soft); }
+  .story-card.c-lab{ background:var(--sky-soft); }
+  .story-card.c-community{ background:var(--gold-soft); }
+  .story-card.c-awards{ background:var(--rose-soft); }
+
+  /* ---------- closing CTA ---------- */
+  .cta{
+    border-radius:22px;
+    background:linear-gradient(135deg,var(--leaf) 0%, #2c6138 100%);
+    color:#fff;
+    padding:28px 24px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .cta::before{
+    content:"";
+    position:absolute;
+    left:-30px; bottom:-40px;
+    width:140px;height:140px;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(255,255,255,0.12), transparent 70%);
+  }
+  .cta-line{
+    font-family:'Noto Serif TC',serif;
+    font-weight:700;
+    font-size:19px;
+    line-height:1.65;
+    margin:0 0 12px;
+    position:relative;
+    z-index:1;
+  }
+  .cta-sub{
+    font-size:12.5px;
+    color:rgba(255,255,255,0.85);
+    margin:0 0 16px;
+    line-height:1.6;
+    position:relative;
+    z-index:1;
+  }
+  .cta-tagline{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    letter-spacing:0.08em;
+    background:rgba(255,255,255,0.16);
+    padding:7px 16px;
+    border-radius:100px;
+    display:inline-block;
+    position:relative;
+    z-index:1;
+  }
+
+  /* ---------- brand series (1 per row) ---------- */
+  .series{
+    display:flex;
+    flex-direction:column;
+    gap:36px;
+  }
+  .series-block{
+    border-radius:20px;
+    overflow:hidden;
+    border:1px solid var(--line);
+    background:#fff;
+  }
+  .series-banner{
+    width:100%;
+    display:block;
+    aspect-ratio:5/3;
+    object-fit:cover;
+    background:#eee;
+  }
+  .series-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:16px 16px 4px;
+  }
+  .series-head .s-name{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:19px;
+    margin:0;
+  }
+  .series-head .s-count{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    letter-spacing:0.04em;
+    padding:4px 10px;
+    border-radius:100px;
+  }
+  .product-list{
+    display:flex;
+    flex-direction:column;
+    padding:6px 16px 16px;
+  }
+  .product-item{
+    display:grid;
+    grid-template-columns:72px 1fr;
+    gap:14px;
+    padding:14px 0;
+    border-top:1px solid var(--line);
+  }
+  .product-item:first-child{border-top:none;}
+  .p-thumb{
+    width:72px;
+    height:72px;
+    border-radius:12px;
+    overflow:hidden;
+    background:#f4f4f0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex:none;
+  }
+  .p-thumb img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    padding:4px;
+  }
+  .p-body{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+  }
+  .p-name{
+    font-size:14px;
+    font-weight:600;
+    margin:0 0 2px;
+    line-height:1.3;
+  }
+  .p-name .p-cn{
+    font-weight:500;
+    opacity:0.7;
+    font-size:12.5px;
+  }
+  .p-desc{
+    font-size:12.5px;
+    line-height:1.65;
+    margin:0;
+    color:#5c6a5d;
+  }
+
+  .series-block.c-tigrox .series-head .s-count{ background:rgba(216,167,65,0.22); color:#6b4a12; }
+  .series-block.c-immority .series-head .s-count{ background:rgba(63,139,76,0.14); color:var(--forest); }
+  .series-block.c-femoire .series-head .s-count{ background:rgba(227,156,178,0.28); color:#7a3350; }
+  .series-block.c-zenso .series-head .s-count{ background:rgba(93,156,182,0.2); color:#254a5c; }
+
+  .p-name{ color:var(--forest); }
+  .series-block.c-tigrox .p-name{ color:#6b4a12; }
+  .series-block.c-femoire .p-name{ color:#7a3350; }
+  .series-block.c-zenso .p-name{ color:#254a5c; }
+
+  /* ---------- footer ---------- */
+  .footer{
+    padding:34px 22px 8px;
+    text-align:center;
+  }
+  .footer .line{
+    width:34px;height:1px;background:var(--line);
+    margin:0 auto 14px;
+  }
+  .footer p{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    color:#8a998b;
+    line-height:1.8;
+    margin:0;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- 1. Event poster -->
+  <div class="hero-wrap">
+    <img src="poster.png" alt="唯樂健康生活節 2026 活動主視覺">
+  </div>
+
+  <!-- 2. Title + intro -->
+  <div class="title-block">
+    <div class="eyebrow">2026年9月6日（日）· 灣仔</div>
+    <h1 class="hero-zh">唯樂<em>健康</em>生活節</h1>
+    <p class="hero-en">Wellous Wellness Fest Hong Kong 2026</p>
+
+    <div class="meta-row">
+      <span class="meta-chip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
+        2026年9月6日（星期日）
+      </span>
+      <span class="meta-chip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        上午10時 – 晚上8時
+      </span>
+      <span class="meta-chip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        灣仔 Runnovation 潤維創坊
+      </span>
+    </div>
+
+    <p class="intro">
+      歡迎蒞臨<strong>唯樂健康生活節</strong>！這是專為您和家人打造的健康嘉年華 —— 當日
+      <strong>Immority、Tigrox、Zenso</strong> 及 <strong>Femoire</strong>
+      四大品牌系列將率先舉行新品發佈禮，並設有多場實用健康講座，由骨關節保養、居家免疫，
+      到體重血糖管理及女性健康內調，一次過為您解答日常健康疑問。現場穿插小遊戲及小休時段，
+      一家大細都啱玩；晚間更邀請人氣藝人 <strong>張與辰 Vic Teo</strong> 到場分享保健心得並現場獻唱，
+      壓軸設有幸運大抽獎同全場大合照，齊齊為健康喝采！由朝到晚、免費入場，老少咸宜，即刻留定時間嚟同我哋一齊
+      Make Health Easier。
+    </p>
+  </div>
+
+  <!-- 3. Agenda -->
+  <div class="section agenda-section">
+    <div class="section-head">
+      <h2>活動流程</h2>
+      <span class="count">共14個環節</span>
+    </div>
+    <p class="section-sub">灣仔 Runnovation 潤維創坊 · 上午10時至晚上8時</p>
+
+    <div class="agenda">
+
+      <div class="agenda-item">
+        <div class="rail"><div class="dot"></div></div>
+        <div class="a-time">10:00<br>–11:00</div>
+        <div class="a-card">
+          <p class="a-zh">關愛老年人骨關節健康講座</p>
+          <p class="a-en">Joint Health Talk</p>
+          <span class="a-tag">健康講座</span>
+        </div>
+      </div>
+
+      <div class="agenda-item">
+        <div class="rail"><div class="dot"></div></div>
+        <div class="a-time">11:00<br>–11:30</div>
+        <div class="a-card">
+          <p class="a-zh">Immority 靈活飲推介禮</p>
+          <p class="a-en">Immority Launching — Moveon</p>
+          <span class="a-tag">品牌推介禮</span>
+        </div>
+      </div>
+
+      <div class="agenda-item rest">
+        <div class="rail"><div class="dot"></div></div>
+        <div class="a-time">11:30<br>–12:00</div>
+        <div class="a-card">
+          <p class="a-zh">小遊戲及小休</p>
+          <p class="a-en">Game &amp; Rest</p>
+        </div>
+      </div>
+
+      <div class="agenda-item">
+        <div class="rail"><div class="dot"></div></div>
+        <div class="a-time">12:00<br>–13:00</div>
+        <div class="a-card">
+          <p class="a-zh">居家免疫</p>
+          <p class="a-en">At-home Immunity Talk</p>
+          <span class="a-tag">健康講座</span>
+        </div>
+      </div>
+
+      <div class="agenda-item">
+        <div class="rail"><div class="dot"></div></div>
+        <div class="a-time">13:00<br>–13:30</div>
+        <div class="a-card">
+          <p class="a-zh">Tigrox 虎乳芝推介禮</p>
+          <p class="a-en">Tigrox Launching</p>
+          <span class="a-tag">品牌推介禮</span>
+        </div>
+      </div>
+
+      <div class="agenda-item rest">
+        <div class="rail"><div class="dot"></div></div>
+        <div class="a-time">13:30<br>–14:00</div>
+        <div class="a-card">
+          <p class="a-zh">小遊戲及小休</p>
+          <p class="a-en">Game &amp; Rest</p>
+        </div>
+      </div>
+
+      <div class="agenda-item">
+        <div class="rail"><div class="dot"></div></div>
+        <div class="a-time">14:00<br>–15:00</div>
+        <div class="a-card">
+          <p class="a-zh">健康體重管理及血糖管理</p>
+          <p class="a-en">Effective Weight Management + Blood Sugar Daily Control</p>
+          <span class="a-tag">健康講座</span>
+        </div>
+      </div>
+
+      <div class="agenda-item">
+        <div class="rail"><div class="dot"></div></div>
+        <div class="a-time">15:00<br>–15:30</div>
+        <div class="a-card">
+          <p class="a-zh">Zenso 推介禮</p>
+          <p class="a-en">Zenso Launching</p>
+          <span class="a-tag">品牌推介禮</span>
+        </div>
+      </div>
+
+      <div class="agenda-item rest">
+        <div class="rail"><div class="dot"></div></div>
+        <div class="a-time">15:30<br>–16:00</div>
+        <div class="a-card">
+          <p class="a-zh">小遊戲及小休</p>
+          <p class="a-en">Game &amp; Rest</p>
+        </div>
+      </div>
+
+      <div class="agenda-item">
+        <div class="rail"><div class="dot"></div></div>
+        <div class="a-time">16:00<br>–17:00</div>
+        <div class="a-card">
+          <p class="a-zh">女性健康內調及皮膚管理</p>
+          <p class="a-en">Women's Health &amp; Skin Management</p>
+          <span class="a-tag">健康講座</span>
+        </div>
+      </div>
+
+      <div class="agenda-item">
+        <div class="rail"><div class="dot"></div></div>
+        <div class="a-time">17:00<br>–17:30</div>
+        <div class="a-card">
+          <p class="a-zh">玫瑰花胎素推介禮</p>
+          <p class="a-en">Femoire Launching</p>
+          <span class="a-tag">品牌推介禮</span>
+        </div>
+      </div>
+
+      <div class="agenda-item highlight">
+        <div class="rail"><div class="dot"></div></div>
+        <div class="a-time">17:30<br>–18:30</div>
+        <div class="a-card">
+          <p class="a-zh">張與辰保健養身分享會 暨 Wellous 品牌推介禮</p>
+          <p class="a-en">Vic Teo Sharing Session with Wellous Launching</p>
+          <span class="a-tag">重頭戲</span>
+        </div>
+      </div>
+
+      <div class="agenda-item">
+        <div class="rail"><div class="dot"></div></div>
+        <div class="a-time">18:30<br>–19:10</div>
+        <div class="a-card">
+          <p class="a-zh">召集最後銷售</p>
+          <p class="a-en">Final Call for Buyer</p>
+          <span class="a-tag">精選優惠</span>
+        </div>
+      </div>
+
+      <div class="agenda-item highlight">
+        <div class="rail"><div class="dot"></div></div>
+        <div class="a-time">19:10<br>–19:20</div>
+        <div class="a-card">
+          <p class="a-zh">張與辰獻唱一曲・幸運大抽獎×3・全場大合照</p>
+          <p class="a-en">Closing: Vic Teo song, 3× lucky draw &amp; group photo</p>
+          <span class="a-tag">溫馨閉幕</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 4. Vic Teo spotlight -->
+  <div class="section">
+    <div class="spotlight">
+      <div class="spotlight-tag">今日重頭戲</div>
+      <div class="spotlight-row">
+        <div class="spotlight-photo">
+          <img src="images/vic-teo.png" alt="張與辰 Vic Teo">
+        </div>
+        <div class="spotlight-content">
+          <p class="spotlight-name">張與辰<br>Vic Teo</p>
+          <p class="spotlight-role">驚喜嘉賓 · 保健養身分享會</p>
+          <span class="spotlight-time">17:30 – 19:20</span>
+          <p class="spotlight-desc">
+            全場矚目焦點！人氣藝人張與辰將親臨現場，同大家暢談保健養生心得，
+            隨後更會大方獻唱一曲，為健康盛會畫上完美句號。分享會後仲有幸運大抽獎同
+            全場大合照，記得預留呢個時段，同偶像零距離接觸！
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. About Wellous -->
+  <div class="section">
+    <div class="section-head">
+      <h2>關於唯樂 Wellous</h2>
+      <span class="count">品牌故事</span>
+    </div>
+    <p class="section-sub">由馬來西亞出發，成為您信賴的健康夥伴</p>
+
+    <div class="story-list">
+
+      <div class="story-card c-products">
+        <div class="s-photo"><img src="images/story-products.jpg" alt="唯樂 Wellous 產品包裝"></div>
+        <h3>馬來西亞領先的功能性食品企業</h3>
+        <p>唯樂 Wellous 成立於 2016 年，專注研發切合現代人健康需要的功能性食品。至今已推出超過30款產品，致力以更精準、便利的方式，為大眾提供優質健康方案。</p>
+        <div class="s-badges">
+          <span class="s-badge">Tigrox™</span>
+          <span class="s-badge">Immority</span>
+          <span class="s-badge">Zenso</span>
+          <span class="s-badge">Femoire</span>
+        </div>
+      </div>
+
+      <div class="story-card c-lab">
+        <div class="s-photo"><img src="images/story-lab.jpg" alt="唯樂 Wellous 研究所科研人員"></div>
+        <h3>科研與品質</h3>
+        <p>唯樂 Wellous 堅持選用天然、珍貴及品質穩定的原材料。為確保產品質素及穩定性，我們於2018年成立自己研究所，並聯通醫療及科研專家組成MRBA顧問委員會，為產品研發提供專業意見。</p>
+        <div class="s-badges">
+          <span class="s-badge">自家研究所 · 2018</span>
+          <span class="s-badge">MRBA 醫療及科研顧問委員會</span>
+        </div>
+      </div>
+
+      <div class="story-card c-community">
+        <div class="s-photo"><img src="images/story-community.jpg" alt="唯樂 Wellous 親子活動"></div>
+        <h3>活動與社區</h3>
+        <p>我們身心健康不止來自產品，更源於知識及良好生活習慣。透過健康講座、實體活動及顧客交流，唯樂 Wellous 持續與社區建立更緊密的連係，實踐「Make Health Easier」的品牌承諾。</p>
+        <div class="s-badges">
+          <span class="s-badge">健康講座</span>
+          <span class="s-badge">實體活動</span>
+          <span class="s-badge">顧客交流</span>
+        </div>
+      </div>
+
+      <div class="story-card c-awards">
+        <div class="s-photo"><img src="images/story-awards.jpg" alt="唯樂 Wellous 頒獎典禮"></div>
+        <h3>屢獲殊榮</h3>
+        <p>憑藉對品質、科研及創新的堅持，唯樂 Wellous 至今已榮獲超過20 項本地及國際認證與獎項。</p>
+        <div class="s-badges">
+          <span class="s-badge">20+ 本地及國際獎項</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 6. Brand series -->
+  <div class="section">
+    <div class="section-head">
+      <h2>品牌系列</h2>
+      <span class="count">4大系列</span>
+    </div>
+    <p class="section-sub">一個唯樂大家庭，四種健康主張</p>
+
+    <div class="series">
+
+      <!-- Tigrox -->
+      <div class="series-block c-tigrox">
+        <img class="series-banner" src="images/tigrox-banner.jpg" alt="Tigrox — 守護呼吸道健康">
+        <div class="series-head">
+          <p class="s-name">Tigrox™</p>
+          <span class="s-count">4款產品</span>
+        </div>
+        <div class="product-list">
+
+          <div class="product-item">
+            <div class="p-thumb"><img src="images/tiger-milk-king.png" alt="Tiger Milk King"></div>
+            <div class="p-body">
+              <p class="p-name">TIGER MILK KING <span class="p-cn">虎乳芝保健飲</span></p>
+              <p class="p-desc">促進肺部及呼吸道健康。</p>
+            </div>
+          </div>
+
+          <div class="product-item">
+            <div class="p-thumb"><img src="images/imuglo.png" alt="Imuglo"></div>
+            <div class="p-body">
+              <p class="p-name">IMUGLO <span class="p-cn">接骨木莓保健飲</span></p>
+              <p class="p-desc">提升免疫力及支援腸胃健康。</p>
+            </div>
+          </div>
+
+          <div class="product-item">
+            <div class="p-thumb"><img src="images/livetal.png" alt="Livetal"></div>
+            <div class="p-body">
+              <p class="p-name">LIVETAL <span class="p-cn">牛樟芝保健飲</span></p>
+              <p class="p-desc">促進肝臟健康及舒緩宿醉不適。</p>
+            </div>
+          </div>
+
+          <div class="product-item">
+            <div class="p-thumb"><img src="images/homega.png" alt="Homega"></div>
+            <div class="p-body">
+              <p class="p-name">HOMEGA <span class="p-cn">維生素魚油</span></p>
+              <p class="p-desc">有助於維持整體健康。</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Immority -->
+      <div class="series-block c-immority">
+        <img class="series-banner" src="images/immority-banner.jpg" alt="Immority — 天然關節修復飲">
+        <div class="series-head">
+          <p class="s-name">Immority</p>
+          <span class="s-count">4款產品</span>
+        </div>
+        <div class="product-list">
+
+          <div class="product-item">
+            <div class="p-thumb"><img src="images/moveon.png" alt="Moveon"></div>
+            <div class="p-body">
+              <p class="p-name">MOVEON <span class="p-cn">靈活飲</span></p>
+              <p class="p-desc">支援骨骼及關節修護、再生及強化。</p>
+            </div>
+          </div>
+
+          <div class="product-item">
+            <div class="p-thumb"><img src="images/liveon.png" alt="Liveon"></div>
+            <div class="p-body">
+              <p class="p-name">LIVEON <span class="p-cn">逆齡飲</span></p>
+              <p class="p-desc">支援DNA修護，延續青春活力。</p>
+            </div>
+          </div>
+
+          <div class="product-item">
+            <div class="p-thumb"><img src="images/bio-grape.png" alt="Bio-Grape Seed"></div>
+            <div class="p-body">
+              <p class="p-name">BIO-GRAPE SEED <span class="p-cn">法國葡萄籽</span></p>
+              <p class="p-desc">有助於保護身體免受自由基侵害。</p>
+            </div>
+          </div>
+
+          <div class="product-item">
+            <div class="p-thumb"><img src="images/bio-lingzhi.png" alt="Bio-Lingzhi"></div>
+            <div class="p-body">
+              <p class="p-name">BIO-LINGZHI <span class="p-cn">日本赤靈芝</span></p>
+              <p class="p-desc">兩千年藥用歷史的珍貴蕈類，有助維持整體健康。</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Femoire -->
+      <div class="series-block c-femoire">
+        <img class="series-banner" src="images/femoire-banner.jpg" alt="Femoire — 重啟肌膚 素顏美">
+        <div class="series-head">
+          <p class="s-name">Femoire</p>
+          <span class="s-count">4款產品</span>
+        </div>
+        <div class="product-list">
+
+          <div class="product-item">
+            <div class="p-thumb">
+              <img src="images/femoire-day-night.png" alt="Femoire Day and Night">
+            </div>
+            <div class="p-body">
+              <p class="p-name">FEMOIRE DAY &amp; NIGHT</p>
+              <p class="p-desc">日間抵禦光害，夜間細胞更新，煥發健康年輕肌膚。</p>
+            </div>
+          </div>
+
+          <div class="product-item">
+            <div class="p-thumb"><img src="images/novia.png" alt="Novia"></div>
+            <div class="p-body">
+              <p class="p-name">NOVIA</p>
+              <p class="p-desc">舒緩情緒、調節荷爾蒙。</p>
+            </div>
+          </div>
+
+          <div class="product-item">
+            <div class="p-thumb"><img src="images/isoduce-plus.png" alt="Isoduce Plus"></div>
+            <div class="p-body">
+              <p class="p-name">ISODUCE PLUS</p>
+              <p class="p-desc">從根本支援女性荷爾蒙及卵巢健康。</p>
+            </div>
+          </div>
+
+          <div class="product-item">
+            <div class="p-thumb"><img src="images/femoire-serum.png" alt="Femoire Youth Serum"></div>
+            <div class="p-body">
+              <p class="p-name">FEMOIRE YOUTH SERUM</p>
+              <p class="p-desc">有助淡紋、緊致、保濕及提亮肌膚。</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Zenso -->
+      <div class="series-block c-zenso">
+        <img class="series-banner" src="images/zenso-banner.jpg" alt="Zenso — Beyond Weight Management">
+        <div class="series-head">
+          <p class="s-name">Zenso</p>
+          <span class="s-count">6款產品</span>
+        </div>
+        <div class="product-list">
+
+          <div class="product-item">
+            <div class="p-thumb"><img src="images/kuro-daitto.png" alt="Kuro Daitto"></div>
+            <div class="p-body">
+              <p class="p-name">KURO DAITTO</p>
+              <p class="p-desc">控制食慾，減少卡路里攝取，帶來持久飽腹感。</p>
+            </div>
+          </div>
+
+          <div class="product-item">
+            <div class="p-thumb"><img src="images/kuro-shuga.png" alt="Kuro Shuga"></div>
+            <div class="p-body">
+              <p class="p-name">KURO SHUGA</p>
+              <p class="p-desc">阻隔糖分、澱粉的吸收，減少其轉化為脂肪。</p>
+            </div>
+          </div>
+
+          <div class="product-item">
+            <div class="p-thumb"><img src="images/kuro-oiru.png" alt="Kuro Oiru"></div>
+            <div class="p-body">
+              <p class="p-name">KURO OIRU</p>
+              <p class="p-desc">促進脂肪燃燒減少脂肪吸收。</p>
+            </div>
+          </div>
+
+          <div class="product-item">
+            <div class="p-thumb"><img src="images/kuro-kosen.png" alt="Kuro Kosen"></div>
+            <div class="p-body">
+              <p class="p-name">KURO KOSEN</p>
+              <p class="p-desc">有助提升新陳代謝重建腸道微生態。</p>
+            </div>
+          </div>
+
+          <div class="product-item">
+            <div class="p-thumb"><img src="images/kuro-mizu.png" alt="Kuro Mizu"></div>
+            <div class="p-body">
+              <p class="p-name">KURO MIZU</p>
+              <p class="p-desc">幫助改善四肢及臉部水腫。</p>
+            </div>
+          </div>
+
+          <div class="product-item">
+            <div class="p-thumb"><img src="images/spi2ro-plus.png" alt="SPI2RO Plus"></div>
+            <div class="p-body">
+              <p class="p-name">SPI2RO PLUS <span class="p-cn">雙效排毒錠</span></p>
+              <p class="p-desc">深層排毒，支持消化順暢，維持健康腸道。</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="cta">
+      <p class="cta-line">由講座到抽獎、由日到夜——<br>一日玩盡四大品牌新品，齊齊為健康喝采！</p>
+      <p class="cta-sub">2026年9月6日（日）· 灣仔 Runnovation 潤維創坊<br>免費入場 · 老少咸宜</p>
+      <span class="cta-tagline">Make Health Easier · 健康，由此啟航</span>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="line"></div>
+    <p>唯樂健康生活節 2026 · WELLOUS WELLNESS FEST HK 2026<br>灣仔港灣道28號灣景中心 · RUNNOVATION CENTER, WAN CHAI</p>
+  </div>
+
+</div>
+</body>
+</html>
