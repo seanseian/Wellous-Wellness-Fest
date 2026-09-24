@@ -1347,34 +1347,15 @@
     });
   });
 
-  // Submits the registration straight into the linked Google Form (and therefore its Sheet)
-  // via a hidden iframe, without the visitor leaving the site or clicking anything extra.
-  // Note: this silent background POST is blocked inside Claude's Artifact preview sandbox —
-  // it only works once the site is hosted on a real domain (e.g. Vercel).
-  var GOOGLE_FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLSedMkDhbkxk-DM5KonXXuQQy9h5jIzbBg0ZhL1IJn-Vnx7Jtg/formResponse';
-  var GOOGLE_FORM_ENTRIES = {
-    fullName: 'entry.159954182',
-    gender: 'entry.1914632640',
-    contactNumber: 'entry.1437442220',
-    referrerId: 'entry.728217369',
-    products: 'entry.1239492912',
-    attendance: 'entry.544736574'
-  };
-  // The Form's own option text is more descriptive than our site's short values —
-  // translate so Google records the matching answer correctly.
-  var ATTENDANCE_LABELS = {
-    'Day 1': 'Day 1 — Sat, 24 Oct',
-    'Day 2': 'Day 2 — Sun, 25 Oct',
-    'Both days': 'Both days'
-  };
-  var PRODUCT_LABELS = {
-    'None': 'I have not purchased any of these products'
-  };
+  // Submits the registration to a Google Apps Script Web App bound to the Sheet, which
+  // appends each entry as a new row directly — bypasses Google Forms' own submission
+  // validation entirely (no per-page-load token required), so this actually lands data.
+  var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzTAdy-aFw-B_0KAu5MtDrDf-ya5cw5IXb_hdEFom3deV4Ectg0BmTAx5S7h42Iz4tr5w/exec';
 
   function submitToGoogleForm(data){
     try{
       var f = document.createElement('form');
-      f.action = GOOGLE_FORM_ACTION;
+      f.action = APPS_SCRIPT_URL;
       f.method = 'POST';
       f.target = 'gformHiddenFrame';
       f.style.display = 'none';
@@ -1387,18 +1368,18 @@
         f.appendChild(input);
       }
 
-      addField(GOOGLE_FORM_ENTRIES.fullName, data.fullName);
-      addField(GOOGLE_FORM_ENTRIES.gender, data.gender);
-      addField(GOOGLE_FORM_ENTRIES.contactNumber, data.contactNumber);
-      if(data.referrerId) addField(GOOGLE_FORM_ENTRIES.referrerId, data.referrerId);
-      (data.products || []).forEach(function(p){ addField(GOOGLE_FORM_ENTRIES.products, PRODUCT_LABELS[p] || p); });
-      addField(GOOGLE_FORM_ENTRIES.attendance, ATTENDANCE_LABELS[data.attendance] || data.attendance);
+      addField('fullName', data.fullName);
+      addField('gender', data.gender);
+      addField('contactNumber', data.contactNumber);
+      if(data.referrerId) addField('referrerId', data.referrerId);
+      (data.products || []).forEach(function(p){ addField('products', p); });
+      addField('attendance', data.attendance);
 
       document.body.appendChild(f);
       f.submit();
       document.body.removeChild(f);
     }catch(e){
-      console.warn('Google Form submit skipped:', e);
+      console.warn('Registration submit skipped:', e);
     }
   }
 
