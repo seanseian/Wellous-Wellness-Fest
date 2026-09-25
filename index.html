@@ -673,6 +673,29 @@
   .workshop-reserve-btn:disabled{opacity:0.5; cursor:not-allowed;}
   .workshop-reserve-btn.reserved{background:var(--green-pale); color:var(--green-dark);}
   .workshop-reserve-btn.full-btn{background:var(--surface); color:var(--text-muted); border:1.5px solid var(--line);}
+  .workshop-cancel-btn{
+    display:block; width:100%; margin-top:8px; background:none; border:none;
+    color:var(--red); font-family:'Nunito'; font-weight:700; font-size:0.8rem;
+    cursor:pointer; text-decoration:underline; padding:4px;
+  }
+
+  .cancel-by-contact{margin-top:24px; text-align:center;}
+  .cancel-by-contact-toggle{
+    background:none; border:none; color:var(--text-muted); font-family:'Nunito'; font-weight:700;
+    font-size:0.85rem; text-decoration:underline; cursor:pointer; padding:6px;
+  }
+  .cancel-by-contact-form{
+    max-width:420px; margin:16px auto 0; text-align:left; background:var(--surface-alt);
+    border:1px solid var(--line); border-radius:16px; padding:20px;
+  }
+  .cancel-by-contact-form select{
+    width:100%; padding:12px 14px; border-radius:10px; border:1.5px solid var(--line);
+    background:var(--surface); font-family:'Nunito'; font-size:0.9rem; color:var(--text);
+  }
+  .cancel-by-contact-status{margin-top:12px; font-size:0.85rem; font-weight:700;}
+  .cancel-by-contact-status.success{color:var(--green-dark);}
+  .cancel-by-contact-status.error{color:var(--red);}
+
   @media (max-width:860px){
     .workshop-grid{grid-template-columns:repeat(2, 1fr);}
   }
@@ -1320,6 +1343,7 @@
               <div class="workshop-card-org">Organised by <b>IMMORITY</b></div>
               <div class="workshop-slot-status" data-slot-status>Checking availability&hellip;</div>
               <button type="button" class="workshop-reserve-btn" data-reserve-btn disabled>Reserve Slot</button>
+              <button type="button" class="workshop-cancel-btn" data-cancel-btn style="display:none;">Cancel reservation</button>
             </div>
           </div>
           <div class="workshop-card" data-workshop-id="workshop2">
@@ -1330,6 +1354,7 @@
               <div class="workshop-card-org">Organised by <b>Tefal</b></div>
               <div class="workshop-slot-status" data-slot-status>Checking availability&hellip;</div>
               <button type="button" class="workshop-reserve-btn" data-reserve-btn disabled>Reserve Slot</button>
+              <button type="button" class="workshop-cancel-btn" data-cancel-btn style="display:none;">Cancel reservation</button>
             </div>
           </div>
           <div class="workshop-card" data-workshop-id="workshop3">
@@ -1340,6 +1365,7 @@
               <div class="workshop-card-org">Organised by <b>Wellous</b></div>
               <div class="workshop-slot-status" data-slot-status>Checking availability&hellip;</div>
               <button type="button" class="workshop-reserve-btn" data-reserve-btn disabled>Reserve Slot</button>
+              <button type="button" class="workshop-cancel-btn" data-cancel-btn style="display:none;">Cancel reservation</button>
             </div>
           </div>
           <div class="workshop-card" data-workshop-id="workshop4">
@@ -1350,6 +1376,7 @@
               <div class="workshop-card-org">Organised by <b>Jung Kwan Jang</b></div>
               <div class="workshop-slot-status" data-slot-status>Checking availability&hellip;</div>
               <button type="button" class="workshop-reserve-btn" data-reserve-btn disabled>Reserve Slot</button>
+              <button type="button" class="workshop-cancel-btn" data-cancel-btn style="display:none;">Cancel reservation</button>
             </div>
           </div>
           <div class="workshop-card" data-workshop-id="workshop5">
@@ -1360,6 +1387,7 @@
               <div class="workshop-card-org">Special Guest <b>Jack Lim</b></div>
               <div class="workshop-slot-status" data-slot-status>Checking availability&hellip;</div>
               <button type="button" class="workshop-reserve-btn" data-reserve-btn disabled>Reserve Slot</button>
+              <button type="button" class="workshop-cancel-btn" data-cancel-btn style="display:none;">Cancel reservation</button>
             </div>
           </div>
           <div class="workshop-card" data-workshop-id="workshop6">
@@ -1370,7 +1398,29 @@
               <div class="workshop-card-org">Organised by <b>Wellous</b></div>
               <div class="workshop-slot-status" data-slot-status>Checking availability&hellip;</div>
               <button type="button" class="workshop-reserve-btn" data-reserve-btn disabled>Reserve Slot</button>
+              <button type="button" class="workshop-cancel-btn" data-cancel-btn style="display:none;">Cancel reservation</button>
             </div>
+          </div>
+        </div>
+
+        <div class="cancel-by-contact">
+          <button type="button" class="cancel-by-contact-toggle" id="cancelByContactToggle">
+            Can't find your reservation? Cancel by phone number
+          </button>
+          <div class="cancel-by-contact-form" id="cancelByContactForm" style="display:none;">
+            <label class="f-title" for="cancelWorkshopSelect">Workshop</label>
+            <select id="cancelWorkshopSelect">
+              <option value="workshop1">IMMORITY × HYROX Fitness Activation — Day 1, 9:00–10:00 AM</option>
+              <option value="workshop2">Tefal × Healthy Cooking Workshop — Day 1, 11:00 AM–12:00 PM</option>
+              <option value="workshop3">Joint Health & Healthy Ageing Talks — Day 1, 1:00–2:00 PM</option>
+              <option value="workshop4">Korea x Jung Kwan Jang Wellness Showcase — Day 2, 3:00–4:00 PM</option>
+              <option value="workshop5">Family Airway & Immunity Health Talk — Day 2, 5:00–6:00 PM</option>
+              <option value="workshop6">DIY Creative Tent — Parents & Kids — Day 2, 7:00–8:00 PM</option>
+            </select>
+            <label class="f-title" for="cancelContactInput" style="margin-top:14px;">Phone number used when reserving</label>
+            <input type="tel" id="cancelContactInput" placeholder="e.g. 012-345 6789">
+            <button type="button" class="btn" id="cancelByContactSubmit" style="margin-top:16px;">Cancel Reservation</button>
+            <div class="cancel-by-contact-status" id="cancelByContactStatus"></div>
           </div>
         </div>
       </div>
@@ -1505,22 +1555,60 @@
   // Live workshop slot availability + booking. Stores the most recently registered
   // visitor's name/contact so a reservation can be attributed to them without re-asking.
   var lastRegistrant = { fullName: '', contactNumber: '' };
+  var TOKEN_KEY_PREFIX = 'wellnessfest_workshop_token_';
 
-  function renderSlot(statusEl, btn, slot){
-    if(!statusEl || !btn) return;
-    statusEl.classList.remove('available', 'low', 'full');
-    btn.classList.remove('full-btn');
-    if(slot.available <= 0){
-      statusEl.textContent = 'Fully booked';
-      statusEl.classList.add('full');
-      btn.disabled = true;
-      btn.textContent = 'Full';
-      btn.classList.add('full-btn');
+  function getStoredToken(workshopId){
+    try{ return localStorage.getItem(TOKEN_KEY_PREFIX + workshopId); }catch(e){ return null; }
+  }
+  function setStoredToken(workshopId, token){
+    try{ localStorage.setItem(TOKEN_KEY_PREFIX + workshopId, token); }catch(e){}
+  }
+  function clearStoredToken(workshopId){
+    try{ localStorage.removeItem(TOKEN_KEY_PREFIX + workshopId); }catch(e){}
+  }
+
+  function showReservedState(card){
+    var reserveBtn = card.querySelector('[data-reserve-btn]');
+    var cancelBtn = card.querySelector('[data-cancel-btn]');
+    if(reserveBtn){
+      reserveBtn.disabled = true;
+      reserveBtn.textContent = 'Reserved ✓';
+      reserveBtn.classList.add('reserved');
+      reserveBtn.classList.remove('full-btn');
+    }
+    if(cancelBtn) cancelBtn.style.display = 'block';
+  }
+
+  function showAvailableState(card, slot){
+    var reserveBtn = card.querySelector('[data-reserve-btn]');
+    var cancelBtn = card.querySelector('[data-cancel-btn]');
+    if(reserveBtn){
+      reserveBtn.classList.remove('reserved', 'full-btn');
+      reserveBtn.disabled = slot.available <= 0;
+      reserveBtn.textContent = slot.available <= 0 ? 'Full' : 'Reserve Slot';
+      if(slot.available <= 0) reserveBtn.classList.add('full-btn');
+    }
+    if(cancelBtn) cancelBtn.style.display = 'none';
+  }
+
+  function renderSlot(card, slot){
+    var statusEl = card.querySelector('[data-slot-status]');
+    if(statusEl){
+      statusEl.classList.remove('available', 'low', 'full');
+      if(slot.available <= 0){
+        statusEl.textContent = 'Fully booked';
+        statusEl.classList.add('full');
+      }else{
+        statusEl.textContent = slot.available + ' / ' + slot.capacity + ' spots left';
+        statusEl.classList.add(slot.available <= 10 ? 'low' : 'available');
+      }
+    }
+    // A stored token means this browser already holds a reservation for this workshop —
+    // show that state regardless of the general availability count.
+    if(getStoredToken(card.dataset.workshopId)){
+      showReservedState(card);
     }else{
-      statusEl.textContent = slot.available + ' / ' + slot.capacity + ' spots left';
-      statusEl.classList.add(slot.available <= 10 ? 'low' : 'available');
-      btn.disabled = false;
-      btn.textContent = 'Reserve Slot';
+      showAvailableState(card, slot);
     }
   }
 
@@ -1531,7 +1619,7 @@
         (json.slots || []).forEach(function(slot){
           var card = document.querySelector('.workshop-card[data-workshop-id="' + slot.id + '"]');
           if(!card) return;
-          renderSlot(card.querySelector('[data-slot-status]'), card.querySelector('[data-reserve-btn]'), slot);
+          renderSlot(card, slot);
         });
       })
       .catch(function(err){
@@ -1539,7 +1627,9 @@
         document.querySelectorAll('[data-slot-status]').forEach(function(el){
           el.textContent = 'Live availability unavailable right now';
         });
-        document.querySelectorAll('[data-reserve-btn]').forEach(function(btn){ btn.disabled = false; btn.textContent = 'Reserve Slot'; });
+        document.querySelectorAll('[data-reserve-btn]').forEach(function(btn){
+          if(!btn.classList.contains('reserved')){ btn.disabled = false; btn.textContent = 'Reserve Slot'; }
+        });
       });
   }
   loadWorkshopSlots();
@@ -1564,8 +1654,8 @@
         .then(function(res){ return res.json(); })
         .then(function(result){
           if(result.result === 'success'){
-            btn.textContent = 'Reserved ✓';
-            btn.classList.add('reserved');
+            setStoredToken(workshopId, result.token);
+            showReservedState(card);
             if(statusEl){
               statusEl.classList.remove('available', 'low', 'full');
               statusEl.textContent = result.remaining + ' spots left';
@@ -1593,6 +1683,104 @@
         });
     });
   });
+
+  document.querySelectorAll('[data-cancel-btn]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var card = btn.closest('.workshop-card');
+      var workshopId = card ? card.dataset.workshopId : null;
+      if(!workshopId) return;
+      var token = getStoredToken(workshopId);
+      if(!token) return;
+
+      if(!confirm('Cancel your reservation for this workshop?')) return;
+
+      btn.disabled = true;
+      btn.textContent = 'Cancelling…';
+
+      var body = new URLSearchParams();
+      body.append('action', 'cancelSlot');
+      body.append('workshopId', workshopId);
+      body.append('token', token);
+
+      fetch(APPS_SCRIPT_URL, { method: 'POST', body: body })
+        .then(function(res){ return res.json(); })
+        .then(function(result){
+          btn.disabled = false;
+          btn.textContent = 'Cancel reservation';
+          if(result.result === 'success'){
+            clearStoredToken(workshopId);
+            loadWorkshopSlots(); // refresh with the true, up-to-date availability
+          }else{
+            alert('Could not cancel this reservation — please try again.');
+          }
+        })
+        .catch(function(err){
+          console.warn('Cancel slot failed:', err);
+          btn.disabled = false;
+          btn.textContent = 'Cancel reservation';
+          alert('Could not reach the booking system — please check your connection and try again.');
+        });
+    });
+  });
+
+  // Fallback: cancel by phone number, for visitors on a different device/browser
+  // than the one they originally reserved on (no token stored there).
+  var cancelByContactToggle = document.getElementById('cancelByContactToggle');
+  var cancelByContactForm = document.getElementById('cancelByContactForm');
+  if(cancelByContactToggle && cancelByContactForm){
+    cancelByContactToggle.addEventListener('click', function(){
+      var isHidden = cancelByContactForm.style.display === 'none';
+      cancelByContactForm.style.display = isHidden ? 'block' : 'none';
+    });
+  }
+
+  var cancelByContactSubmit = document.getElementById('cancelByContactSubmit');
+  if(cancelByContactSubmit){
+    cancelByContactSubmit.addEventListener('click', function(){
+      var workshopId = document.getElementById('cancelWorkshopSelect').value;
+      var contactNumber = document.getElementById('cancelContactInput').value.trim();
+      var statusEl = document.getElementById('cancelByContactStatus');
+
+      statusEl.className = 'cancel-by-contact-status';
+      if(!contactNumber){
+        statusEl.textContent = 'Please enter the phone number you used when reserving.';
+        statusEl.classList.add('error');
+        return;
+      }
+
+      cancelByContactSubmit.disabled = true;
+      cancelByContactSubmit.textContent = 'Cancelling…';
+      statusEl.textContent = '';
+
+      var body = new URLSearchParams();
+      body.append('action', 'cancelSlotByContact');
+      body.append('workshopId', workshopId);
+      body.append('contactNumber', contactNumber);
+
+      fetch(APPS_SCRIPT_URL, { method: 'POST', body: body })
+        .then(function(res){ return res.json(); })
+        .then(function(result){
+          cancelByContactSubmit.disabled = false;
+          cancelByContactSubmit.textContent = 'Cancel Reservation';
+          if(result.result === 'success'){
+            statusEl.textContent = 'Reservation cancelled successfully.';
+            statusEl.classList.add('success');
+            clearStoredToken(workshopId); // in case it was this browser after all
+            loadWorkshopSlots();
+          }else{
+            statusEl.textContent = result.message || 'Could not find a matching reservation.';
+            statusEl.classList.add('error');
+          }
+        })
+        .catch(function(err){
+          console.warn('Cancel by contact failed:', err);
+          cancelByContactSubmit.disabled = false;
+          cancelByContactSubmit.textContent = 'Cancel Reservation';
+          statusEl.textContent = 'Could not reach the booking system — please check your connection and try again.';
+          statusEl.classList.add('error');
+        });
+    });
+  }
 
   // Form validation + submit
   var form = document.getElementById('regForm');
