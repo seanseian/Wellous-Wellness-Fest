@@ -167,10 +167,10 @@
   @media (min-width:760px){
     .hero2-photo-wrap{min-height:620px;}
     .hero2-overlay-content{
-      flex-direction:row; align-items:center; justify-content:center;
+      flex-direction:row; flex-wrap:wrap; align-content:center; align-items:flex-start; justify-content:center;
       gap:56px; padding:40px 48px; min-height:620px; text-align:left;
     }
-    .hero2-masthead{width:min(28%, 320px); align-self:center; transform:translateY(-42px);}
+    .hero2-masthead{width:min(28%, 320px); align-self:flex-start; margin-top:34px; /* top aligns with the facts-card title (card padding-top) */}
     .hero2-facts-card{flex:0 0 400px;}
   }
   .hero2-facts-title{
