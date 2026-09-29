@@ -170,7 +170,7 @@
       flex-direction:row; align-items:center; justify-content:center;
       gap:56px; padding:40px 48px; min-height:620px; text-align:left;
     }
-    .hero2-masthead{width:min(28%, 320px);}
+    .hero2-masthead{width:min(28%, 320px); align-self:center; transform:translateY(-42px);}
     .hero2-facts-card{flex:0 0 400px;}
   }
   .hero2-facts-title{
@@ -697,10 +697,14 @@
     position:relative; overflow:hidden; min-height:280px;
     margin:-50px -44px -50px 0; border-radius:0 30px 30px 0;
   }
-  .wellous-carousel-track{position:relative; width:100%; height:100%; min-height:280px;}
+  .wellous-carousel-track{
+    position:relative; width:100%; height:100%; min-height:280px;
+    touch-action:pan-y; cursor:grab; user-select:none;
+  }
+  .wellous-carousel-track:active{cursor:grabbing;}
   .wellous-carousel-track img{
     position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;
-    opacity:0; transition:opacity .7s ease;
+    opacity:0; transition:opacity .7s ease; pointer-events:none;
   }
   .wellous-carousel-track img.active{opacity:1;}
   .wellous-carousel-track::after{
@@ -2698,6 +2702,31 @@
     ['touchstart','mousedown'].forEach(function(evt){
       viewport.addEventListener(evt, pauseThenResume, {passive:true});
     });
+
+    // Mouse click-and-drag scrolling. Touch already scrolls the viewport
+    // natively; a mouse press on a plain overflow:auto row does not, so this
+    // fills that in and is what the cursor:grab styling was promising.
+    var dragActive = false, dragStartX = 0, dragStartScroll = 0, dragMoved = false;
+    viewport.addEventListener('mousedown', function(e){
+      dragActive = true; dragMoved = false;
+      dragStartX = e.clientX;
+      dragStartScroll = viewport.scrollLeft;
+      scrollPos = viewport.scrollLeft;
+    });
+    window.addEventListener('mousemove', function(e){
+      if(!dragActive) return;
+      var dx = e.clientX - dragStartX;
+      if(Math.abs(dx) > 3) dragMoved = true;
+      viewport.scrollLeft = dragStartScroll - dx;
+      scrollPos = viewport.scrollLeft;
+    });
+    window.addEventListener('mouseup', function(){
+      if(!dragActive) return;
+      dragActive = false;
+      scrollPos = viewport.scrollLeft;
+    });
+    // Prevent a dragged click from also acting like a click on a slide/link.
+    viewport.addEventListener('click', function(e){ if(dragMoved){ e.preventDefault(); dragMoved = false; } }, true);
     viewport.addEventListener('scroll', function(){
       if(!playing) updateActiveDot();
       // keep the scroll position inside the first set once the visitor drags
@@ -2749,6 +2778,33 @@
 
     document.getElementById('wellousPrev').addEventListener('click', function(){ prev(); restart(); });
     document.getElementById('wellousNext').addEventListener('click', function(){ next(); restart(); });
+
+    // Drag/swipe support — this carousel is a cross-fade slideshow rather than
+    // a scrolling track, so dragging just measures the horizontal distance and
+    // advances or rewinds one slide once it passes a small threshold.
+    var dragStartX = null, dragging = false, dragMoved = false;
+    var DRAG_THRESHOLD = 40;
+    track.addEventListener('pointerdown', function(e){
+      dragging = true; dragMoved = false; dragStartX = e.clientX;
+      track.setPointerCapture(e.pointerId);
+    });
+    track.addEventListener('pointermove', function(e){
+      if(!dragging) return;
+      if(Math.abs(e.clientX - dragStartX) > 5) dragMoved = true;
+    });
+    track.addEventListener('pointerup', function(e){
+      if(!dragging) return;
+      dragging = false;
+      var dx = e.clientX - dragStartX;
+      if(Math.abs(dx) > DRAG_THRESHOLD){
+        if(dx < 0) next(); else prev();
+        restart();
+      }
+    });
+    track.addEventListener('pointercancel', function(){ dragging = false; });
+    // Swallow the click that a drag would otherwise also fire, so a swipe
+    // doesn't also register as a tap on the image underneath.
+    track.addEventListener('click', function(e){ if(dragMoved) e.preventDefault(); }, true);
   })();
 
   // Top nav bar hides itself once the footer scrolls into view
