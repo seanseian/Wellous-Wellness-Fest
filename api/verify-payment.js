@@ -15,6 +15,10 @@
 //                      When set, only payments made through these three links count.
 //   LOOKUP_SINCE       (optional) ISO date; phone lookups ignore payments before it,
 //                      e.g. 2026-09-01
+//   INTERNAL_API_KEY   (optional) shared secret for the booking Apps Script. When a
+//                      request sends it in the X-Internal-Key header, the payer's email
+//                      (from Stripe Checkout) is included so the workshop confirmation
+//                      email can be sent. Browsers never get the email.
 
 const STRIPE_API = 'https://api.stripe.com/v1';
 
@@ -98,6 +102,7 @@ function evaluateSession(session, passLinks) {
     regId: m ? ref : null,
     phone: m ? m[2] : normalisePhone(custPhone) || null,
     sessionId: session.id,
+    email: (session.customer_details && session.customer_details.email) || null,
     paidAt: session.created ? new Date(session.created * 1000).toISOString() : null,
   };
 }
@@ -157,6 +162,12 @@ module.exports = async function handler(req, res) {
   }
 
   const passLinks = parsePassLinks();
+  const internalKey = process.env.INTERNAL_API_KEY;
+  const isInternal = Boolean(internalKey) && req.headers['x-internal-key'] === internalKey;
+  const send = (result) => {
+    if (!isInternal) delete result.email; // never hand the payer's email to a browser
+    return res.status(200).json(result);
+  };
   const sessionId = String((req.query && req.query.session_id) || '');
   const phoneRaw = String((req.query && req.query.phone) || '');
 
@@ -177,7 +188,7 @@ module.exports = async function handler(req, res) {
       }
       // Name is only returned for the session-based check (the payer just came from Stripe).
       result.name = (session.customer_details && session.customer_details.name) || null;
-      return res.status(200).json(result);
+      return send(result);
     }
 
     if (phoneRaw) {
@@ -189,7 +200,7 @@ module.exports = async function handler(req, res) {
       if (!result) {
         return res.status(200).json({ paid: false, error: 'No completed payment found for that phone number.' });
       }
-      return res.status(200).json(result);
+      return send(result);
     }
 
     return res.status(400).json({ paid: false, error: 'Missing session_id or phone.' });
