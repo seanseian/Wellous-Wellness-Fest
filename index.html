@@ -1122,7 +1122,7 @@
       <a href="#wellous">Wellous</a>
       <a href="#my-bookings">My Bookings</a>
     </nav>
-    <a href="#best-deal" class="nav-cta" id="navCta">Get Your Pass</a>
+    <a href="#regForm" class="nav-cta" id="navCta">Get Your Pass</a>
     <button class="burger" id="burgerBtn" aria-label="Open menu">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
     </button>
@@ -1134,7 +1134,7 @@
     <a href="#venue">Venue</a>
     <a href="#wellous">Wellous</a>
     <a href="#my-bookings">My Bookings</a>
-    <a href="#register">Get Your Pass</a>
+    <a href="#regForm">Get Your Pass</a>
   </div>
 </header>
 
@@ -3157,13 +3157,15 @@
     // a jump link (e.g. "Get Your Pass") should never land on an invisible section
     window.addEventListener('hashchange', function(){
       var t = document.getElementById(location.hash.slice(1));
-      if(t && t.classList.contains('fade-section')) t.classList.add('is-in');
+      t = t && t.closest('.fade-section');
+      if(t) t.classList.add('is-in');
     });
     document.addEventListener('click', function(e){
       var a = e.target.closest && e.target.closest('a[href^="#"]');
       if(!a) return;
       var t = document.getElementById(a.getAttribute('href').slice(1));
-      if(t && t.classList.contains('fade-section')) t.classList.add('is-in');
+      t = t && t.closest('.fade-section');
+      if(t) t.classList.add('is-in');
     });
   })();
 
