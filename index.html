@@ -805,6 +805,18 @@
     position:absolute; top:12px; right:14px; width:34px; height:34px; border:none; background:var(--grey-pale);
     border-radius:50%; font-size:1.3rem; line-height:1; color:var(--grey-ink); cursor:pointer;
   }
+  .paycheck-emoji{font-size:2rem; line-height:1; margin-bottom:6px;}
+  .paycheck-phone{
+    display:flex; flex-direction:column; gap:2px; background:var(--green-pale); border-radius:14px; padding:12px 16px; margin-bottom:12px;
+  }
+  .paycheck-phone span{font-size:0.78rem; font-weight:700; color:var(--text-muted);}
+  .paycheck-phone b{font-family:'Mark Pro'; font-size:1.35rem; letter-spacing:0.04em; color:var(--green-dark);}
+  .paycheck-summary{font-size:0.86rem; margin-bottom:4px;}
+  .paycheck-summary div{display:flex; justify-content:space-between; gap:12px; padding:5px 2px; border-top:1px solid var(--line);}
+  .paycheck-summary div:first-child{border-top:none;}
+  .paycheck-summary span{color:var(--text-muted);}
+  .paycheck-switch{text-align:center; margin:14px 0 0; font-size:0.88rem; color:var(--text-muted);}
+  .paycheck-switch button{background:none; border:none; padding:0; font:inherit; font-weight:800; color:var(--green-dark); text-decoration:underline; cursor:pointer;}
   .paycheck-status{margin-top:14px; font-size:0.9rem; font-weight:700;}
   .paycheck-status.error{color:var(--red);}
   .paycheck-status.success{color:var(--green-dark);}
@@ -2353,13 +2365,16 @@
 <div class="paycheck-overlay" id="payCheck" role="dialog" aria-modal="true" aria-labelledby="payCheckTitle" hidden>
   <div class="paycheck-card">
     <button type="button" class="paycheck-close" id="payCheckClose" aria-label="Close">&times;</button>
-    <h3 id="payCheckTitle">Welcome back!</h3>
-    <p class="paycheck-lead">Please insert your phone number to check if you are eligible to reserve the slot.</p>
-    <label class="f-title" for="payCheckPhone">Phone number</label>
-    <input type="tel" id="payCheckPhone" placeholder="e.g. 012-345 6789" autocomplete="tel">
-    <button type="button" class="btn paycheck-btn" id="payCheckBtn">Check eligibility</button>
-    <div class="paycheck-status" id="payCheckStatus" role="status"></div>
-    <div class="paycheck-continue" id="payCheckContinue"></div>
+    <div class="paycheck-emoji" aria-hidden="true">👋</div>
+    <h3 id="payCheckTitle">Glad that you&rsquo;re back!</h3>
+    <p class="paycheck-lead">Your registration is not yet complete without your payment.</p>
+    <div class="paycheck-phone">
+      <span>Registered phone number</span>
+      <b id="payCheckPhoneShown"></b>
+    </div>
+    <div class="paycheck-summary" id="payCheckSummary"></div>
+    <a class="btn paycheck-btn" id="payCheckPay" href="#">Complete payment to finish registration</a>
+    <p class="paycheck-switch">Not your number? <button type="button" id="payCheckSwitch">Switch to your number</button></p>
     <button type="button" class="paycheck-later" id="payCheckLater">Not now</button>
   </div>
 </div>
@@ -2784,78 +2799,60 @@
     });
   }
 
+  // "Glad that you're back!" pop-up for a registration saved in this browser that has
+  // not been paid. It checks with Stripe first, so paid guests never see it.
   var payCheck = document.getElementById('payCheck');
-  function openPayCheck(){
-    if(!payCheck) return;
-    var reg = storeGet(REG_KEY);
-    var input = document.getElementById('payCheckPhone');
-    if(reg && input && !input.value) input.value = reg.contactNumber || '';
-    document.getElementById('payCheckStatus').textContent = '';
-    document.getElementById('payCheckContinue').innerHTML = '';
-    payCheck.hidden = false;
-    setTimeout(function(){ if(input) input.focus(); }, 50);
-  }
   function closePayCheck(){ if(payCheck) payCheck.hidden = true; }
+  function openPayCheck(){
+    var reg = storeGet(REG_KEY);
+    if(!payCheck || !reg || !reg.contactNumber) return;
+    var phone = normalisePhone(reg.contactNumber);
+    lastRegistrant.contactNumber = phone;
+    if(!lastRegistrant.fullName) lastRegistrant.fullName = reg.fullName || '';
+    verifyPayment('phone=' + encodeURIComponent(phone), { silent: true })
+      .then(function(){ /* paid after all: booking is now unlocked, no pop-up needed */ })
+      .catch(function(msg){
+        if(!isUnpaidReply(msg)) return; // couldn't check right now: don't nag on a guess
+        showUnpaidPopup(reg, phone);
+      });
+  }
+  function showUnpaidPopup(reg, phone){
+    document.getElementById('payCheckPhoneShown').textContent = phone;
+    var price = reg.attendance === 'Both days' ? 'RM50' : 'RM35';
+    document.getElementById('payCheckSummary').innerHTML =
+      (reg.fullName ? '<div><span>Name</span><b>' + escapeHtml(reg.fullName) + '</b></div>' : '') +
+      '<div><span>Pass</span><b>' + escapeHtml(reg.attendance || '') + '</b></div>' +
+      '<div><span>Price</span><b>' + price + '</b></div>';
+    var pay = document.getElementById('payCheckPay');
+    if(reg.regId && STRIPE_LINKS[reg.attendance]){
+      pay.href = STRIPE_LINKS[reg.attendance] + '?client_reference_id=' + encodeURIComponent(reg.regId);
+    }else{
+      pay.href = '#regForm';
+    }
+    payCheck.hidden = false;
+    setTimeout(function(){ pay.focus(); }, 50);
+  }
   if(payCheck){
     document.getElementById('payCheckClose').addEventListener('click', closePayCheck);
     document.getElementById('payCheckLater').addEventListener('click', closePayCheck);
     payCheck.addEventListener('click', function(e){ if(e.target === payCheck) closePayCheck(); });
     document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && !payCheck.hidden) closePayCheck(); });
-    var payCheckBtn = document.getElementById('payCheckBtn');
-    payCheckBtn.addEventListener('click', function(){
-      var raw = document.getElementById('payCheckPhone').value.trim();
-      var statusEl = document.getElementById('payCheckStatus');
-      var cont = document.getElementById('payCheckContinue');
-      statusEl.className = 'paycheck-status';
-      cont.innerHTML = '';
-      if(raw.replace(/\D/g, '').length < 9){
-        statusEl.textContent = 'Please enter the phone number you registered with.';
-        statusEl.classList.add('error');
-        return;
-      }
-      var phone = normalisePhone(raw);
-      payCheckBtn.disabled = true;
-      payCheckBtn.textContent = 'Checking…';
-      statusEl.textContent = '';
-      lastRegistrant.contactNumber = phone;
-      var reg = storeGet(REG_KEY);
-      if(reg && normalisePhone(reg.contactNumber) === phone && !lastRegistrant.fullName) lastRegistrant.fullName = reg.fullName || '';
-      verifyPayment('phone=' + encodeURIComponent(phone), { silent: true })
-        .then(function(){
-          statusEl.textContent = 'Payment confirmed! You can now reserve your workshop slots.';
-          statusEl.classList.add('success');
-          setTimeout(function(){ closePayCheck(); scrollToBook(); }, 900);
-        })
-        .catch(function(msg){
-          if(isUnpaidReply(msg)){
-            renderPayContinue(cont, phone);
-          }else{
-            statusEl.textContent = typeof msg === 'string' ? msg : 'Could not check right now. Please try again.';
-            statusEl.classList.add('error');
-          }
-        })
-        .then(function(){
-          payCheckBtn.disabled = false;
-          payCheckBtn.textContent = 'Check eligibility';
-        });
+    document.getElementById('payCheckPay').addEventListener('click', function(){
+      if(this.getAttribute('href') === '#regForm') closePayCheck();
     });
-    document.getElementById('payCheckPhone').addEventListener('keydown', function(e){
-      if(e.key === 'Enter') document.getElementById('payCheckBtn').click();
-    });
-  }
-
-  // "Not you?": forget the pass, registration and reservations saved in this browser
-  // (e.g. a shared family device), then start the page fresh.
-  var passSwitch = document.getElementById('passSwitch');
-  if(passSwitch){
-    passSwitch.addEventListener('click', function(){
-      try{
-        Object.keys(localStorage).forEach(function(k){
-          if(k === PASS_KEY || k === REG_KEY || k.indexOf(TOKEN_KEY_PREFIX) === 0) localStorage.removeItem(k);
-        });
-      }catch(e){}
-      location.href = location.pathname + '#book';
-      location.reload();
+    // Not their number: forget this browser's saved registration and take them to the
+    // "Already registered?" box to check their own number.
+    document.getElementById('payCheckSwitch').addEventListener('click', function(){
+      try{ localStorage.removeItem(REG_KEY); }catch(e){}
+      lastRegistrant.fullName = '';
+      lastRegistrant.contactNumber = '';
+      closePayCheck();
+      var input = document.getElementById('bookLookupPhone');
+      if(input) input.value = '';
+      if(bookSection) bookSection.classList.add('is-in'); // skip the fade so it's visible straight away
+      var target = document.querySelector('.book-returning') || bookSection;
+      if(target) target.scrollIntoView({behavior:'smooth', block:'center'});
+      setTimeout(function(){ if(input) input.focus({preventScroll:true}); }, 700);
     });
   }
 
