@@ -960,6 +960,14 @@
     padding:14px 18px; font-weight:800; font-size:0.92rem; text-align:center;
   }
   .pass-badge b{color:var(--text);}
+  .pass-celebrate{
+    text-align:center; background:linear-gradient(135deg, #EAFBD1 0%, #E4F7D2 55%, #DDF1FB 100%);
+    border:1.5px solid rgba(47,138,23,0.25); border-radius:24px; padding:28px 24px 22px;
+  }
+  .pass-celebrate-emoji{font-size:2.4rem; line-height:1; margin-bottom:8px;}
+  .pass-celebrate-title{font-family:'Mark Pro'; font-weight:800; font-size:clamp(1.4rem, 3vw, 1.9rem); color:var(--green-dark); margin:0 0 8px;}
+  .pass-celebrate-text{color:var(--text); max-width:560px; margin:0 auto 16px; line-height:1.55;}
+  .pass-celebrate .pass-badge{background:rgba(255,255,255,0.75); display:inline-flex;}
   .workshop-card.not-included{opacity:0.55;}
 
   /* Locked (no confirmed pass on this browser): cards stay visible but can't be used */
@@ -975,6 +983,14 @@
   .book-returning{
     max-width:560px; margin:20px auto 0; text-align:left; background:var(--surface);
     border:1px solid var(--line); border-radius:18px; padding:18px 20px;
+  }
+  /* side by side: buy a pass (left) | already registered (right) */
+  .book-locked-grid{display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:stretch;}
+  .book-locked-grid .book-cta{flex-direction:column; align-items:flex-start; justify-content:center; gap:18px;}
+  .book-locked-grid .book-returning{max-width:none; margin:0; display:flex; flex-direction:column; justify-content:center; border-radius:22px; padding:24px 26px; box-shadow:var(--shadow);}
+  .book-returning-title{font-family:'Mark Pro'; font-weight:800; font-size:1.25rem; color:var(--text); line-height:1.2; margin:0 0 6px;}
+  @media (max-width:860px){
+    .book-locked-grid{grid-template-columns:1fr;}
   }
   .book-returning-row{display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;}
   .book-returning-row input{flex:1 1 200px; min-width:0;}
@@ -1046,7 +1062,8 @@
   .price-preview span.amt{font-family:'Mark Pro'; font-size:1.3rem; color:var(--green-dark); font-weight:700;}
   .submit-row{display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-top:8px;}
   .form-note{color:var(--text-muted); font-size:0.82rem; margin-top:18px;}
-  .field-error{color:var(--red); font-size:0.82rem; font-weight:700; margin-top:6px; display:none;}
+  .field-error{color:var(--red); font-size:0.82rem; font-weight:700; margin-top:6px; display:none; line-height:1.45;}
+  .field-error a{color:var(--green-dark); text-decoration:underline;}
   .f-group.error input[type=text], .f-group.error input[type=tel]{border-color:var(--red);}
   .f-group.error .field-error{display:block;}
 
@@ -2043,12 +2060,12 @@
   <div class="wrap">
     <div class="confirm-panel" id="confirmPanel">
       <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12.5l2.5 2.5L16 9.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <h3>You're registered!</h3>
-      <p>Thanks for registering for Make Health Easier Wellness Fest 2026. <b>Next step: complete your payment.</b> Once Stripe confirms it, you'll be brought straight back here to reserve your workshop slots (first-come, first-served).</p>
+      <h3>Almost there! Complete your payment to secure your pass 🎉</h3>
+      <p>Thanks for signing up for Make Health Easier Wellness Fest 2026! Your details are saved, but <b>your pass is only confirmed once payment is made</b>. Registrations without payment aren't counted as a purchase, so finish checkout below to lock in your spot. Once Stripe confirms it, you'll come straight back here to reserve your workshop slots.</p>
       <div class="confirm-summary" id="confirmSummary"></div>
 
       <a href="#" class="btn" style="margin-top:28px;" id="paymentBtn">
-        Proceed to Payment
+        Pay now &amp; secure my pass
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
       <p class="pay-note">Workshop booking unlocks only after a successful payment.<br>Already paid? <a href="#book" data-open-book>Continue to workshop booking</a></p>
@@ -2071,6 +2088,7 @@
     </div>
 
     <div class="book-state" data-book-state="locked">
+     <div class="book-locked-grid">
       <div class="book-cta">
         <div class="book-cta-text">
           <b>Buy your pass now to access these amazing workshops.</b>
@@ -2079,13 +2097,15 @@
         <a href="#register" class="btn book-cta-btn">Buy Your Pass Now</a>
       </div>
       <div class="book-returning">
-        <label class="f-title" for="bookLookupPhone">Already have a pass? Enter the phone number you registered with to see your reserved slots and book more.</label>
+        <p class="book-returning-title">Already registered?</p>
+        <label class="f-title" for="bookLookupPhone">Enter the phone number you registered with to see your reserved slots and book more.</label>
         <div class="book-returning-row">
           <input type="tel" id="bookLookupPhone" placeholder="e.g. 012-345 6789" autocomplete="tel">
           <button type="button" class="btn" id="bookLookupBtn">Show my workshops</button>
         </div>
         <div class="mybookings-status" id="bookLookupStatus"></div>
       </div>
+     </div>
     </div>
 
     <div class="book-state" data-book-state="failed">
@@ -2098,7 +2118,12 @@
     </div>
 
     <div class="book-state" data-book-state="unlocked">
-      <div class="pass-badge" id="passBadge"></div>
+      <div class="pass-celebrate">
+        <div class="pass-celebrate-emoji" aria-hidden="true">🎉</div>
+        <h3 class="pass-celebrate-title">Congrats, you&rsquo;ve got your pass!</h3>
+        <p class="pass-celebrate-text">Your pass gets you into all the booths, health screenings and activities running throughout the day. <b>Workshops have limited spots</b>, so reserve the ones you want below.</p>
+        <div class="pass-badge" id="passBadge"></div>
+      </div>
       <div class="my-reserved" id="myReserved" style="display:none;">
         <h3 class="my-reserved-title">Your reserved workshops</h3>
         <ul class="my-reserved-list" id="myReservedList"></ul>
@@ -2555,6 +2580,7 @@
 
   function unlockBooking(pass){
     verifiedPass = pass;
+    try{ window.dispatchEvent(new Event('wwf:pass')); }catch(e){}
     storeSet(PASS_KEY, pass);
     if(pass.name && !lastRegistrant.fullName) lastRegistrant.fullName = pass.name;
     if(pass.phone && !lastRegistrant.contactNumber) lastRegistrant.contactNumber = pass.phone;
@@ -3280,6 +3306,44 @@
     g.classList.toggle('error', hasError);
   }
 
+  // ---------- One registration per phone number ----------
+  var contactErrEl = document.querySelector('#g-contact .field-error');
+  var CONTACT_ERR_DEFAULT = contactErrEl ? contactErrEl.innerHTML : '';
+  var contactInput = document.getElementById('contactNumber');
+  if(contactInput){
+    contactInput.addEventListener('input', function(){
+      if(contactErrEl) contactErrEl.innerHTML = CONTACT_ERR_DEFAULT;
+      setError('g-contact', false);
+    });
+  }
+  // Resolves { registered, paid, regId, attendance }, or null if the check couldn't run
+  // (then registration carries on rather than blocking a genuine guest).
+  function checkPhoneRegistered(phone){
+    var body = new URLSearchParams();
+    body.append('action', 'checkPhone');
+    body.append('contactNumber', phone);
+    return fetch(APPS_SCRIPT_URL, { method: 'POST', body: body })
+      .then(function(res){ return res.json(); })
+      .then(function(r){ return r && r.result === 'success' ? r : null; })
+      .catch(function(){ return null; });
+  }
+  function showDuplicatePhone(found){
+    if(!contactErrEl) return;
+    var html = 'This phone number is already registered. Please use a different number.';
+    if(found.paid){
+      html += ' <br>If this is your number, you already have a pass: <a href="#book" data-open-book>go to workshop booking</a>.';
+    }else if(found.regId && STRIPE_LINKS[found.attendance]){
+      var link = STRIPE_LINKS[found.attendance] + '?client_reference_id=' + encodeURIComponent(found.regId);
+      html += ' <br>If this is your number, your registration is waiting for payment: <a href="' + link + '">continue to payment</a>.';
+    }
+    contactErrEl.innerHTML = html;
+    setError('g-contact', true);
+    document.getElementById('g-contact').scrollIntoView({behavior:'smooth', block:'center'});
+    contactErrEl.querySelectorAll('[data-open-book]').forEach(function(el){
+      el.addEventListener('click', function(ev){ ev.preventDefault(); scrollToBook(); });
+    });
+  }
+
   if(form){
     form.addEventListener('submit', function(e){
       e.preventDefault();
@@ -3305,46 +3369,61 @@
         return;
       }
 
-      var referrerId = document.getElementById('referrerId').value.trim();
-      var products = Array.from(form.querySelectorAll('input[name=products]:checked')).map(function(cb){ return cb.value; });
+      // One registration per phone number: check the sheet before going any further.
+      var submitBtn = document.getElementById('submitBtn');
+      var submitHtml = submitBtn ? submitBtn.innerHTML : '';
+      if(submitBtn){ submitBtn.disabled = true; submitBtn.textContent = 'Checking…'; }
+      checkPhoneRegistered(normalisePhone(contact)).then(function(found){
+        if(submitBtn){ submitBtn.disabled = false; submitBtn.innerHTML = submitHtml; }
+        if(found && found.registered){
+          showDuplicatePhone(found);
+          return;
+        }
+        proceed();
+      });
 
-      // Always store/search phone numbers in the "0123456789" shape, so every row in the
-      // Sheet, and every later phone lookup, matches on the same format.
-      var contactNormalised = normalisePhone(contact);
+      function proceed(){
+        var referrerId = document.getElementById('referrerId').value.trim();
+        var products = Array.from(form.querySelectorAll('input[name=products]:checked')).map(function(cb){ return cb.value; });
 
-      var data = {
-        fullName: name,
-        gender: gender.value,
-        contactNumber: contactNormalised,
-        referrerId: referrerId || null,
-        products: products,
-        attendance: days.value,
-        passPrice: 'RM' + days.dataset.price,
-        submittedAt: new Date().toISOString()
-      };
+        // Always store/search phone numbers in the "0123456789" shape, so every row in the
+        // Sheet, and every later phone lookup, matches on the same format.
+        var contactNormalised = normalisePhone(contact);
 
-      // Reference id that travels through Stripe and comes back with the payment,
-      // tying the payment to this registration (and its phone number).
-      data.regId = makeRegId(data.attendance, data.contactNumber);
+        var data = {
+          fullName: name,
+          gender: gender.value,
+          contactNumber: contactNormalised,
+          referrerId: referrerId || null,
+          products: products,
+          attendance: days.value,
+          passPrice: 'RM' + days.dataset.price,
+          submittedAt: new Date().toISOString()
+        };
 
-      submitToGoogleForm(data);
-      lastRegistrant.fullName = data.fullName;
-      lastRegistrant.contactNumber = data.contactNumber;
-      storeSet(REG_KEY, { regId: data.regId, fullName: data.fullName, contactNumber: data.contactNumber, attendance: data.attendance });
+        // Reference id that travels through Stripe and comes back with the payment,
+        // tying the payment to this registration (and its phone number).
+        data.regId = makeRegId(data.attendance, data.contactNumber);
 
-      var paymentBtn = document.getElementById('paymentBtn');
-      var baseLink = STRIPE_LINKS[data.attendance] || STRIPE_LINKS['Both days'];
-      if(paymentBtn) paymentBtn.href = baseLink + '?client_reference_id=' + encodeURIComponent(data.regId);
+        submitToGoogleForm(data);
+        lastRegistrant.fullName = data.fullName;
+        lastRegistrant.contactNumber = data.contactNumber;
+        storeSet(REG_KEY, { regId: data.regId, fullName: data.fullName, contactNumber: data.contactNumber, attendance: data.attendance });
 
-      confirmSummary.innerHTML =
-        '<div><span>Name</span><b>' + escapeHtml(name) + '</b></div>' +
-        '<div><span>Attending</span><b>' + escapeHtml(days.value) + '</b></div>' +
-        '<div><span>Pass price</span><b>' + escapeHtml(data.passPrice) + '</b></div>' +
-        '<div><span>Contact</span><b>' + escapeHtml(contactNormalised) + '</b></div>';
+        var paymentBtn = document.getElementById('paymentBtn');
+        var baseLink = STRIPE_LINKS[data.attendance] || STRIPE_LINKS['Both days'];
+        if(paymentBtn) paymentBtn.href = baseLink + '?client_reference_id=' + encodeURIComponent(data.regId);
 
-      form.style.display = 'none';
-      confirmPanel.classList.add('show');
-      confirmPanel.scrollIntoView({behavior:'smooth', block:'center'});
+        confirmSummary.innerHTML =
+          '<div><span>Name</span><b>' + escapeHtml(name) + '</b></div>' +
+          '<div><span>Attending</span><b>' + escapeHtml(days.value) + '</b></div>' +
+          '<div><span>Pass price</span><b>' + escapeHtml(data.passPrice) + '</b></div>' +
+          '<div><span>Contact</span><b>' + escapeHtml(contactNormalised) + '</b></div>';
+
+        form.style.display = 'none';
+        confirmPanel.classList.add('show');
+        confirmPanel.scrollIntoView({behavior:'smooth', block:'center'});
+      }
     });
   }
 
@@ -3622,7 +3701,7 @@
     if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     var target = parseInt(el.getAttribute('data-count-to'), 10);
     var suffix = el.getAttribute('data-count-suffix') || '';
-    var DURATION = 1400;
+    var DURATION = 3200;
     el.textContent = '0' + suffix;
     var io = new IntersectionObserver(function(entries){
       if(!entries[0].isIntersecting) return;
@@ -3631,7 +3710,7 @@
       function step(ts){
         if(start === null) start = ts;
         var t = Math.min(1, (ts - start) / DURATION);
-        var eased = 1 - Math.pow(1 - t, 3); // fast start, gentle landing
+        var eased = 1 - Math.pow(1 - t, 5); // quick start, then the last numbers tick in slowly
         el.textContent = Math.round(target * eased) + suffix;
         if(t < 1) requestAnimationFrame(step);
       }
@@ -3714,7 +3793,7 @@
     var pastPasses = false, blocked = {};
     function update(){
       var anyBlocked = Object.keys(blocked).some(function(k){ return blocked[k]; });
-      var show = pastPasses && !anyBlocked;
+      var show = pastPasses && !anyBlocked && !verifiedPass; // pass holders don't need the nudge
       bar.classList.toggle('visible', show);
       bar.setAttribute('aria-hidden', show ? 'false' : 'true');
       link.tabIndex = show ? 0 : -1;
@@ -3725,6 +3804,7 @@
       pastPasses = !e.isIntersecting && e.boundingClientRect.top < 0;
       update();
     }, {threshold:0}).observe(passes);
+    window.addEventListener('wwf:pass', update);
     ['register'].forEach(function(id){
       var el = document.getElementById(id);
       if(!el) return;
