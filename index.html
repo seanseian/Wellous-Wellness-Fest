@@ -1170,6 +1170,8 @@
   }
   .mybookings-status{margin-top:12px; font-size:0.85rem; font-weight:700;}
   .mybookings-status.error{color:var(--red);}
+  .mybookings-status a:not(.btn){color:var(--green-dark); text-decoration:underline;}
+  .mybookings-note{color:var(--text); font-weight:700; margin:0; line-height:1.5;}
   .mybookings-results{margin-top:8px;}
   .mybookings-results-title{font-family:'Mark Pro'; font-size:1.3rem; color:var(--text); margin-bottom:20px; text-align:center;}
   .mybookings-cancel-btn{
@@ -3283,6 +3285,28 @@
     });
   }
 
+  // No bookings for this number: say why. Unpaid registrations are told to finish payment
+  // (with a direct link to their Stripe checkout); pass holders are pointed to the workshops.
+  function explainNoBookings(statusEl, phone){
+    statusEl.className = 'mybookings-status';
+    statusEl.textContent = 'Checking your registration…';
+    checkPhoneRegistered(phone).then(function(found){
+      if(found && found.registered && !found.paid){
+        statusEl.innerHTML = '<p class="mybookings-note">Your registration isn&rsquo;t complete yet. Your pass is only confirmed after payment, and workshop slots can only be booked once you&rsquo;ve paid.</p>';
+        var box = document.createElement('div');
+        statusEl.appendChild(box);
+        renderPayContinue(box, phone);
+      }else if(found && found.registered && found.paid){
+        statusEl.innerHTML = 'You have a pass, but no workshops reserved yet. <a href="#book" data-open-book>Reserve your workshop slots</a>.';
+        statusEl.querySelectorAll('[data-open-book]').forEach(function(a){
+          a.addEventListener('click', function(ev){ ev.preventDefault(); scrollToBook(); });
+        });
+      }else{
+        statusEl.innerHTML = 'No bookings found for that phone number. Haven&rsquo;t registered yet? <a href="#regForm">Register &amp; get your pass</a>.';
+      }
+    });
+  }
+
   var myBookingsLookupBtn = document.getElementById('myBookingsLookupBtn');
   if(myBookingsLookupBtn){
     myBookingsLookupBtn.addEventListener('click', function(){
@@ -3311,8 +3335,8 @@
           myBookingsLookupBtn.textContent = 'View My Bookings';
           if(result.result === 'success'){
             if(!result.bookings || result.bookings.length === 0){
-              statusEl.textContent = 'No active bookings found for that phone number.';
               document.getElementById('myBookingsResults').style.display = 'none';
+              explainNoBookings(statusEl, normalisePhone(phone));
             }else{
               renderMyBookings(result.bookings);
             }
