@@ -2741,20 +2741,39 @@
     if(!container) return;
     var reg = storeGet(REG_KEY);
     var mine = reg && reg.regId && normalisePhone(reg.contactNumber) === normalisePhone(phone);
-    var html = '<div class="pay-continue"><p class="pay-continue-msg">' + UNPAID_MSG + '</p>';
     if(mine){
+      paintPayContinue(container, { regId: reg.regId, attendance: reg.attendance, fullName: reg.fullName, contactNumber: reg.contactNumber });
+      return;
+    }
+    // Not saved in this browser: look the registration up by phone number in the sheet,
+    // so the guest can still go straight to their own Stripe checkout.
+    container.innerHTML = '<div class="pay-continue"><p class="pay-continue-msg">' + UNPAID_MSG + '</p><p class="pay-continue-summary">Finding your registration&hellip;</p></div>';
+    checkPhoneRegistered(normalisePhone(phone)).then(function(found){
+      if(found && found.registered && !found.paid && found.regId && STRIPE_LINKS[found.attendance]){
+        paintPayContinue(container, { regId: found.regId, attendance: found.attendance, contactNumber: phone });
+      }else{
+        paintPayContinue(container, null);
+      }
+    });
+  }
+  // reg = { regId, attendance, fullName?, contactNumber } to link to Stripe, or null for "register first"
+  function paintPayContinue(container, reg){
+    var html = '<div class="pay-continue"><p class="pay-continue-msg">' + UNPAID_MSG + '</p>';
+    if(reg){
       var link = (STRIPE_LINKS[reg.attendance] || STRIPE_LINKS['Both days']) + '?client_reference_id=' + encodeURIComponent(reg.regId);
       var price = reg.attendance === 'Both days' ? 'RM50' : 'RM35';
       html += '<div class="pay-continue-summary">' +
-          '<div><span>Name</span><b>' + escapeHtml(reg.fullName || '') + '</b></div>' +
+          (reg.fullName ? '<div><span>Name</span><b>' + escapeHtml(reg.fullName) + '</b></div>' : '') +
           '<div><span>Pass</span><b>' + escapeHtml(reg.attendance || '') + '</b></div>' +
           '<div><span>Price</span><b>' + price + '</b></div>' +
           '<div><span>Phone</span><b>' + escapeHtml(normalisePhone(reg.contactNumber)) + '</b></div>' +
         '</div>' +
-        '<a class="btn" href="' + link + '">Continue to payment</a>' +
-        '<a class="pay-continue-alt" href="#regForm" data-close-paycheck>Register a different pass instead</a>';
+        '<a class="btn" href="' + link + '">Continue to payment</a>';
+      // remember it here too, so the welcome-back check works on this device from now on
+      if(!storeGet(REG_KEY)) storeSet(REG_KEY, { regId: reg.regId, fullName: reg.fullName || '', contactNumber: normalisePhone(reg.contactNumber), attendance: reg.attendance });
     }else{
-      html += '<a class="btn" href="#regForm" data-close-paycheck>Register &amp; pay for your pass</a>';
+      html += '<p class="pay-continue-summary">We couldn&rsquo;t find a registration for this number yet.</p>' +
+        '<a class="btn" href="#regForm" data-close-paycheck>Register &amp; pay for your pass</a>';
     }
     html += '</div>';
     container.innerHTML = html;
