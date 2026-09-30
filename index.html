@@ -1025,16 +1025,12 @@
 
   /* Your reserved workshops (after a pass is confirmed) */
   .my-reserved{
-    margin-top:18px; background:var(--surface); border:1px solid var(--line); border-radius:18px;
-    padding:18px 20px; box-shadow:var(--shadow);
+    margin-top:22px; background:var(--green-pale); border:1.5px solid rgba(47,138,23,0.3); border-radius:24px; padding:22px;
   }
-  .my-reserved-title{font-family:'Mark Pro'; font-size:1.05rem; color:var(--text); margin:0 0 10px;}
-  .my-reserved-list{list-style:none; margin:0; padding:0;}
-  .my-reserved-list li{display:flex; justify-content:space-between; gap:12px; padding:9px 0; border-top:1px solid var(--line); font-size:0.9rem;}
-  .my-reserved-list li:first-child{border-top:none;}
-  .my-reserved-list b{color:var(--text);}
-  .my-reserved-list span{color:var(--text-muted); font-weight:700; white-space:nowrap;}
-  .my-reserved-note{margin:10px 0 0; color:var(--text-muted); font-size:0.82rem;}
+  .my-reserved-head{display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:4px 16px; margin-bottom:16px;}
+  .my-reserved-title{font-family:'Mark Pro'; font-size:1.3rem; font-weight:800; color:var(--green-dark); margin:0;}
+  .my-reserved-note{margin:0; color:var(--text-muted); font-size:0.85rem; font-weight:700;}
+  .my-reserved .workshop-card{background:var(--surface); border:2px solid var(--green);}
   @media (max-width:560px){
     .book-cta{padding:20px;}
     .my-reserved-list li{flex-direction:column; gap:2px;}
@@ -1284,7 +1280,7 @@
       <a href="#agenda">Agenda</a>
       <a href="#venue">Venue</a>
       <a href="#wellous">Wellous</a>
-      <a href="#my-bookings">My Bookings</a>
+      <a href="#book">My Bookings</a>
     </nav>
     <a href="#regForm" class="nav-cta" id="navCta">Get Your Pass</a>
     <button class="burger" id="burgerBtn" aria-label="Open menu">
@@ -1297,7 +1293,7 @@
     <a href="#agenda">Agenda</a>
     <a href="#venue">Venue</a>
     <a href="#wellous">Wellous</a>
-    <a href="#my-bookings">My Bookings</a>
+    <a href="#book">My Bookings</a>
     <a href="#regForm">Get Your Pass</a>
   </div>
 </header>
@@ -1969,28 +1965,6 @@
   </div>
 </section>
 
-<section id="my-bookings">
-  <div class="wrap-narrow">
-    <span class="eyebrow-tag pink">My Bookings</span>
-    <h2 class="section-title" style="max-width:100%;">View &amp; manage your workshop bookings.</h2>
-    <p class="section-lead">Enter the phone number you used when reserving a workshop slot to see your active bookings.</p>
-
-    <div class="mybookings-login">
-      <label class="f-title" for="myBookingsPhone">Phone number</label>
-      <input type="tel" id="myBookingsPhone" placeholder="e.g. 012-345 6789">
-      <button type="button" class="btn" id="myBookingsLookupBtn" style="margin-top:14px;">View My Bookings</button>
-      <div class="mybookings-status" id="myBookingsStatus"></div>
-    </div>
-  </div>
-
-  <div class="wrap">
-    <div class="mybookings-results" id="myBookingsResults" style="display:none;">
-      <h3 class="mybookings-results-title">Your active bookings</h3>
-      <div class="workshop-grid" id="myBookingsGrid"></div>
-    </div>
-  </div>
-</section>
-
 <section id="register">
   <div class="wrap-narrow">
     <span class="eyebrow-tag yellow">Registration</span>
@@ -2141,16 +2115,18 @@
         <button type="button" class="pass-switch" id="passSwitch">Not you? Use a different number</button>
       </div>
       <div class="my-reserved" id="myReserved" style="display:none;">
-        <h3 class="my-reserved-title">Your reserved workshops</h3>
-        <ul class="my-reserved-list" id="myReservedList"></ul>
-        <p class="my-reserved-note">Show the phone number you booked with at the workshop entrance.</p>
+        <div class="my-reserved-head">
+          <h3 class="my-reserved-title">&#10003; Your booked workshops</h3>
+          <p class="my-reserved-note">Show the phone number you booked with at the workshop entrance.</p>
+        </div>
+        <div class="workshop-grid" id="myReservedGrid"></div>
       </div>
     </div>
 
     <!-- Workshop grid is always visible; it is only clickable once a paid pass is confirmed. -->
     <div class="workshop-area" id="workshopArea">
       <div class="workshop-featured">
-        <span class="workshop-featured-eyebrow">Confirmed Workshops</span>
+        <span class="workshop-featured-eyebrow" id="workshopEyebrow">Confirmed Workshops</span>
         <h3 class="workshop-day-title">Day 1 &middot; Saturday, 24 Oct</h3>
         <div class="workshop-grid">
           <div class="workshop-card" data-workshop-id="d1-sound-bath" data-day="1">
@@ -3061,20 +3037,37 @@
     });
   });
 
-  // "Your reserved workshops": built from the reservation tokens held in this browser.
+  // Booked workshops (tokens held in this browser) move up into "Your booked workshops";
+  // everything else stays in its Day 1 / Day 2 grid, in the original order.
+  (function(){
+    document.querySelectorAll('#workshopArea .workshop-grid').forEach(function(grid){
+      var first = grid.querySelector('.workshop-card');
+      if(first) grid.setAttribute('data-day-grid', first.dataset.day);
+    });
+    document.querySelectorAll('#book .workshop-card').forEach(function(card, i){ card.dataset.order = i; });
+  })();
   function renderMyReserved(){
     var wrap = document.getElementById('myReserved');
-    var list = document.getElementById('myReservedList');
-    if(!wrap || !list) return;
-    list.innerHTML = '';
-    document.querySelectorAll('#book .workshop-card').forEach(function(card){
-      if(!getStoredToken(card.dataset.workshopId)) return;
-      var title = card.querySelector('h4'), meta = card.querySelector('.workshop-card-meta');
-      var li = document.createElement('li');
-      li.innerHTML = '<b>' + escapeHtml(title ? title.textContent : '') + '</b><span>' + escapeHtml(meta ? meta.textContent.trim() : '') + '</span>';
-      list.appendChild(li);
+    var booked = document.getElementById('myReservedGrid');
+    if(!wrap || !booked) return;
+    var cards = Array.prototype.slice.call(document.querySelectorAll('#book .workshop-card'))
+      .sort(function(a, b){ return a.dataset.order - b.dataset.order; });
+    cards.forEach(function(card){
+      var mine = verifiedPass && getStoredToken(card.dataset.workshopId);
+      var home = document.querySelector('#workshopArea .workshop-grid[data-day-grid="' + card.dataset.day + '"]');
+      (mine ? booked : home || booked).appendChild(card);
     });
-    wrap.style.display = list.children.length ? 'block' : 'none';
+    var hasBooked = booked.children.length > 0;
+    wrap.style.display = hasBooked ? 'block' : 'none';
+    // hide a day heading when every workshop that day is already booked
+    document.querySelectorAll('#workshopArea .workshop-grid[data-day-grid]').forEach(function(grid){
+      var title = grid.previousElementSibling;
+      var empty = !grid.querySelector('.workshop-card');
+      grid.style.display = empty ? 'none' : '';
+      if(title && title.classList.contains('workshop-day-title')) title.style.display = empty ? 'none' : '';
+    });
+    var eyebrow = document.getElementById('workshopEyebrow');
+    if(eyebrow) eyebrow.textContent = hasBooked ? 'More workshops you can book' : 'Confirmed Workshops';
   }
 
   // Pull this phone number's reservations from the booking sheet, so a returning
@@ -3203,151 +3196,6 @@
         .then(function(){
           cancelByContactSubmit.disabled = false;
           cancelByContactSubmit.textContent = 'Find my reservations';
-        });
-    });
-  }
-
-  // "My Bookings", phone-number lookup that lists active workshop bookings as cards,
-  // each with an obvious cancel button, reusing the same photos already on the page.
-  function getWorkshopImageSrc(workshopId){
-    var el = document.querySelector('.workshop-card[data-workshop-id="' + workshopId + '"] img');
-    return el ? el.src : '';
-  }
-
-  function renderMyBookings(bookings){
-    var grid = document.getElementById('myBookingsGrid');
-    var resultsWrap = document.getElementById('myBookingsResults');
-    if(!grid || !resultsWrap) return;
-    grid.innerHTML = '';
-
-    if(!bookings || bookings.length === 0){
-      resultsWrap.style.display = 'none';
-      return;
-    }
-
-    bookings.forEach(function(b){
-      var card = document.createElement('div');
-      card.className = 'workshop-card';
-      card.innerHTML =
-        '<div class="workshop-card-media"><img src="' + getWorkshopImageSrc(b.workshopId) + '" alt="' + escapeHtml(b.workshopName) + '"></div>' +
-        '<div class="workshop-card-body">' +
-          '<h4>' + escapeHtml(b.workshopName) + '</h4>' +
-          '<div class="workshop-card-meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M8 3v4M16 3v4" stroke-linecap="round"/></svg> ' + escapeHtml(b.day) + ' &middot; ' + escapeHtml(b.time) + '</div>' +
-          '<button type="button" class="mybookings-cancel-btn" data-mb-cancel data-workshop-id="' + escapeHtml(b.workshopId) + '" data-token="' + escapeHtml(b.token) + '">Cancel Booking</button>' +
-        '</div>';
-      grid.appendChild(card);
-    });
-
-    resultsWrap.style.display = 'block';
-
-    grid.querySelectorAll('[data-mb-cancel]').forEach(function(btn){
-      btn.addEventListener('click', function(){
-        if(!confirm('Cancel this booking?')) return;
-        var workshopId = btn.dataset.workshopId;
-        var token = btn.dataset.token;
-        btn.disabled = true;
-        btn.textContent = 'Cancelling…';
-
-        var body = new URLSearchParams();
-        body.append('action', 'cancelSlot');
-        body.append('workshopId', workshopId);
-        body.append('token', token);
-
-        fetch(APPS_SCRIPT_URL, { method: 'POST', body: body })
-          .then(function(res){ return res.json(); })
-          .then(function(result){
-            if(result.result === 'success'){
-              clearStoredToken(workshopId);
-              var cardEl = btn.closest('.workshop-card');
-              if(cardEl) cardEl.remove();
-              loadWorkshopSlots(); // keep the main grid's live counts in sync
-              if(!grid.querySelector('.workshop-card')){
-                resultsWrap.style.display = 'none';
-                var statusEl = document.getElementById('myBookingsStatus');
-                if(statusEl) statusEl.textContent = 'No more active bookings for this phone number.';
-              }
-            }else{
-              btn.disabled = false;
-              btn.textContent = 'Cancel Booking';
-              alert('Could not cancel this booking, please try again.');
-            }
-          })
-          .catch(function(err){
-            console.warn('My Bookings cancel failed:', err);
-            btn.disabled = false;
-            btn.textContent = 'Cancel Booking';
-            alert('Could not reach the booking system, please check your connection and try again.');
-          });
-      });
-    });
-  }
-
-  // No bookings for this number: say why. Unpaid registrations are told to finish payment
-  // (with a direct link to their Stripe checkout); pass holders are pointed to the workshops.
-  function explainNoBookings(statusEl, phone){
-    statusEl.className = 'mybookings-status';
-    statusEl.textContent = 'Checking your registration…';
-    checkPhoneRegistered(phone).then(function(found){
-      if(found && found.registered && !found.paid){
-        statusEl.innerHTML = '<p class="mybookings-note">Your registration isn&rsquo;t complete yet. Your pass is only confirmed after payment, and workshop slots can only be booked once you&rsquo;ve paid.</p>';
-        var box = document.createElement('div');
-        statusEl.appendChild(box);
-        renderPayContinue(box, phone);
-      }else if(found && found.registered && found.paid){
-        statusEl.innerHTML = 'You have a pass, but no workshops reserved yet. <a href="#book" data-open-book>Reserve your workshop slots</a>.';
-        statusEl.querySelectorAll('[data-open-book]').forEach(function(a){
-          a.addEventListener('click', function(ev){ ev.preventDefault(); scrollToBook(); });
-        });
-      }else{
-        statusEl.innerHTML = 'No bookings found for that phone number. Haven&rsquo;t registered yet? <a href="#regForm">Register &amp; get your pass</a>.';
-      }
-    });
-  }
-
-  var myBookingsLookupBtn = document.getElementById('myBookingsLookupBtn');
-  if(myBookingsLookupBtn){
-    myBookingsLookupBtn.addEventListener('click', function(){
-      var phone = document.getElementById('myBookingsPhone').value.trim();
-      var statusEl = document.getElementById('myBookingsStatus');
-      statusEl.className = 'mybookings-status';
-
-      if(!phone){
-        statusEl.textContent = 'Please enter your phone number.';
-        statusEl.classList.add('error');
-        return;
-      }
-
-      myBookingsLookupBtn.disabled = true;
-      myBookingsLookupBtn.textContent = 'Looking up…';
-      statusEl.textContent = '';
-
-      var body = new URLSearchParams();
-      body.append('action', 'getBookingsByContact');
-      body.append('contactNumber', normalisePhone(phone));
-
-      fetch(APPS_SCRIPT_URL, { method: 'POST', body: body })
-        .then(function(res){ return res.json(); })
-        .then(function(result){
-          myBookingsLookupBtn.disabled = false;
-          myBookingsLookupBtn.textContent = 'View My Bookings';
-          if(result.result === 'success'){
-            if(!result.bookings || result.bookings.length === 0){
-              document.getElementById('myBookingsResults').style.display = 'none';
-              explainNoBookings(statusEl, normalisePhone(phone));
-            }else{
-              renderMyBookings(result.bookings);
-            }
-          }else{
-            statusEl.textContent = result.message || 'Something went wrong.';
-            statusEl.classList.add('error');
-          }
-        })
-        .catch(function(err){
-          console.warn('My Bookings lookup failed:', err);
-          myBookingsLookupBtn.disabled = false;
-          myBookingsLookupBtn.textContent = 'View My Bookings';
-          statusEl.textContent = 'Could not reach the booking system, please check your connection and try again.';
-          statusEl.classList.add('error');
         });
     });
   }
