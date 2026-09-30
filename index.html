@@ -792,6 +792,20 @@
     background:rgba(15,42,25,0.55); backdrop-filter:blur(3px);
   }
   .paycheck-overlay[hidden]{display:none;}
+  /* soft entrance: backdrop fades in, card pops up with a gentle nudge */
+  @keyframes popFade{from{opacity:0;} to{opacity:1;}}
+  @keyframes popNudge{
+    0%{opacity:0; transform:translateY(24px) scale(0.94);}
+    55%{opacity:1; transform:translateY(-4px) scale(1.015);}
+    72%{transform:translateY(0) scale(0.995) rotate(-0.6deg);}
+    86%{transform:rotate(0.4deg);}
+    100%{transform:none;}
+  }
+  .paycheck-overlay:not([hidden]){animation:popFade .25s ease both;}
+  .paycheck-overlay:not([hidden]) .paycheck-card{animation:popNudge .6s cubic-bezier(.2,.8,.3,1) both;}
+  @media (prefers-reduced-motion: reduce){
+    .paycheck-overlay:not([hidden]), .paycheck-overlay:not([hidden]) .paycheck-card{animation:none;}
+  }
   .paycheck-card{
     position:relative; width:100%; max-width:440px; max-height:calc(100vh - 40px); overflow:auto;
     background:var(--surface); border-radius:24px; padding:30px 26px 22px; text-align:left;
@@ -3026,9 +3040,15 @@
     var title = card.querySelector('h4'), meta = card.querySelector('.workshop-card-meta');
     return escapeHtml(title ? title.textContent : '') + '<span>' + escapeHtml(meta ? meta.textContent.replace(/\s+/g, ' ').trim() : '') + '</span>';
   }
-  var RESERVE_TERMS_HTML =
-    '<ul>' +
-      '<li><b>Limited slots:</b> Approx. 50&ndash;100 participants per workshop.</li>' +
+  // Capacity comes from the live booking sheet; before it loads, fall back to the stage limit.
+  function workshopCapacity(card){
+    if(card._slot && card._slot.capacity) return card._slot.capacity;
+    var org = card.querySelector('.workshop-card-org');
+    return org && /Move Stage/.test(org.textContent) ? 100 : 50;
+  }
+  function reserveTermsHtml(card){
+    return '<ul>' +
+      '<li><b>Limited slots:</b> Only ' + workshopCapacity(card) + ' participants for this workshop.</li>' +
       '<li><b>First come, first served:</b> Arrive 5&ndash;10 minutes early for registration and verification.</li>' +
       '<li><b>10-minute grace period:</b> Reserved slots are held for 10 minutes after class starts.</li>' +
       '<li><b>Late arrival:</b> After 10 minutes, your slot may be released to participants on the waiting list.</li>' +
@@ -3036,8 +3056,9 @@
     '</ul>' +
     '<p>Please arrive early to secure your spot and enjoy a smooth workshop experience.</p>' +
     '<p class="confirm-agree">By clicking &ldquo;Reserve my slot&rdquo;, you agree to these terms.</p>';
+  }
   function askReserveTerms(card){
-    return askConfirm({ title: 'Before You Reserve', workshopHtml: workshopSummaryHtml(card), bodyHtml: RESERVE_TERMS_HTML,
+    return askConfirm({ title: 'Before You Reserve', workshopHtml: workshopSummaryHtml(card), bodyHtml: reserveTermsHtml(card),
       yes: 'Reserve my slot', no: 'Go back', fallback: 'Reserve this workshop slot?' });
   }
   function askCancel(workshopHtml){
