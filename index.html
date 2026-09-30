@@ -968,6 +968,7 @@
   .pass-celebrate-title{font-family:'Mark Pro'; font-weight:800; font-size:clamp(1.4rem, 3vw, 1.9rem); color:var(--green-dark); margin:0 0 8px;}
   .pass-celebrate-text{color:var(--text); max-width:560px; margin:0 auto 16px; line-height:1.55;}
   .pass-celebrate .pass-badge{background:rgba(255,255,255,0.75); display:inline-flex;}
+  .pass-switch{display:block; margin:12px auto 0; background:none; border:none; color:var(--text-muted); font-size:0.82rem; font-weight:700; text-decoration:underline; cursor:pointer;}
   .workshop-card.not-included{opacity:0.55;}
 
   /* Locked (no confirmed pass on this browser): cards stay visible but can't be used */
@@ -2123,6 +2124,7 @@
         <h3 class="pass-celebrate-title">Congrats, you&rsquo;ve got your pass!</h3>
         <p class="pass-celebrate-text">Your pass gets you into all the booths, health screenings and activities running throughout the day. <b>Workshops have limited spots</b>, so reserve the ones you want below.</p>
         <div class="pass-badge" id="passBadge"></div>
+        <button type="button" class="pass-switch" id="passSwitch">Not you? Use a different number</button>
       </div>
       <div class="my-reserved" id="myReserved" style="display:none;">
         <h3 class="my-reserved-title">Your reserved workshops</h3>
@@ -2818,6 +2820,21 @@
     });
     document.getElementById('payCheckPhone').addEventListener('keydown', function(e){
       if(e.key === 'Enter') document.getElementById('payCheckBtn').click();
+    });
+  }
+
+  // "Not you?": forget the pass, registration and reservations saved in this browser
+  // (e.g. a shared family device), then start the page fresh.
+  var passSwitch = document.getElementById('passSwitch');
+  if(passSwitch){
+    passSwitch.addEventListener('click', function(){
+      try{
+        Object.keys(localStorage).forEach(function(k){
+          if(k === PASS_KEY || k === REG_KEY || k.indexOf(TOKEN_KEY_PREFIX) === 0) localStorage.removeItem(k);
+        });
+      }catch(e){}
+      location.href = location.pathname + '#book';
+      location.reload();
     });
   }
 
