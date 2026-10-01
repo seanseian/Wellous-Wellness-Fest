@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Make Health Easier Wellness Fest 2026 | Wellous</title>
+<link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="images/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
@@ -1007,7 +1010,13 @@
   .vendor-row{
     display:flex; gap:16px; overflow-x:auto; scroll-snap-type:x mandatory; padding:8px 4px 18px; margin-top:26px;
     scrollbar-width:thin; -webkit-overflow-scrolling:touch;
+    /* soft fade at the edges instead of a hard cut; the left fade only appears once scrolled */
+    --fade-l:0px; --fade-r:72px;
+    -webkit-mask-image:linear-gradient(to right, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%);
+            mask-image:linear-gradient(to right, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%);
   }
+  .vendor-row.scrolled{--fade-l:72px;}
+  .vendor-row.at-end{--fade-r:0px;}
   .vendor-card{
     flex:0 0 min(300px, 78vw); scroll-snap-align:start; background:var(--surface); border:1px solid var(--line);
     border-radius:20px; overflow:hidden; box-shadow:var(--shadow); display:flex; flex-direction:column;
@@ -4168,6 +4177,13 @@
       row.appendChild(card);
     });
     section.hidden = !row.children.length;
+    function edges(){
+      row.classList.toggle('scrolled', row.scrollLeft > 4);
+      row.classList.toggle('at-end', row.scrollLeft + row.clientWidth >= row.scrollWidth - 4);
+    }
+    row.addEventListener('scroll', edges, {passive:true});
+    window.addEventListener('resize', edges);
+    edges();
   }
   // Only one video plays at a time. A tap inside a video frame moves focus into it (the page
   // gets a blur), so when a different frame takes focus, reload the previous one to stop it.
