@@ -652,6 +652,54 @@
       .stat-card b{font-size:1.5rem;}
   }
 
+
+  /* ---------- GOODIE BAG: layered tote with scroll parallax ---------- */
+  .bag-section{background:radial-gradient(120% 90% at 75% 55%, #E4F7D2 0%, var(--page-bg) 62%); overflow:hidden;}
+  .bag-grid{display:grid; grid-template-columns:1fr 1.05fr; gap:40px; align-items:center;}
+  .bag-copy .section-title{margin-top:12px;}
+  .bag-copy .section-title em{font-style:normal; color:var(--green-dark);}
+  .bag-worth{
+    display:inline-flex; flex-direction:column; align-items:flex-start; gap:4px; margin-top:18px; padding:12px 20px; border-radius:16px;
+    background:var(--green-dark); color:#fff; font-family:'Mark Pro'; font-weight:800; box-shadow:0 14px 30px -16px rgba(47,138,23,0.7);
+  }
+  .bag-worth small{font-size:0.85rem; opacity:0.85; font-weight:700;}
+  .bag-worth b{font-size:1.9rem; line-height:1;}
+  .bag-list{list-style:none; margin:22px 0 0; padding:0; display:grid; gap:10px;}
+  .bag-list li{display:flex; align-items:center; gap:12px; background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:10px 14px;}
+  .bag-list li img{width:34px; height:34px; object-fit:contain; flex:none;}
+  .bag-list li span.ico{width:34px; height:34px; flex:none; display:grid; place-items:center; font-size:1.3rem;}
+  .bag-list b{display:block; font-family:'Mark Pro'; font-weight:800; color:var(--text); font-size:0.95rem; line-height:1.25;}
+  .bag-list small{display:block; color:var(--text-muted); font-size:0.8rem; line-height:1.35;}
+  .bag-note{font-size:0.78rem; color:var(--text-muted); margin-top:12px;}
+  /* the stage: every layer is placed in % so the scene scales as one piece */
+  .bag-stage{position:relative; width:100%; max-width:520px; margin:0 auto; aspect-ratio:100/120;}
+  .bag-layer{position:absolute; will-change:transform;}
+  .bag-layer > *{display:block; width:100%; height:auto; transform:rotate(var(--r,0deg)); filter:drop-shadow(0 14px 18px rgba(20,60,20,0.18));}
+  .bag-tote{left:11%; top:29%; width:78%; z-index:9;}
+  .bag-tote > img{filter:drop-shadow(0 26px 30px rgba(20,60,20,0.25));}
+  .bag-tigrox{left:13%; top:24%; width:13%; z-index:6; --r:-14deg;}
+  .bag-gift-a{left:17%; top:26%; width:31%; z-index:4; --r:-7deg;}
+  .bag-gift-b{left:40%; top:24%; width:30%; z-index:4; --r:9deg;}
+  .bag-liveon{left:55%; top:20%; width:23%; z-index:7; --r:8deg;}
+  .bag-femoire{left:75%; top:31%; width:15%; z-index:8; --r:16deg;}
+  .bag-v1{left:13%; top:10%; width:31%; z-index:5; --r:-15deg;}
+  .bag-v2{left:42%; top:3%; width:26%; z-index:3; --r:20deg;}
+  .bag-v3{left:68%; top:13%; width:27%; z-index:6; --r:-20deg;}
+  .bag-voucher{position:relative;}
+  .bag-voucher img{width:100%; display:block;}
+  .bag-voucher span{
+    position:absolute; inset:0; display:grid; place-items:center; font-family:'Mark Pro'; font-weight:800;
+    color:#F4F7A1; letter-spacing:0.04em; font-size:clamp(0.75rem, 2.4vw, 1.35rem);
+  }
+  @keyframes bagFloat{0%,100%{translate:0 0;} 50%{translate:0 -8px;}}
+  .bag-v1 > *, .bag-v2 > *, .bag-v3 > *{animation:bagFloat 5s ease-in-out infinite;}
+  .bag-v2 > *{animation-delay:-1.6s;} .bag-v3 > *{animation-delay:-3.1s;}
+  @media (prefers-reduced-motion: reduce){ .bag-v1 > *, .bag-v2 > *, .bag-v3 > *{animation:none;} }
+  @media (max-width:860px){
+    .bag-grid{grid-template-columns:1fr; gap:10px;}
+    .bag-stage{max-width:400px; order:-1;}
+  }
+
   /* ---------- AGENDA ---------- */
   .agenda-tabs{display:flex; gap:10px; margin-top:36px;}
   .tab-btn{
@@ -1004,19 +1052,17 @@
   .venue-name{font-family:'Mark Pro'; font-weight:800; font-size:1.25rem; color:var(--green-dark); margin:-4px 0 10px;}
 
   /* ---------- VENDOR VIDEOS (9:16 Instagram / TikTok) ---------- */
-  .vendors-section{background:linear-gradient(180deg, var(--page-bg) 0%, #EAF6FB 100%);}
+  .vendors-section{overflow-x:clip; background:linear-gradient(180deg, var(--page-bg) 0%, #EAF6FB 100%);}
   .vendors-head{text-align:center;}
   .vendors-head .section-title, .vendors-head .section-lead{margin-left:auto; margin-right:auto;}
   .vendor-row{
     display:flex; gap:16px; overflow-x:auto; scroll-snap-type:x mandatory; padding:8px 4px 18px; margin-top:26px;
     scrollbar-width:thin; -webkit-overflow-scrolling:touch;
-    /* soft fade at the edges instead of a hard cut; the left fade only appears once scrolled */
-    --fade-l:0px; --fade-r:72px;
-    -webkit-mask-image:linear-gradient(to right, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%);
-            mask-image:linear-gradient(to right, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%);
+    /* run edge to edge across the browser, with the first card lined up with the page content */
+    margin-left:calc(50% - 50vw); margin-right:calc(50% - 50vw);
+    padding-left:calc(50vw - 50% + 4px); padding-right:calc(50vw - 50% + 4px);
+    scroll-padding-inline:max(28px, calc(50vw - 532px)); /* same inset as the padding (page gutter + 4px) */
   }
-  .vendor-row.scrolled{--fade-l:72px;}
-  .vendor-row.at-end{--fade-r:0px;}
   .vendor-card{
     flex:0 0 min(300px, 78vw); scroll-snap-align:start; background:var(--surface); border:1px solid var(--line);
     border-radius:20px; overflow:hidden; box-shadow:var(--shadow); display:flex; flex-direction:column;
@@ -1357,6 +1403,9 @@
   /* ---------- RESPONSIVE ---------- */
   @media (max-width:900px){
     .cta-band-inner{grid-template-columns:1fr;}
+    /* stacked on phones: give the tote photo a tall frame so the whole bag shows */
+    .goodie-bag-media{aspect-ratio:4/5; min-height:0;}
+    .goodie-bag-media img{object-position:50% 52%;}
     .highlight-grid{grid-template-columns:repeat(2,1fr);}
     .venue-grid{grid-template-columns:1fr;}
     .wellous-band{grid-template-columns:1fr; text-align:center;}
@@ -1710,6 +1759,34 @@
       <p>From "I need to be healthier" to "We can be healthier together," the Fest turns everyday steps into shared experiences, a better food choice, a little more movement, a health question finally answered, a useful habit learned, or simply having someone encourage you to keep going.</p>
       <p>Through expert health talks, wellness workshops, fitness activities, health screenings, interactive experiences and a curated wellness marketplace, discover practical ways to make healthier living more accessible, understandable, enjoyable and achievable for you and your family.</p>
       <p><strong>Come with your family and friends.</strong> Learn something new. Move together. Discover what works for you. Experience wellness in a different way. And connect with a community that makes the journey easier.</p>
+    </div>
+  </div>
+</section>
+
+<section id="goodie-bag" class="bag-section">
+  <div class="wrap bag-grid">
+    <div class="bag-copy">
+      <span class="eyebrow-tag">Your goodie bag</span>
+      <h2 class="section-title">Your goodie bag is <em>so</em> worth it.</h2>
+      <p class="section-lead">Every pass comes with our Make Health Easier goodie bag, packed with Wellous wellness products for you to take home and enjoy.</p>
+      <div class="bag-worth"><small>Goodie bag + Wellous products worth</small><b>RM150*</b></div>
+      <ul class="bag-list">
+        <li><img src="images/bag-tote.webp" alt="" loading="lazy"><div><b>Make Health Easier tote bag</b><small>Yours to keep, and handy for every wellness day after</small></div></li>
+        <li><img src="images/vendor-logo-wellous.jpg" alt="" loading="lazy" style="border-radius:8px;"><div><b>Wellous wellness products</b><small>A curated selection for you to try at home</small></div></li>
+      </ul>
+      <a href="#best-deal" class="btn" style="margin-top:22px;">Get your pass &amp; your bag</a>
+      <p class="bag-note">*Terms &amp; Conditions apply.</p>
+    </div>
+    <div class="bag-stage" aria-hidden="true">
+      <div class="bag-layer bag-v2" data-depth="1.1"><div class="bag-voucher"><img src="images/bag-voucher.png" alt=""><span>VOUCHER</span></div></div>
+      <div class="bag-layer bag-gift-a" data-depth="0.35"><img src="images/bag-gift-a.png" alt="" loading="lazy"></div>
+      <div class="bag-layer bag-gift-b" data-depth="0.45"><img src="images/bag-gift-b.png" alt="" loading="lazy"></div>
+      <div class="bag-layer bag-v1" data-depth="1.3"><div class="bag-voucher"><img src="images/bag-voucher.png" alt=""><span>VOUCHER</span></div></div>
+      <div class="bag-layer bag-tigrox" data-depth="0.7"><img src="images/bag-tigrox.webp" alt="" loading="lazy"></div>
+      <div class="bag-layer bag-v3" data-depth="1"><div class="bag-voucher"><img src="images/bag-voucher.png" alt=""><span>VOUCHER</span></div></div>
+      <div class="bag-layer bag-liveon" data-depth="0.6"><img src="images/bag-liveon.webp" alt="" loading="lazy"></div>
+      <div class="bag-layer bag-femoire" data-depth="0.8"><img src="images/bag-femoire.webp" alt="" loading="lazy"></div>
+      <div class="bag-layer bag-tote" data-depth="-0.12"><img src="images/bag-tote.webp" alt="" loading="lazy"></div>
     </div>
   </div>
 </section>
@@ -4100,6 +4177,35 @@
     });
   })();
 
+
+  // Goodie bag parallax: as the section scrolls through the screen, the goodies rise out of the
+  // tote at different speeds (data-depth), the vouchers furthest, the tote itself barely moves.
+  (function(){
+    var stage = document.querySelector('.bag-stage');
+    if(!stage) return;
+    if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var layers = [].slice.call(stage.querySelectorAll('.bag-layer'));
+    var ticking = false, active = false;
+    function update(){
+      ticking = false;
+      var r = stage.getBoundingClientRect(), vh = window.innerHeight;
+      // 0 when the stage's top enters at the bottom of the screen, 1 when its bottom leaves at the top
+      var t = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));
+      var range = r.width * 0.45;
+      layers.forEach(function(l){
+        var d = parseFloat(l.getAttribute('data-depth')) || 0;
+        l.style.transform = 'translate3d(0,' + ((0.5 - t) * range * d).toFixed(1) + 'px,0)';
+      });
+    }
+    function onScroll(){ if(active && !ticking){ ticking = true; requestAnimationFrame(update); } }
+    if('IntersectionObserver' in window){
+      new IntersectionObserver(function(entries){ active = entries[0].isIntersecting; if(active) update(); }, {rootMargin:'100px 0px'}).observe(stage);
+    } else { active = true; }
+    window.addEventListener('scroll', onScroll, {passive:true});
+    window.addEventListener('resize', onScroll);
+    update();
+  })();
+
   // ---------- Vendor videos ----------
   // Add a vendor by adding a line here. "video" is the normal link to an Instagram reel/post
   // or a TikTok video. noEmbed: Instagram marks the post age-restricted, so it can't play
@@ -4177,13 +4283,6 @@
       row.appendChild(card);
     });
     section.hidden = !row.children.length;
-    function edges(){
-      row.classList.toggle('scrolled', row.scrollLeft > 4);
-      row.classList.toggle('at-end', row.scrollLeft + row.clientWidth >= row.scrollWidth - 4);
-    }
-    row.addEventListener('scroll', edges, {passive:true});
-    window.addEventListener('resize', edges);
-    edges();
   }
   // Only one video plays at a time. A tap inside a video frame moves focus into it (the page
   // gets a blur), so when a different frame takes focus, reload the previous one to stop it.
