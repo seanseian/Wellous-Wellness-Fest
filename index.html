@@ -205,7 +205,7 @@
     background:var(--surface); border-radius:22px; box-shadow:var(--shadow); border:1px solid var(--line);
     max-width:960px; margin:32px auto 0; padding:22px 30px; text-align:center; position:relative; z-index:2;
   }
-  .refresh-card h2{color:var(--green-dark); font-size:1.15rem;}
+  .refresh-card h2{font-family:'Mark Pro'; font-weight:700; color:var(--text); font-size:clamp(1.1rem,2.6vw,1.5rem); letter-spacing:0.01em;}
   .refresh-card p{color:var(--text-muted); margin:6px auto 0; max-width:520px; font-size:0.84rem;}
   .refresh-card p strong{color:var(--text);}
   .freebie-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:10px; margin-top:18px; text-align:left;}
@@ -683,6 +683,13 @@
   .ag-stagetabs{display:none;}
   .ag-day{display:none;}
   .ag-day.active{display:block;}
+  /* Agenda entrance: the day's theme, stage cards and rows drift up and fade in one after another
+     (on first view and on every day / stage switch). JS sets each piece's --d delay. */
+  @keyframes agIn{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:none;}}
+  .ag-wrap.ag-anim .ag-day.active :is(.ag-theme, .ag-stage, .ag-row){opacity:0;}
+  .ag-wrap.ag-anim.ag-play .ag-day.active :is(.ag-theme, .ag-stage, .ag-row){
+    animation:agIn .75s cubic-bezier(.22,.61,.36,1) var(--d,0s) both;
+  }
   .ag-stages{display:grid; grid-template-columns:1.35fr 1fr; gap:18px; margin-top:18px; align-items:start;}
   .ag-stage{background:var(--surface); border-radius:22px; overflow:hidden; box-shadow:0 18px 40px -22px rgba(0,0,0,0.45);}
   .ag-stage-head{display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 12px; padding:16px 20px;}
@@ -1002,7 +1009,7 @@
     scrollbar-width:thin; -webkit-overflow-scrolling:touch;
   }
   .vendor-card{
-    flex:0 0 250px; scroll-snap-align:start; background:var(--surface); border:1px solid var(--line);
+    flex:0 0 min(300px, 78vw); scroll-snap-align:start; background:var(--surface); border:1px solid var(--line);
     border-radius:20px; overflow:hidden; box-shadow:var(--shadow); display:flex; flex-direction:column;
   }
   .vendor-card-head{display:flex; align-items:center; gap:10px; padding:10px 12px; border-bottom:1px solid var(--line);}
@@ -1011,6 +1018,16 @@
   .vendor-platform{display:block; font-size:0.72rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;}
   .vendor-video{position:relative; aspect-ratio:9/16; background:#0F2A19; overflow:hidden;}
   .vendor-video iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
+  /* Instagram's embed comes with its own header, buttons and caption. Crop the frame so only
+     the 9:16 video shows: the embed has a 54px header, then a 4:5 media box with the video
+     centred inside it, so a frame 143% wider, shifted up 54px, lines the video up with the card. */
+  .vendor-video iframe.ig-crop{inset:auto; top:-54px; left:-21.5%; width:143%; height:calc(100% + 420px);}
+  .vendor-foot{display:flex; align-items:center; gap:10px; padding:10px 12px; text-decoration:none; color:inherit; min-width:0;}
+  .vendor-foot .vendor-name{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .vendor-ig{font-size:0.74rem; font-weight:700; color:var(--text-muted); white-space:nowrap; max-width:48%; overflow:hidden; text-overflow:ellipsis; transition:color .15s;}
+  a.vendor-foot:hover .vendor-ig, a.vendor-foot:hover .vendor-name{color:var(--green-dark);}
+  div.vendor-play{cursor:default;}
+  .vendor-foot .vendor-logo{width:34px; height:34px; border-radius:10px; padding:3px;}
   .vendor-play{
     position:absolute; inset:0; display:flex; text-decoration:none; text-align:center; line-height:1.3; flex-direction:column; align-items:center; justify-content:center; gap:12px;
     border:0; cursor:pointer; color:#fff; font-family:'Mark Pro'; font-weight:800; font-size:0.95rem;
@@ -1457,7 +1474,6 @@
   </div>
   <div class="hero2-headline-wrap">
     <p class="hero2-subline">Learn &bull; Move &bull; Discover &bull; Experience &bull; Connect</p>
-    <p class="hero2-pillars">2 Days. 1 Wellness Fest. So Much to Experience.</p>
     <p class="hero2-lead">From workouts and health screenings to expert talks, workshops, healthy eats, brand experiences &amp; exclusive rewards, it's all happening in one place.</p>
   </div>
 
@@ -1624,11 +1640,15 @@
       <p>Come hungry, curious and ready to feel good! Here&rsquo;s a taste of the <strong>FREE</strong> treats and experiences waiting for you, with more to be announced.</p>
       <div class="freebie-grid">
         <div class="freebie"><img class="freebie-logo" src="images/partner-logo-nowwacoffee.png" alt="NOWWA Caf&eacute;" loading="lazy"><div><b>Free coffee samples</b><span>NOWWA Caf&eacute;</span><small>1,000 cups every day</small></div></div>
-        <div class="freebie"><span class="freebie-logo brand-tile" aria-hidden="true">flaky</span><div><b>Free mini tarts</b><span>flaky</span><small>2,000 to give away</small></div></div>
+        <div class="freebie"><img class="freebie-logo" src="images/vendor-logo-flaky.jpg" alt="flaky" loading="lazy"><div><b>Free mini tarts</b><span>flaky</span><small>2,000 to give away</small></div></div>
         <div class="freebie"><span class="freebie-logo brand-tile" aria-hidden="true">goodmusclefood</span><div><b>Free healthy sampling bowls</b><span>goodmusclefood</span><small>2,000 bowls over 2 days</small></div></div>
-        <div class="freebie"><img class="freebie-logo" src="images/partner-logo-juiceworks.png" alt="Juice Works" loading="lazy"><div><b>RM5 juice vouchers</b><span>Juice Works</span><small>Min. spend RM15, while stocks last</small></div></div>
-        <div class="freebie"><span class="freebie-logo brand-tile" aria-hidden="true">MYGP Clinic</span><div><b>Free health checks</b><span>MYGP Clinic</span><small>Blood pressure, blood oxygen, peak flow &amp; bone density</small></div></div>
-        <div class="freebie"><span class="freebie-logo brand-tile" aria-hidden="true">vano.chiropractic</span><div><b>Free chiro assessment</b><span>vano.chiropractic</span><small>Get your posture checked</small></div></div>
+        <div class="freebie"><img class="freebie-logo" src="images/vendor-logo-wellous.jpg" alt="Wellous" loading="lazy"><div><b>Free sampling</b><span>Wellous</span><small>Try our wellness favourites</small></div></div>
+        <div class="freebie"><img class="freebie-logo" src="images/vendor-logo-immority.jpg" alt="Immority" loading="lazy"><div><b>Free sampling</b><span>Immority</span><small>Have a taste of their functional food</small></div></div>
+        <div class="freebie"><img class="freebie-logo" src="images/vendor-logo-tigrox.jpg" alt="Tigrox" loading="lazy"><div><b>Free sampling</b><span>Tigrox</span><small>Have a taste of their functional food</small></div></div>
+        <div class="freebie"><img class="freebie-logo" src="images/vendor-logo-zenso.jpg" alt="Zenso" loading="lazy"><div><b>Free sampling</b><span>Zenso</span><small>Sip their light black vinegar</small></div></div>
+        <div class="freebie"><img class="freebie-logo" src="images/vendor-logo-femoire.jpg" alt="Femoire" loading="lazy"><div><b>Free sampling</b><span>Femoire</span><small>Beauty from the inside out</small></div></div>
+        <div class="freebie"><img class="freebie-logo" src="images/vendor-logo-mygp.jpg" alt="MYGP Clinic" loading="lazy"><div><b>Free health checks</b><span>MYGP Clinic</span><small>Blood pressure, blood oxygen, peak flow &amp; bone density</small></div></div>
+        <div class="freebie"><img class="freebie-logo" src="images/vendor-logo-vano.jpg" alt="vano.chiropractic" loading="lazy"><div><b>Free chiro assessment</b><span>vano.chiropractic</span><small>Get your posture checked</small></div></div>
         <div class="freebie"><img class="freebie-logo" src="images/partner-logo-sweatspa.png" alt="Sweatspa" loading="lazy"><div><b>Mobile spa experience</b><span>Sweatspa</span><small>Relax and recharge on site</small></div></div>
         <div class="freebie"><img class="freebie-logo" src="images/partner-logo-tefal.png" alt="Tefal" loading="lazy"><div><b>Healthy cooking demo</b><span>Tefal</span><small>Tips and tools for easy, healthy meals</small></div></div>
       </div>
@@ -4022,6 +4042,34 @@
     if(!wrap) return;
     wrap.classList.add('js-stages');
     wrap.setAttribute('data-stage', 'main');
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var animOn = !reduceMotion && 'IntersectionObserver' in window;
+    function playAgenda(){
+      if(!animOn) return;
+      var day = wrap.querySelector('.ag-day.active');
+      if(!day) return;
+      var theme = day.querySelector('.ag-theme');
+      if(theme) theme.style.setProperty('--d', '0s');
+      day.querySelectorAll('.ag-stage').forEach(function(stage, si){
+        var base = 0.12 + si * 0.12;
+        stage.style.setProperty('--d', base + 's');
+        stage.querySelectorAll('.ag-row').forEach(function(row, ri){
+          row.style.setProperty('--d', (base + 0.18 + Math.min(ri, 14) * 0.05).toFixed(2) + 's');
+        });
+      });
+      wrap.classList.remove('ag-play');
+      void wrap.offsetWidth; // restart the animation
+      wrap.classList.add('ag-play');
+    }
+    if(animOn){
+      wrap.classList.add('ag-anim');
+      var agObs = new IntersectionObserver(function(entries){
+        if(!entries[0].isIntersecting) return;
+        agObs.disconnect();
+        playAgenda();
+      }, {threshold:0.15});
+      agObs.observe(wrap);
+    }
     wrap.querySelectorAll('.ag-daytab').forEach(function(tab){
       tab.addEventListener('click', function(){
         var d = tab.getAttribute('data-day');
@@ -4031,39 +4079,42 @@
           t.setAttribute('aria-selected', on ? 'true' : 'false');
         });
         wrap.querySelectorAll('.ag-day').forEach(function(p){ p.classList.toggle('active', p.getAttribute('data-day') === d); });
+        playAgenda();
       });
     });
     wrap.querySelectorAll('.ag-stagetab').forEach(function(tab){
       tab.addEventListener('click', function(){
         wrap.setAttribute('data-stage', tab.getAttribute('data-stage'));
         wrap.querySelectorAll('.ag-stagetab').forEach(function(t){ t.classList.toggle('active', t === tab); });
+        playAgenda();
       });
     });
   })();
 
   // ---------- Vendor videos ----------
   // Add a vendor by adding a line here. "video" is the normal link to an Instagram reel/post
-  // or a TikTok video. Vendors without a video are skipped; the whole section stays hidden
+  // or a TikTok video. noEmbed: Instagram marks the post age-restricted, so it can't play
+  // outside Instagram; the card shows the brand's logo until a different reel is supplied. Vendors without a video are skipped; the whole section stays hidden
   // until at least one vendor has one.
   var VENDORS = [
     { name: 'NOWWA Café', logo: 'images/partner-logo-nowwacoffee.png', instagram: 'nowwacafe_my', video: 'https://www.instagram.com/reel/Da4T32ZJn-I/', blurb: 'Free coffee samples, 1,000 cups every day.' },
     { name: 'flaky', logo: 'images/vendor-logo-flaky.jpg', instagram: 'flaky_my', video: 'https://www.instagram.com/reel/DbAsckAzgEA/', blurb: '2,000 free mini tarts to give away.' },
-    { name: 'goodmusclefood', logo: '', instagram: 'goodmusclefood', video: 'https://www.instagram.com/reel/DbqYsc5N2cz/', blurb: '2,000 healthy sampling bowls over 2 days.' },
+    { name: 'goodmusclefood', logo: '', instagram: 'goodmusclefood', video: 'https://www.instagram.com/reel/DaSfPkXBK6w/', blurb: '2,000 healthy sampling bowls over 2 days.' },
     { name: 'Juice Works', logo: 'images/partner-logo-juiceworks.png', instagram: 'juiceworksmy', video: 'https://www.instagram.com/reel/DdQ6_6UPJ3z/', blurb: 'RM5 juice vouchers (min. spend RM15).' },
     { name: 'MYGP Clinic', logo: 'images/vendor-logo-mygp.jpg', instagram: 'mygpclinicshq', video: 'https://www.instagram.com/reel/Dc-po2IPyUV/', blurb: 'Free health checks: blood pressure, blood oxygen, peak flow & bone density.' },
     { name: 'vano.chiropractic', logo: 'images/vendor-logo-vano.jpg', instagram: 'vano.chiropractic', video: 'https://www.instagram.com/reel/Dc0OJ1DpZmu/', blurb: 'Free chiropractic posture assessment.' },
     { name: 'Sweatspa', logo: 'images/partner-logo-sweatspa.png', instagram: 'sweatspa', video: 'https://www.instagram.com/reel/DZtryDmRTbp/', blurb: 'Mobile spa experience to relax and recharge.' },
     { name: 'Tefal', logo: 'images/partner-logo-tefal.png', instagram: 'tefal_my', video: 'https://www.instagram.com/reel/DYWuRbUANUF/', blurb: 'Healthy cooking demos and kitchen tools.' },
-    { name: 'Upbound', logo: '', instagram: 'stayupbound', video: 'https://www.instagram.com/reel/DWgb0NxmpVf/', blurb: 'Join the 5KM run club on Day 1.' },
+    { name: 'Upbound', logo: 'images/vendor-logo-upbound.jpg', instagram: 'stayupbound', video: 'https://www.instagram.com/reel/DWgb0NxmpVf/', blurb: 'Join the 5KM run club on Day 1.' },
     { name: 'Myhera', logo: 'images/vendor-logo-myhera.jpg', instagram: 'myhera_sportswear', video: 'https://www.instagram.com/reel/Dd6ZXxHTlzi/', blurb: 'Activewear for every workout.' },
     { name: 'Immority', logo: 'images/vendor-logo-immority.jpg', instagram: 'immority_official', video: 'https://www.instagram.com/reel/DczzFA9FJfj/', blurb: 'Functional food by Wellous.' },
-    { name: 'Tigrox', logo: 'images/vendor-logo-tigrox.jpg', instagram: '', video: 'https://www.instagram.com/reel/Dd5NnEqlQwR/', blurb: 'Functional food for everyday wellness.' },
-    { name: 'Zenso', logo: 'images/vendor-logo-zenso.jpg', instagram: '', video: 'https://www.instagram.com/reel/Dd3TTsGx-be/', blurb: 'Light black vinegar for everyday wellness.' },
-    { name: 'Femoire', logo: 'images/vendor-logo-femoire.jpg', instagram: '', video: 'https://www.instagram.com/reel/DbKR-2vGFOM/', blurb: 'Beyond beauty, from the inside out.' },
-    { name: 'Wellous', logo: 'images/vendor-logo-wellous.jpg', instagram: '', video: 'https://www.instagram.com/p/Dd01jzOvq0M/', blurb: 'Make health easier with your festival host.' },
-    { name: 'Jung Kwan Jang', logo: 'images/vendor-logo-jkj.jpg', instagram: '', video: 'https://www.instagram.com/reel/DUnlVkgjIyF/', blurb: 'Korean red ginseng since 1899.' },
-    { name: 'Afyaa', logo: 'images/vendor-logo-afyaa.jpg', instagram: '', video: 'https://www.instagram.com/reel/DdgUh3hPsBU/', blurb: 'Functional food for everyday wellness.' },
-    { name: 'NADI', logo: 'images/vendor-logo-nadi.jpg', instagram: '', video: 'https://www.instagram.com/reel/DcxPzbFD0cS/', blurb: 'Wellness made simple.' }
+    { name: 'Tigrox', logo: 'images/vendor-logo-tigrox.jpg', instagram: 'tigrox_official', video: 'https://www.instagram.com/reel/Dd5NnEqlQwR/', blurb: 'Functional food for everyday wellness.' },
+    { name: 'Zenso', logo: 'images/vendor-logo-zenso.jpg', instagram: 'zensofficialmy', video: 'https://www.instagram.com/reel/DZ8-nWIjZPC/', blurb: 'Light black vinegar for everyday wellness.' },
+    { name: 'Femoire', logo: 'images/vendor-logo-femoire.jpg', instagram: 'femoire.official', video: 'https://www.instagram.com/reel/DbKR-2vGFOM/', blurb: 'Beyond beauty, from the inside out.' },
+    { name: 'Wellous', logo: 'images/vendor-logo-wellous.jpg', instagram: 'wellous_official', video: 'https://www.instagram.com/p/Dd01jzOvq0M/', blurb: 'Make health easier with your festival host.' },
+    { name: 'Jung Kwan Jang', logo: 'images/vendor-logo-jkj.jpg', instagram: 'jungkwanjang.my.official', video: 'https://www.instagram.com/reel/DUnlVkgjIyF/', blurb: 'Korean red ginseng since 1899.' },
+    { name: 'Afyaa', logo: 'images/vendor-logo-afyaa.jpg', instagram: 'afyaaofficial', video: 'https://www.instagram.com/p/DZJUyY2Snqh/', blurb: 'Functional food for everyday wellness.' },
+    { name: 'NADI', logo: 'images/vendor-logo-nadi.jpg', instagram: 'nadiclinic', video: 'https://www.instagram.com/reel/Db2kVkbiChH/', blurb: 'Wellness made simple.' }
   ];
   // Instagram reel/post or TikTok video link -> { platform, embed URL }
   function vendorEmbed(url){
@@ -4077,42 +4128,61 @@
     var section = document.getElementById('vendors'), row = document.getElementById('vendorRow');
     if(!section || !row) return;
     row.innerHTML = '';
+    var lazy = 'IntersectionObserver' in window ? new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(!en.isIntersecting) return;
+        lazy.unobserve(en.target);
+        en.target.src = en.target.getAttribute('data-src');
+      });
+    }, {rootMargin:'300px'}) : null;
     list.forEach(function(v){
-      var e = vendorEmbed(v.video);
+      var e = v.noEmbed ? null : vendorEmbed(v.video);
       var igUrl = v.instagram ? 'https://www.instagram.com/' + encodeURIComponent(v.instagram) + '/' : '';
       if(!e && !igUrl) return; // nothing to show yet
       var logoHtml = v.logo
-        ? '<img class="vendor-logo" src="' + escapeHtml(v.logo) + '" alt="' + escapeHtml(v.name) + ' logo">'
+        ? '<img class="vendor-logo" src="' + escapeHtml(v.logo) + '" alt="">'
         : '<span class="vendor-logo brand-tile" aria-hidden="true">' + escapeHtml(v.name) + '</span>';
       var posterLogo = v.logo ? '<img src="' + escapeHtml(v.logo) + '" alt="">' : '<span class="vendor-play-name">' + escapeHtml(v.name) + '</span>';
       var card = document.createElement('article');
       card.className = 'vendor-card';
       card.innerHTML =
-        '<div class="vendor-card-head">' + logoHtml +
-          '<div><span class="vendor-name">' + escapeHtml(v.name) + '</span><span class="vendor-platform">' +
-          (e ? e.platform : '@' + escapeHtml(v.instagram)) + '</span></div></div>' +
-        '<div class="vendor-video">' + (e
-          ? '<button type="button" class="vendor-play" aria-label="Play ' + escapeHtml(v.name) + ' video">' + posterLogo + '<i>&#9654;</i>Watch video</button>'
-          : '<a class="vendor-play" href="' + igUrl + '" target="_blank" rel="noopener" aria-label="' + escapeHtml(v.name) + ' on Instagram">' + posterLogo +
-              '<i>&#9654;</i>Watch their videos<br>on Instagram &#8599;</a>') +
-        '</div>' +
-        (v.blurb ? '<p class="vendor-blurb">' + escapeHtml(v.blurb) + '</p>' : '');
+        '<div class="vendor-video">' + (e ? '' : '<div class="vendor-play">' + posterLogo + '</div>') + '</div>' +
+        (igUrl
+          ? '<a class="vendor-foot" href="' + igUrl + '" target="_blank" rel="noopener" aria-label="' + escapeHtml(v.name) + ' on Instagram">' +
+              logoHtml + '<span class="vendor-name">' + escapeHtml(v.name) + '</span><span class="vendor-ig">@' + escapeHtml(v.instagram) + ' &#8599;</span></a>'
+          : '<div class="vendor-foot">' + logoHtml + '<span class="vendor-name">' + escapeHtml(v.name) + '</span></div>');
       if(e){
-        // load the embed only when tapped, so the page stays fast
-        card.querySelector('.vendor-play').addEventListener('click', function(){
-          var frame = document.createElement('iframe');
-          frame.src = e.src;
-          frame.title = v.name + ' video';
-          frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
-          frame.allowFullscreen = true;
-          frame.setAttribute('scrolling', 'no');
-          this.replaceWith(frame);
-        });
+        // the embed shows the video's cover straight away and plays in place when tapped
+        var frame = document.createElement('iframe');
+        frame.title = v.name + ' video';
+        frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+        frame.allowFullscreen = true;
+        frame.setAttribute('scrolling', 'no');
+        // no allow-popups / allow-top-navigation: taps play and pause the video, but can't jump to Instagram
+        frame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-presentation');
+        if(e.platform === 'Instagram') frame.className = 'ig-crop';
+        frame.setAttribute('data-src', e.src);
+        if(lazy) lazy.observe(frame); else frame.src = e.src;
+        card.querySelector('.vendor-video').appendChild(frame);
       }
       row.appendChild(card);
     });
     section.hidden = !row.children.length;
   }
+  // Only one video plays at a time. A tap inside a video frame moves focus into it (the page
+  // gets a blur), so when a different frame takes focus, reload the previous one to stop it.
+  (function(){
+    var playing = null;
+    window.addEventListener('blur', function(){
+      setTimeout(function(){
+        var f = document.activeElement;
+        if(!f || f.tagName !== 'IFRAME' || !f.closest('#vendorRow')) return;
+        if(playing && playing !== f) playing.src = playing.getAttribute('data-src');
+        playing = f;
+        f.blur(); window.focus(); // hand focus back so the next tap on another video is noticed
+      }, 0);
+    });
+  })();
   renderVendors(VENDORS);
 
   // Top nav bar hides itself once the footer scrolls into view
