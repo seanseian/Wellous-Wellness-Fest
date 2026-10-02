@@ -709,6 +709,22 @@
   }
 
 
+
+  /* booking / cancel confirmation message */
+  .booking-toast{
+    position:fixed; left:50%; bottom:calc(20px + env(safe-area-inset-bottom, 0px)); z-index:250; width:min(520px, calc(100vw - 32px));
+    display:flex; align-items:center; gap:12px; padding:12px 14px 12px 14px; border-radius:16px;
+    background:var(--surface); color:var(--text); border:1px solid var(--line); box-shadow:0 18px 40px -16px rgba(15,42,25,0.45);
+    font-size:0.88rem; line-height:1.4; opacity:0; transform:translate(-50%, 16px); pointer-events:none;
+    transition:opacity .3s ease, transform .35s cubic-bezier(.22,.61,.36,1);
+  }
+  .booking-toast.show{opacity:1; transform:translate(-50%, 0); pointer-events:auto;}
+  .booking-toast-icon{flex:none; width:28px; height:28px; border-radius:50%; display:grid; place-items:center; font-weight:800; color:#fff; background:var(--green-dark);}
+  .booking-toast.cancelled .booking-toast-icon{background:var(--grey-ink);}
+  .booking-toast span:nth-child(2){flex:1;}
+  .booking-toast button{flex:none; border:0; background:var(--green-pale); color:var(--green-dark); font:inherit; font-weight:800; padding:7px 14px; border-radius:999px; cursor:pointer;}
+  @media (prefers-reduced-motion: reduce){ .booking-toast{transition:none;} }
+
   /* ---------- FAQ ---------- */
   .faq-head{text-align:center;}
   .faq-list{margin-top:26px; display:grid; gap:10px;}
@@ -3525,6 +3541,30 @@
     }, 300);
   })();
 
+  // Links to the registration form land exactly on its top ("Registration" heading), just
+  // below the sticky header. Positions are measured without the scroll fade-in offset, and
+  // re-checked once the scroll ends in case images above finished loading on the way.
+  function pageTop(el){ var y = 0; while(el){ y += el.offsetTop; el = el.offsetParent; } return y; }
+  function goToRegistration(){
+    var section = document.getElementById('register');
+    if(!section) return;
+    section.classList.add('is-in');
+    var target = section.querySelector('.eyebrow-tag') || section;
+    var header = document.querySelector('header.nav');
+    function y(){ return Math.max(0, pageTop(target) - (header ? header.offsetHeight : 76) - 16); }
+    window.scrollTo({ top: y(), behavior: reduceMotionUI ? 'auto' : 'smooth' });
+    [700, 1400].forEach(function(ms){
+      setTimeout(function(){ if(Math.abs(window.scrollY - y()) > 4) window.scrollTo({ top: y(), behavior: 'smooth' }); }, ms);
+    });
+  }
+  document.addEventListener('click', function(e){
+    var a = e.target.closest && e.target.closest('a[href="#register"], a[href="#regForm"]');
+    if(!a || e.defaultPrevented) return;
+    e.preventDefault();
+    try{ history.replaceState(null, '', '#register'); }catch(err){}
+    goToRegistration();
+  });
+
   // Pricing-card BUY buttons now lead to the registration form with the pass pre-selected.
   document.querySelectorAll('[data-select-pass]').forEach(function(a){
     a.addEventListener('click', function(){
@@ -3684,7 +3724,7 @@
       yes.classList.toggle('danger', !!opts.danger);
       document.getElementById('confirmModalNo').textContent = opts.no;
       confirmModal.hidden = false;
-      setTimeout(function(){ yes.focus(); }, 50);
+      setTimeout(function(){ yes.focus({preventScroll:true}); }, 50);
       function done(answer){
         confirmModal.hidden = true;
         confirmModal.removeEventListener('click', onClick);
@@ -3808,7 +3848,7 @@
             if(card._slot && typeof result.remaining === 'number') card._slot.available = result.remaining;
             setStoredToken(workshopId, result.token);
             showReservedState(card);
-            renderMyReserved();
+            settleCard(card, 'booked');
             if(statusEl && typeof result.remaining === 'number'){
               statusEl.classList.remove('available', 'low', 'full');
               statusEl.textContent = result.remaining + ' spots left';
@@ -3865,7 +3905,7 @@
           btn.textContent = 'Cancel reservation';
           if(result.result === 'success'){
             clearStoredToken(workshopId);
-            renderMyReserved();
+            settleCard(card, 'cancelled');
             loadWorkshopSlots(); // refresh with the true, up-to-date availability
           }else{
             alert('Could not cancel this reservation, please try again.');
@@ -3880,6 +3920,81 @@
       }
     });
   });
+
+  // ---------- Seamless booking feedback ----------
+  // After a booking or cancel the card first shows its new state ("Reserved ✓" / "Reserve Slot")
+  // in place, then fades out and moves to its new spot (Your booked workshops / its day list).
+  // Whatever else the guest is looking at stays exactly where it was on screen, and a short
+  // message confirms what happened.
+  var reduceMotionUI = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function viewAnchor(skip){
+    var ys = [0.3, 0.5, 0.7, 0.15, 0.85];
+    for(var i = 0; i < ys.length; i++){
+      var el = document.elementFromPoint(window.innerWidth / 2, window.innerHeight * ys[i]);
+      if(!el || skip.contains(el)) continue;
+      var c = el.closest('.workshop-card');
+      if(c === skip) continue;
+      return c || el;
+    }
+    return null;
+  }
+  function settleCard(card, kind){
+    var name = card.querySelector('h4') ? card.querySelector('h4').textContent : 'this workshop';
+    showBookingToast(kind, name);
+    setTimeout(function(){
+      var anchor = viewAnchor(card);
+      var before = anchor ? anchor.getBoundingClientRect().top : 0;
+      function move(){
+        // remember where every other card is, so they can glide (not jump) into their new places
+        var others = [].slice.call(document.querySelectorAll('#book .workshop-card')).filter(function(c){ return c !== card; });
+        var rects = others.map(function(c){ return c.getBoundingClientRect(); });
+        renderMyReserved();
+        if(anchor && anchor.isConnected){
+          var d = anchor.getBoundingClientRect().top - before;
+          if(Math.abs(d) > 1) window.scrollTo({ top: window.scrollY + d, behavior: 'instant' });
+        }
+        if(!reduceMotionUI) others.forEach(function(c, i){
+          var r = c.getBoundingClientRect(), dx = rects[i].left - r.left, dy = rects[i].top - r.top;
+          if((dx || dy) && c.animate && r.bottom > -200 && r.top < window.innerHeight + 200){
+            c.animate([{transform:'translate(' + dx + 'px,' + dy + 'px)'}, {transform:'none'}], {duration:420, easing:'cubic-bezier(.22,.61,.36,1)'});
+          }
+        });
+        if(!reduceMotionUI && card.animate){
+          card.animate([{opacity:0, transform:'translateY(10px)'}, {opacity:1, transform:'none'}], {duration:420, easing:'cubic-bezier(.22,.61,.36,1)'});
+        }
+      }
+      if(reduceMotionUI || !card.animate){ move(); return; }
+      card.animate([{opacity:1, transform:'none'}, {opacity:0, transform:'scale(.96)'}], {duration:260, easing:'ease-out', fill:'forwards'})
+        .onfinish = function(a){ move(); if(a && a.target && a.target.cancel) a.target.cancel(); };
+    }, 1100); // long enough to see the new button state before the card moves
+  }
+  var toastTimer = null;
+  function showBookingToast(kind, name){
+    var t = document.getElementById('bookingToast');
+    if(!t){
+      t = document.createElement('div');
+      t.id = 'bookingToast';
+      t.className = 'booking-toast';
+      t.setAttribute('role', 'status');
+      t.setAttribute('aria-live', 'polite');
+      document.body.appendChild(t);
+    }
+    t.className = 'booking-toast ' + kind;
+    t.innerHTML = kind === 'booked'
+      ? '<span class="booking-toast-icon">&#10003;</span><span><b>You&rsquo;re booked!</b> ' + escapeHtml(name) + ' is now in your booked workshops.</span>' +
+        '<button type="button" data-toast-view>View</button>'
+      : '<span class="booking-toast-icon">&#8634;</span><span><b>Reservation cancelled.</b> ' + escapeHtml(name) + ' is back in the list.</span>';
+    var view = t.querySelector('[data-toast-view]');
+    if(view) view.addEventListener('click', function(){
+      var mine = document.getElementById('myReserved');
+      if(mine) mine.scrollIntoView({behavior:'smooth', block:'start'});
+      t.classList.remove('show');
+    });
+    void t.offsetWidth;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 5000);
+  }
 
   // Booked workshops (tokens held in this browser) move up into "Your booked workshops";
   // everything else stays in its Day 1 / Day 2 grid, in the original order.
