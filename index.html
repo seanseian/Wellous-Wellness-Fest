@@ -1198,6 +1198,13 @@
   .pass-celebrate .pass-badge{background:rgba(255,255,255,0.75); display:inline-flex;}
   .pass-switch{display:block; margin:12px auto 0; background:none; border:none; color:var(--text-muted); font-size:0.82rem; font-weight:700; text-decoration:underline; cursor:pointer;}
   .workshop-card.not-included{opacity:0.55;}
+  /* time clash with a workshop they've already booked */
+  .workshop-reserve-btn.clash-btn{background:var(--grey-pale); color:var(--grey-ink); border-color:transparent; cursor:not-allowed;}
+  .clash-note{
+    margin-top:10px; padding:10px 12px; border-radius:12px; background:#FFF4E5; border:1px solid #F5C98A;
+    color:#7A4A00; font-size:0.8rem; line-height:1.45; text-align:left;
+  }
+  .clash-note b{color:#5C3700;}
 
   /* Locked (no confirmed pass on this browser): cards stay visible but can't be used */
   .book-cta{
@@ -1309,6 +1316,12 @@
     margin-top:40px; text-align:center; border:1.5px solid var(--line); box-shadow:var(--shadow);
   }
   .confirm-panel.show{display:block;}
+  .edit-details-btn{
+    display:inline-flex; align-items:center; gap:8px; margin-top:16px; padding:10px 18px; border-radius:999px;
+    background:var(--surface); border:1.5px solid var(--line); color:var(--text); font:inherit; font-weight:800; font-size:0.9rem; cursor:pointer;
+    transition:border-color .2s, color .2s, background .2s;
+  }
+  .edit-details-btn:hover{border-color:var(--green-dark); color:var(--green-dark); background:var(--green-pale);}
   .confirm-panel .check{width:56px; height:56px; margin:0 auto 16px; color:var(--green-dark);}
   .confirm-panel h3{color:var(--text); font-size:1.5rem;}
   .confirm-panel p{color:var(--text-muted); max-width:440px; margin:12px auto 0;}
@@ -2303,6 +2316,10 @@
         Pay now &amp; secure my pass
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
+      <button type="button" class="edit-details-btn" id="editDetailsBtn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+        Go back to change my details or pass
+      </button>
       <p class="pay-note">Workshop booking unlocks only after a successful payment.<br>Already paid? <a href="#book" data-open-book>Continue to workshop booking</a></p>
       <a href="#home" class="btn btn-outline" style="margin-top:14px; border-color:var(--text); color:var(--text);" id="backHomeBtn">Back to top</a>
     </div>
@@ -2404,7 +2421,7 @@
         <span class="workshop-featured-eyebrow" id="workshopEyebrow">Confirmed Workshops</span>
         <h3 class="workshop-day-title">Day 1 &middot; Saturday, 24 Oct</h3>
         <div class="workshop-grid">
-          <div class="workshop-card" data-workshop-id="d1-sound-bath" data-day="1">
+          <div class="workshop-card" data-workshop-id="d1-sound-bath" data-day="1" data-start="09:00" data-end="09:45">
             <div class="workshop-card-media"><img src="images/ws-d1-sound-bath.jpg" alt="Sound Bath" loading="lazy"><div class="workshop-full-overlay" aria-hidden="true"><b>Fully Booked!</b><span>You can try your luck by attending at the entrance of the workshop, or add yourself to the wait list. An email will be sent to you if someone else cancels and slots are available.</span></div></div>
             <div class="workshop-card-body">
               <h4>Sound Bath</h4>
@@ -2415,7 +2432,7 @@
               <button type="button" class="workshop-cancel-btn" data-cancel-btn style="display:none;">Cancel reservation</button>
             </div>
           </div>
-          <div class="workshop-card" data-workshop-id="d1-zumba" data-day="1">
+          <div class="workshop-card" data-workshop-id="d1-zumba" data-day="1" data-start="09:55" data-end="10:35">
             <div class="workshop-card-media"><img src="images/ws-d1-zumba.jpg" alt="Zumba Fitness Workshop" loading="lazy"><div class="workshop-full-overlay" aria-hidden="true"><b>Fully Booked!</b><span>You can try your luck by attending at the entrance of the workshop, or add yourself to the wait list. An email will be sent to you if someone else cancels and slots are available.</span></div></div>
             <div class="workshop-card-body">
               <h4>Zumba Fitness Workshop</h4>
@@ -2426,7 +2443,7 @@
               <button type="button" class="workshop-cancel-btn" data-cancel-btn style="display:none;">Cancel reservation</button>
             </div>
           </div>
-          <div class="workshop-card" data-workshop-id="d1-strength-yoga" data-day="1">
+          <div class="workshop-card" data-workshop-id="d1-strength-yoga" data-day="1" data-start="10:00" data-end="10:45">
             <div class="workshop-card-media"><img src="images/ws-d1-strength-yoga.jpg" alt="Strength Yoga" loading="lazy"><div class="workshop-full-overlay" aria-hidden="true"><b>Fully Booked!</b><span>You can try your luck by attending at the entrance of the workshop, or add yourself to the wait list. An email will be sent to you if someone else cancels and slots are available.</span></div></div>
             <div class="workshop-card-body">
               <h4>Strength Yoga</h4>
@@ -2437,7 +2454,7 @@
               <button type="button" class="workshop-cancel-btn" data-cancel-btn style="display:none;">Cancel reservation</button>
             </div>
           </div>
-          <div class="workshop-card" data-workshop-id="d1-chair-yoga" data-day="1">
+          <div class="workshop-card" data-workshop-id="d1-chair-yoga" data-day="1" data-start="11:35" data-end="11:45">
             <div class="workshop-card-media"><img src="images/ws-d1-chair-yoga.jpg" alt="Elderly Easy Exercise: Chair Yoga" loading="lazy"><div class="workshop-full-overlay" aria-hidden="true"><b>Fully Booked!</b><span>You can try your luck by attending at the entrance of the workshop, or add yourself to the wait list. An email will be sent to you if someone else cancels and slots are available.</span></div></div>
             <div class="workshop-card-body">
               <h4>Elderly Easy Exercise: Chair Yoga</h4>
@@ -2448,7 +2465,7 @@
               <button type="button" class="workshop-cancel-btn" data-cancel-btn style="display:none;">Cancel reservation</button>
             </div>
           </div>
-          <div class="workshop-card" data-workshop-id="workshop2" data-day="1">
+          <div class="workshop-card" data-workshop-id="workshop2" data-day="1" data-start="14:00" data-end="14:40">
             <div class="workshop-card-media"><img src="images/ws-workshop2.jpg" alt="Tefal × Healthy Cooking Workshop" loading="lazy"><div class="workshop-full-overlay" aria-hidden="true"><b>Fully Booked!</b><span>You can try your luck by attending at the entrance of the workshop, or add yourself to the wait list. An email will be sent to you if someone else cancels and slots are available.</span></div></div>
             <div class="workshop-card-body">
               <h4>Tefal × Healthy Cooking Workshop</h4>
@@ -2459,7 +2476,7 @@
               <button type="button" class="workshop-cancel-btn" data-cancel-btn style="display:none;">Cancel reservation</button>
             </div>
           </div>
-          <div class="workshop-card" data-workshop-id="d1-yoga-mobility" data-day="1">
+          <div class="workshop-card" data-workshop-id="d1-yoga-mobility" data-day="1" data-start="16:30" data-end="17:15">
             <div class="workshop-card-media"><img src="images/ws-d1-yoga-mobility.jpg" alt="Yoga &amp; Mobility" loading="lazy"><div class="workshop-full-overlay" aria-hidden="true"><b>Fully Booked!</b><span>You can try your luck by attending at the entrance of the workshop, or add yourself to the wait list. An email will be sent to you if someone else cancels and slots are available.</span></div></div>
             <div class="workshop-card-body">
               <h4>Yoga &amp; Mobility</h4>
@@ -2470,7 +2487,7 @@
               <button type="button" class="workshop-cancel-btn" data-cancel-btn style="display:none;">Cancel reservation</button>
             </div>
           </div>
-          <div class="workshop-card" data-workshop-id="d1-mat-pilates" data-day="1">
+          <div class="workshop-card" data-workshop-id="d1-mat-pilates" data-day="1" data-start="17:30" data-end="18:15">
             <div class="workshop-card-media"><img src="images/ws-d1-mat-pilates.jpg" alt="Mat Pilates" loading="lazy"><div class="workshop-full-overlay" aria-hidden="true"><b>Fully Booked!</b><span>You can try your luck by attending at the entrance of the workshop, or add yourself to the wait list. An email will be sent to you if someone else cancels and slots are available.</span></div></div>
             <div class="workshop-card-body">
               <h4>Mat Pilates</h4>
@@ -2481,7 +2498,7 @@
               <button type="button" class="workshop-cancel-btn" data-cancel-btn style="display:none;">Cancel reservation</button>
             </div>
           </div>
-          <div class="workshop-card" data-workshop-id="d1-floral" data-day="1">
+          <div class="workshop-card" data-workshop-id="d1-floral" data-day="1" data-start="17:35" data-end="18:15">
             <div class="workshop-card-media"><img src="images/highlight-2-wellness-workshops.jpg" alt="Floral Workshop" loading="lazy"><div class="workshop-full-overlay" aria-hidden="true"><b>Fully Booked!</b><span>You can try your luck by attending at the entrance of the workshop, or add yourself to the wait list. An email will be sent to you if someone else cancels and slots are available.</span></div></div>
             <div class="workshop-card-body">
               <h4>Floral Workshop</h4>
@@ -2492,7 +2509,7 @@
               <button type="button" class="workshop-cancel-btn" data-cancel-btn style="display:none;">Cancel reservation</button>
             </div>
           </div>
-          <div class="workshop-card" data-workshop-id="d1-breathwork" data-day="1">
+          <div class="workshop-card" data-workshop-id="d1-breathwork" data-day="1" data-start="18:30" data-end="19:15">
             <div class="workshop-card-media"><img src="images/ws-d1-breathwork.jpg" alt="Breathwork Session" loading="lazy"><div class="workshop-full-overlay" aria-hidden="true"><b>Fully Booked!</b><span>You can try your luck by attending at the entrance of the workshop, or add yourself to the wait list. An email will be sent to you if someone else cancels and slots are available.</span></div></div>
             <div class="workshop-card-body">
               <h4>Breathwork Session</h4>
@@ -2506,7 +2523,7 @@
         </div>
         <h3 class="workshop-day-title">Day 2 &middot; Sunday, 25 Oct</h3>
         <div class="workshop-grid">
-          <div class="workshop-card" data-workshop-id="d2-pound" data-day="2">
+          <div class="workshop-card" data-workshop-id="d2-pound" data-day="2" data-start="08:00" data-end="09:00">
             <div class="workshop-card-media"><img src="images/ws-d2-pound.jpg" alt="Pound Workshop" loading="lazy"><div class="workshop-full-overlay" aria-hidden="true"><b>Fully Booked!</b><span>You can try your luck by attending at the entrance of the workshop, or add yourself to the wait list. An email will be sent to you if someone else cancels and slots are available.</span></div></div>
             <div class="workshop-card-body">
               <h4>Pound Workshop</h4>
@@ -2517,7 +2534,7 @@
               <button type="button" class="workshop-cancel-btn" data-cancel-btn style="display:none;">Cancel reservation</button>
             </div>
           </div>
-          <div class="workshop-card" data-workshop-id="d2-yin-yoga" data-day="2">
+          <div class="workshop-card" data-workshop-id="d2-yin-yoga" data-day="2" data-start="09:00" data-end="09:45">
             <div class="workshop-card-media"><img src="images/ws-d2-yin-yoga.jpg" alt="Yin Yoga" loading="lazy"><div class="workshop-full-overlay" aria-hidden="true"><b>Fully Booked!</b><span>You can try your luck by attending at the entrance of the workshop, or add yourself to the wait list. An email will be sent to you if someone else cancels and slots are available.</span></div></div>
             <div class="workshop-card-body">
               <h4>Yin Yoga</h4>
@@ -2528,7 +2545,7 @@
               <button type="button" class="workshop-cancel-btn" data-cancel-btn style="display:none;">Cancel reservation</button>
             </div>
           </div>
-          <div class="workshop-card" data-workshop-id="workshop6" data-day="2">
+          <div class="workshop-card" data-workshop-id="workshop6" data-day="2" data-start="10:00" data-end="10:45">
             <div class="workshop-card-media"><img src="images/ws-workshop6.jpg" alt="DIY Creative Tent, Parents &amp; Kids" loading="lazy"><div class="workshop-full-overlay" aria-hidden="true"><b>Fully Booked!</b><span>You can try your luck by attending at the entrance of the workshop, or add yourself to the wait list. An email will be sent to you if someone else cancels and slots are available.</span></div></div>
             <div class="workshop-card-body">
               <h4>DIY Creative Tent, Parents &amp; Kids</h4>
@@ -2539,7 +2556,7 @@
               <button type="button" class="workshop-cancel-btn" data-cancel-btn style="display:none;">Cancel reservation</button>
             </div>
           </div>
-          <div class="workshop-card" data-workshop-id="d2-hiit" data-day="2">
+          <div class="workshop-card" data-workshop-id="d2-hiit" data-day="2" data-start="10:20" data-end="11:00">
             <div class="workshop-card-media"><img src="images/ws-d2-hiit.jpg" alt="HIIT Fitness Workshop" loading="lazy"><div class="workshop-full-overlay" aria-hidden="true"><b>Fully Booked!</b><span>You can try your luck by attending at the entrance of the workshop, or add yourself to the wait list. An email will be sent to you if someone else cancels and slots are available.</span></div></div>
             <div class="workshop-card-body">
               <h4>HIIT Fitness Workshop</h4>
@@ -2550,7 +2567,7 @@
               <button type="button" class="workshop-cancel-btn" data-cancel-btn style="display:none;">Cancel reservation</button>
             </div>
           </div>
-          <div class="workshop-card" data-workshop-id="d2-daddy-daughter" data-day="2">
+          <div class="workshop-card" data-workshop-id="d2-daddy-daughter" data-day="2" data-start="15:00" data-end="15:30">
             <div class="workshop-card-media"><img src="images/ws-d2-daddy-daughter.jpg" alt="Daddy &amp; Daughter Play Date" loading="lazy"><div class="workshop-full-overlay" aria-hidden="true"><b>Fully Booked!</b><span>You can try your luck by attending at the entrance of the workshop, or add yourself to the wait list. An email will be sent to you if someone else cancels and slots are available.</span></div></div>
             <div class="workshop-card-body">
               <h4>Daddy &amp; Daughter Play Date</h4>
@@ -2561,7 +2578,7 @@
               <button type="button" class="workshop-cancel-btn" data-cancel-btn style="display:none;">Cancel reservation</button>
             </div>
           </div>
-          <div class="workshop-card" data-workshop-id="d2-hiit-strength" data-day="2">
+          <div class="workshop-card" data-workshop-id="d2-hiit-strength" data-day="2" data-start="16:30" data-end="17:15">
             <div class="workshop-card-media"><img src="images/ws-d2-hiit-strength.jpg" alt="HIIT Strength" loading="lazy"><div class="workshop-full-overlay" aria-hidden="true"><b>Fully Booked!</b><span>You can try your luck by attending at the entrance of the workshop, or add yourself to the wait list. An email will be sent to you if someone else cancels and slots are available.</span></div></div>
             <div class="workshop-card-body">
               <h4>HIIT Strength</h4>
@@ -2572,7 +2589,7 @@
               <button type="button" class="workshop-cancel-btn" data-cancel-btn style="display:none;">Cancel reservation</button>
             </div>
           </div>
-          <div class="workshop-card" data-workshop-id="d2-zumba" data-day="2">
+          <div class="workshop-card" data-workshop-id="d2-zumba" data-day="2" data-start="17:30" data-end="18:15">
             <div class="workshop-card-media"><img src="images/who-2days.jpg" alt="Zumba" loading="lazy"><div class="workshop-full-overlay" aria-hidden="true"><b>Fully Booked!</b><span>You can try your luck by attending at the entrance of the workshop, or add yourself to the wait list. An email will be sent to you if someone else cancels and slots are available.</span></div></div>
             <div class="workshop-card-body">
               <h4>Zumba</h4>
@@ -2583,7 +2600,7 @@
               <button type="button" class="workshop-cancel-btn" data-cancel-btn style="display:none;">Cancel reservation</button>
             </div>
           </div>
-          <div class="workshop-card" data-workshop-id="d2-yoga-flow" data-day="2">
+          <div class="workshop-card" data-workshop-id="d2-yoga-flow" data-day="2" data-start="18:30" data-end="19:15">
             <div class="workshop-card-media"><img src="images/ws-d2-yoga-flow.jpg" alt="Yoga Flow" loading="lazy"><div class="workshop-full-overlay" aria-hidden="true"><b>Fully Booked!</b><span>You can try your luck by attending at the entrance of the workshop, or add yourself to the wait list. An email will be sent to you if someone else cancels and slots are available.</span></div></div>
             <div class="workshop-card-body">
               <h4>Yoga Flow</h4>
@@ -3019,6 +3036,7 @@
       (data.products || []).forEach(function(p){ addField('products', p); });
       addField('attendance', data.attendance);
       if(data.regId) addField('regId', data.regId);
+      if(data.replacesRegId) addField('replacesRegId', data.replacesRegId);
 
       document.body.appendChild(f);
       f.submit();
@@ -3038,9 +3056,64 @@
   }
   function setStoredToken(workshopId, token){
     try{ localStorage.setItem(TOKEN_KEY_PREFIX + workshopId, token); }catch(e){}
+    refreshClashes();
   }
   function clearStoredToken(workshopId){
     try{ localStorage.removeItem(TOKEN_KEY_PREFIX + workshopId); }catch(e){}
+    refreshClashes();
+  }
+
+  // ---------- Time clashes ----------
+  // Two workshops on the same day whose times overlap can't both be booked: once one is
+  // reserved, the other shows "Time clash" with a note saying which booking it overlaps.
+  function toMinutes(t){ var p = String(t || '').split(':'); return (+p[0]) * 60 + (+p[1] || 0); }
+  function clashingBooking(card){
+    var id = card.dataset.workshopId, day = card.dataset.day;
+    var s = toMinutes(card.dataset.start), e = toMinutes(card.dataset.end), hit = null;
+    if(!card.dataset.start) return null;
+    document.querySelectorAll('#book .workshop-card').forEach(function(o){
+      var oid = o.dataset.workshopId;
+      if(hit || oid === id || o.dataset.day !== day || !o.dataset.start || !getStoredToken(oid)) return;
+      if(toMinutes(o.dataset.start) < e && s < toMinutes(o.dataset.end)) hit = o;
+    });
+    return hit;
+  }
+  function clashMessage(other){
+    var name = other.querySelector('h4') ? other.querySelector('h4').textContent : 'another workshop';
+    var meta = other.querySelector('.workshop-card-meta');
+    var time = meta ? (meta.textContent.split('·').pop() || '').trim() : '';
+    return 'Oops, time clash! This overlaps with <b>' + escapeHtml(name) + '</b>' + (time ? ' (' + escapeHtml(time) + ')' : '') +
+      ', which you&rsquo;ve already booked. To join this one instead, cancel that booking first.';
+  }
+  function showClashState(card, other){
+    var btn = card.querySelector('[data-reserve-btn]');
+    if(btn){
+      btn.disabled = true;
+      btn.classList.remove('full-btn', 'waitlist-btn', 'waitlisted', 'reserved');
+      btn.classList.add('clash-btn');
+      btn.textContent = 'Time clash';
+    }
+    var note = card.querySelector('.clash-note');
+    if(!note){
+      note = document.createElement('p');
+      note.className = 'clash-note';
+      note.setAttribute('role', 'status');
+      if(btn) btn.insertAdjacentElement('afterend', note); else card.appendChild(note);
+    }
+    note.innerHTML = '&#9200; ' + clashMessage(other);
+  }
+  function clearClashState(card){
+    var btn = card.querySelector('[data-reserve-btn]');
+    if(btn) btn.classList.remove('clash-btn');
+    var note = card.querySelector('.clash-note');
+    if(note) note.remove();
+  }
+  var clashTimer = null;
+  function refreshClashes(){
+    clearTimeout(clashTimer);
+    clashTimer = setTimeout(function(){
+      document.querySelectorAll('#book .workshop-card').forEach(function(c){ if(c._slot) renderSlot(c, c._slot); });
+    }, 0);
   }
 
   // ---------- Payment gate ----------
@@ -3497,6 +3570,7 @@
         statusEl.classList.add(slot.available <= 10 ? 'low' : 'available');
       }
     }
+    clearClashState(card);
     // Without a confirmed pass the card is view-only.
     if(!verifiedPass){
       showLockedState(card);
@@ -3509,6 +3583,8 @@
       showReservedState(card);
     }else{
       showAvailableState(card, slot);
+      var clash = clashingBooking(card);
+      if(clash) showClashState(card, clash);
     }
     applyDayCoverage(card);
   }
@@ -3679,6 +3755,8 @@
       var card = btn.closest('.workshop-card');
       var workshopId = card ? card.dataset.workshopId : null;
       if(!workshopId) return;
+      var clash = clashingBooking(card);
+      if(clash){ showClashState(card, clash); return; }
       if(card.classList.contains('is-full')){ joinWaitlist(card, btn); return; }
       askReserveTerms(card).then(function(ok){ if(ok) reserveNow(); });
       function reserveNow(){
@@ -3702,6 +3780,7 @@
         .then(function(res){ return res.json(); })
         .then(function(result){
           if(result.result === 'success'){
+            if(card._slot && typeof result.remaining === 'number') card._slot.available = result.remaining;
             setStoredToken(workshopId, result.token);
             showReservedState(card);
             renderMyReserved();
@@ -3955,6 +4034,18 @@
   // Form validation + submit
   var form = document.getElementById('regForm');
   var confirmPanel = document.getElementById('confirmPanel');
+  // "Go back to change my details or pass": show the form again with everything still filled in.
+  // The next submit replaces this registration instead of being blocked as a duplicate number.
+  var editingRegId = null, lastSubmittedRegId = null;
+  var editDetailsBtn = document.getElementById('editDetailsBtn');
+  if(editDetailsBtn){
+    editDetailsBtn.addEventListener('click', function(){
+      editingRegId = lastSubmittedRegId;
+      confirmPanel.classList.remove('show');
+      form.style.display = '';
+      form.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  }
   var confirmSummary = document.getElementById('confirmSummary');
 
   function setError(groupId, hasError){
@@ -4032,7 +4123,10 @@
       if(submitBtn){ submitBtn.disabled = true; submitBtn.textContent = 'Checking…'; }
       checkPhoneRegistered(normalisePhone(contact)).then(function(found){
         if(submitBtn){ submitBtn.disabled = false; submitBtn.innerHTML = submitHtml; }
-        if(found && found.registered){
+        // Coming back from "Go back to change my details": the unpaid registration this browser
+        // just made is theirs, so it's not a duplicate. The new details replace it in the sheet.
+        var ownUnpaid = found && found.registered && !found.paid && editingRegId && found.regId === editingRegId;
+        if(found && found.registered && !ownUnpaid){
           showDuplicatePhone(found);
           return;
         }
@@ -4061,8 +4155,11 @@
         // Reference id that travels through Stripe and comes back with the payment,
         // tying the payment to this registration (and its phone number).
         data.regId = makeRegId(data.attendance, data.contactNumber);
+        if(editingRegId) data.replacesRegId = editingRegId;
 
         submitToGoogleForm(data);
+        editingRegId = null;
+        lastSubmittedRegId = data.regId;
         lastRegistrant.fullName = data.fullName;
         lastRegistrant.contactNumber = data.contactNumber;
         storeSet(REG_KEY, { regId: data.regId, fullName: data.fullName, contactNumber: data.contactNumber, attendance: data.attendance });
