@@ -74,6 +74,14 @@ function evaluateSession(session, passLinks) {
 
   const ref = session.client_reference_id || '';
   const m = REF_RE.exec(ref);
+
+  // TEMPORARY testing switch. With ALLOW_TEST_PAYMENTS=true in Vercel's environment variables,
+  // a cheap test payment (the RM2 link) counts as whichever pass the guest registered for, so
+  // Day 1, Day 2 and the 2-Day Pass can all be tested for RM2. DELETE the variable before going live.
+  if (process.env.ALLOW_TEST_PAYMENTS === 'true' && m) {
+    return passResult(session, m[1], m, ref);
+  }
+
   const linkPass = passLinks[session.payment_link];
   const hasLinkMap = Object.keys(passLinks).length > 0;
 
@@ -94,6 +102,10 @@ function evaluateSession(session, passLinks) {
     if ((session.amount_subtotal || 0) < PASS_PRICES[pass]) return null;
   }
 
+  return passResult(session, pass, m, ref);
+}
+
+function passResult(session, pass, m, ref) {
   const custPhone = session.customer_details && session.customer_details.phone;
   return {
     paid: true,
@@ -115,7 +127,8 @@ async function findByPhone(phone, passLinks) {
   }
 
   // With a link map we can ask Stripe for just those links; otherwise scan the account.
-  const linkIds = Object.keys(passLinks);
+  // (In test mode the RM2 link isn't one of the three pass links, so scan the whole account.)
+  const linkIds = process.env.ALLOW_TEST_PAYMENTS === 'true' ? [] : Object.keys(passLinks);
   const scopes = linkIds.length ? linkIds.map((id) => ({ payment_link: id })) : [{}];
 
   const RANK = { BOTH: 2, D1: 1, D2: 1 };
