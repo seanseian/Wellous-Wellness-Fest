@@ -224,14 +224,16 @@
     background:linear-gradient(135deg, #EAFBD1, #DDF1FB);
   }
   .partner-row{
-    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:18px 22px;
+    display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:18px 26px;
     margin-top:16px; border-top:1px solid var(--line); padding-top:18px;
   }
-  .partner-row img{height:78px; width:auto; max-width:210px; object-fit:contain; flex:1 1 auto;}
+  .partner-row img{height:64px; width:auto; max-width:150px; object-fit:contain; border-radius:12px;}
+  .partner-word{font-family:'Mark Pro'; font-weight:800; color:var(--green-dark); font-size:1rem; letter-spacing:-0.01em;}
   @media (max-width:640px){
     .refresh-card{padding:16px 18px; border-radius:18px; margin-top:24px;}
     .partner-row{gap:14px 16px; justify-content:center;}
-    .partner-row img{height:50px; max-width:150px;}
+    .partner-row img{height:46px; max-width:110px;}
+    .partner-row{gap:14px 18px;}
   }
 
   /* ---------- PRICING: made the most prominent element on the page ---------- */
@@ -699,6 +701,39 @@
     .bag-grid{grid-template-columns:1fr; gap:10px;}
     .bag-stage{max-width:400px; order:-1;}
   }
+
+
+  /* ---------- FAQ ---------- */
+  .faq-head{text-align:center;}
+  .faq-list{margin-top:26px; display:grid; gap:10px;}
+  .faq-item{background:var(--surface); border:1px solid var(--line); border-radius:16px; overflow:hidden;}
+  .faq-item summary{
+    list-style:none; cursor:pointer; padding:16px 52px 16px 20px; position:relative;
+    font-family:'Mark Pro'; font-weight:800; color:var(--text); font-size:1rem; line-height:1.35;
+  }
+  .faq-item summary::-webkit-details-marker{display:none;}
+  .faq-item summary::after{
+    content:'+'; position:absolute; right:18px; top:50%; transform:translateY(-50%); width:26px; height:26px; border-radius:50%;
+    display:grid; place-items:center; background:var(--green-pale); color:var(--green-dark); font-size:1.2rem; transition:transform .2s;
+  }
+  .faq-item[open] summary::after{content:'\2212';}
+  .faq-a{padding:0 20px 16px; color:var(--text-muted); font-size:0.94rem; line-height:1.55;}
+  .faq-a p{margin:0;}
+  .faq-a a, .tnc-link{color:var(--green-dark); font-weight:700;}
+  .tnc-link{background:none; border:0; padding:0; font:inherit; text-decoration:underline; cursor:pointer;}
+  .footer-tnc{background:none; border:0; padding:0; font:inherit; color:rgba(var(--brand-text-rgb),0.75); font-weight:700; font-size:0.9rem; cursor:pointer;}
+  .footer-tnc:hover{color:var(--brand-text);}
+  [data-open-tnc].note-link{cursor:pointer; text-decoration:underline;}
+  /* ---------- T&C pop-up ---------- */
+  .tnc-card{max-width:720px; padding:28px 26px 22px;}
+  .tnc-kicker{font-size:0.78rem; font-weight:800; letter-spacing:0.04em; text-transform:uppercase; color:var(--green-dark); margin:0 40px 4px 0;}
+  .tnc-body{font-size:0.9rem; line-height:1.6; color:var(--text);}
+  .tnc-body h4{font-family:'Mark Pro'; font-size:1.02rem; margin:22px 0 6px; color:var(--text);}
+  .tnc-body h5{font-size:0.92rem; margin:14px 0 4px;}
+  .tnc-body p{margin:0 0 10px; color:var(--text-muted);}
+  .tnc-body ul, .tnc-body ol{margin:0 0 10px; padding-left:22px; color:var(--text-muted);}
+  .tnc-body li{margin:3px 0;}
+  .tnc-foot{margin-top:22px !important; padding-top:14px; border-top:1px solid var(--line); font-weight:700; color:var(--text) !important;}
 
   /* ---------- AGENDA ---------- */
   .agenda-tabs{display:flex; gap:10px; margin-top:36px;}
@@ -1695,20 +1730,27 @@
   <div class="wrap">
     <div class="refresh-card">
       <h2>Refresh on us!</h2>
-      <p>Come hungry, curious and ready to feel good! Here&rsquo;s a taste of the <strong>FREE</strong> treats and experiences waiting for you, with more to be announced.</p>
-      <div class="freebie-grid">
-        <div class="freebie"><img class="freebie-logo" src="images/partner-logo-nowwacoffee.png" alt="NOWWA Caf&eacute;" loading="lazy"><div><b>Free coffee samples</b><span>NOWWA Caf&eacute;</span><small>1,000 cups every day</small></div></div>
-        <div class="freebie"><img class="freebie-logo" src="images/vendor-logo-flaky.jpg" alt="flaky" loading="lazy"><div><b>Free mini tarts</b><span>flaky</span><small>2,000 to give away</small></div></div>
-        <div class="freebie"><span class="freebie-logo brand-tile" aria-hidden="true">goodmusclefood</span><div><b>Free healthy sampling bowls</b><span>goodmusclefood</span><small>2,000 bowls over 2 days</small></div></div>
-        <div class="freebie"><img class="freebie-logo" src="images/vendor-logo-wellous.jpg" alt="Wellous" loading="lazy"><div><b>Free sampling</b><span>Wellous</span><small>Try our wellness favourites</small></div></div>
-        <div class="freebie"><img class="freebie-logo" src="images/vendor-logo-immority.jpg" alt="Immority" loading="lazy"><div><b>Free sampling</b><span>Immority</span><small>Have a taste of their functional food</small></div></div>
-        <div class="freebie"><img class="freebie-logo" src="images/vendor-logo-tigrox.jpg" alt="Tigrox" loading="lazy"><div><b>Free sampling</b><span>Tigrox</span><small>Have a taste of their functional food</small></div></div>
-        <div class="freebie"><img class="freebie-logo" src="images/vendor-logo-zenso.jpg" alt="Zenso" loading="lazy"><div><b>Free sampling</b><span>Zenso</span><small>Sip their light black vinegar</small></div></div>
-        <div class="freebie"><img class="freebie-logo" src="images/vendor-logo-femoire.jpg" alt="Femoire" loading="lazy"><div><b>Free sampling</b><span>Femoire</span><small>Beauty from the inside out</small></div></div>
-        <div class="freebie"><img class="freebie-logo" src="images/vendor-logo-mygp.jpg" alt="MYGP Clinic" loading="lazy"><div><b>Free health checks</b><span>MYGP Clinic</span><small>Blood pressure, blood oxygen, peak flow &amp; bone density</small></div></div>
-        <div class="freebie"><img class="freebie-logo" src="images/vendor-logo-vano.jpg" alt="vano.chiropractic" loading="lazy"><div><b>Free chiro assessment</b><span>vano.chiropractic</span><small>Get your posture checked</small></div></div>
-        <div class="freebie"><img class="freebie-logo" src="images/partner-logo-sweatspa.png" alt="Sweatspa" loading="lazy"><div><b>Mobile spa experience</b><span>Sweatspa</span><small>Relax and recharge on site</small></div></div>
-        <div class="freebie"><img class="freebie-logo" src="images/partner-logo-tefal.png" alt="Tefal" loading="lazy"><div><b>Healthy cooking demo</b><span>Tefal</span><small>Tips and tools for easy, healthy meals</small></div></div>
+      <p>Enjoy <strong>FREE</strong> refreshments and experiences from our wellness partners, with even more waiting for you at the festival!</p>
+      <div class="partner-row">
+        <img src="images/partner-logo-nowwacoffee.png" alt="NOWWA Caf&eacute;" loading="lazy">
+        <img src="images/vendor-logo-flaky.jpg" alt="flaky" loading="lazy">
+        <span class="partner-word" role="img" aria-label="goodmusclefood">goodmusclefood</span>
+        <img src="images/partner-logo-juiceworks.png" alt="Juice Works" loading="lazy">
+        <img src="images/vendor-logo-niangjia.jpg" alt="Niang Jia" loading="lazy">
+        <img src="images/vendor-logo-wellous.jpg" alt="Wellous" loading="lazy">
+        <img src="images/vendor-logo-immority.jpg" alt="Immority" loading="lazy">
+        <img src="images/vendor-logo-tigrox.jpg" alt="Tigrox" loading="lazy">
+        <img src="images/vendor-logo-zenso.jpg" alt="Zenso" loading="lazy">
+        <img src="images/vendor-logo-femoire.jpg" alt="Femoire" loading="lazy">
+        <img src="images/vendor-logo-jkj.jpg" alt="Jung Kwan Jang" loading="lazy">
+        <img src="images/vendor-logo-afyaa.jpg" alt="Afyaa" loading="lazy">
+        <img src="images/vendor-logo-mygp.jpg" alt="MYGP Clinic" loading="lazy">
+        <img src="images/vendor-logo-vano.jpg" alt="vano.chiropractic" loading="lazy">
+        <img src="images/vendor-logo-nadi.jpg" alt="NADI" loading="lazy">
+        <img src="images/partner-logo-sweatspa.png" alt="Sweatspa" loading="lazy">
+        <img src="images/partner-logo-tefal.png" alt="Tefal" loading="lazy">
+        <img src="images/vendor-logo-myhera.jpg" alt="Myhera" loading="lazy">
+        <img src="images/vendor-logo-upbound.jpg" alt="Upbound" loading="lazy">
       </div>
     </div>
   </div>
@@ -2622,6 +2664,213 @@
   <a href="#register" tabindex="-1">Get Your Pass</a>
 </div>
 
+<section id="faq" class="faq-section">
+  <div class="wrap-narrow">
+    <div class="faq-head">
+      <span class="eyebrow-tag">FAQ</span>
+      <h2 class="section-title">Questions? We&rsquo;ve got you.</h2>
+    </div>
+    <div class="faq-list">
+      <details class="faq-item"><summary>When and where is the Fest?</summary><div class="faq-a"><p>Saturday &amp; Sunday, 24&ndash;25 October 2026, from 9 AM to 9 PM both days, at KL Wellness City Gallery, Bukit Jalil, Kuala Lumpur. Directions are just above in <a href="#venue">See you there!</a></p></div></details>
+      <details class="faq-item"><summary>How much is a pass?</summary><div class="faq-a"><p>A 1-Day Pass is RM35 (choose Day 1 or Day 2) and the 2-Day Pass is RM50 for both days. <a href="#best-deal">Get your pass here</a>.</p></div></details>
+      <details class="faq-item"><summary>What does my pass include?</summary><div class="faq-a"><p>Unlimited wellness activities and workshops, health talks, complimentary health screenings, snacks and refreshments, games and festival-only deals, plus a goodie bag with Wellous products worth RM150*.</p></div></details>
+      <details class="faq-item"><summary>Do kids need a pass?</summary><div class="faq-a"><p>Kids 12 and below enter for free! Children must be with a parent or guardian at all times.</p></div></details>
+      <details class="faq-item"><summary>Do I need to book workshops separately?</summary><div class="faq-a"><p>Yes. Your pass gets you into the Fest, and workshops have limited spots, so reserve the ones you&rsquo;d like in <a href="#book">Reserve your workshop slots</a> after you get your pass. Booking is free with your pass.</p></div></details>
+      <details class="faq-item"><summary>What if a workshop is fully booked?</summary><div class="faq-a"><p>Tap &ldquo;Add to wait list&rdquo;. If a spot opens up, it goes to the next person on the list and we&rsquo;ll email you straight away.</p></div></details>
+      <details class="faq-item"><summary>Can I cancel a workshop booking?</summary><div class="faq-a"><p>Yes, cancel anytime in <a href="#book">Reserve your workshop slots</a>. Your spot is passed to the next person on the wait list, so please cancel if you can&rsquo;t make it.</p></div></details>
+      <details class="faq-item"><summary>What if I&rsquo;m late for a workshop?</summary><div class="faq-a"><p>Your spot is held for 10 minutes after the class starts. After that, it may be given to someone on the wait list, so do come 5&ndash;10 minutes early.</p></div></details>
+      <details class="faq-item"><summary>I paid but didn&rsquo;t get a confirmation email.</summary><div class="faq-a"><p>It can take a few minutes, and sometimes lands in spam or promotions. You can also come back to this page on the same phone and your pass will show in <a href="#book">Reserve your workshop slots</a>.</p></div></details>
+      <details class="faq-item"><summary>Can I get a refund or transfer my pass?</summary><div class="faq-a"><p>Passes are non-refundable and non-transferable, except where required by law. See the full <button type="button" class="tnc-link" data-open-tnc>Terms &amp; Conditions</button>.</p></div></details>
+    </div>
+  </div>
+</section>
+
+<div class="paycheck-overlay tnc-overlay" id="tncModal" hidden role="dialog" aria-modal="true" aria-labelledby="tncTitle">
+  <div class="paycheck-card tnc-card">
+    <button type="button" class="paycheck-close" data-close-tnc aria-label="Close">&times;</button>
+    <p class="tnc-kicker">Make Health Easier Wellness Fest 2026 &middot; Presented by Wellous</p>
+    <h3 id="tncTitle">Terms &amp; Conditions</h3>
+    <div class="tnc-body">
+<p>Please read these Terms &amp; Conditions (“Terms”) carefully before registering for, purchasing a ticket or wristband for, or attending Make Health Easier Wellness Fest 2026 (“Event”).</p>
+<p>By registering for, purchasing a ticket or wristband for, participating in, or attending the Event, each individual (“Participant”) acknowledges that they have read, understood, accepted and agreed to be bound by these Terms.</p>
+<p>Where the Participant is a minor, these Terms shall be accepted and agreed to by the Participant’s parent, guardian or legal representative on the Participant’s behalf.</p>
+<p>The Event is presented and organised by Wellous and/or its appointed event partners, vendors, contractors and representatives (collectively, the “Organiser”).</p>
+<h4>1. Event Details</h4>
+<p>The Event will be held on:</p>
+<p>Date: 24 &amp; 25 October 2026</p>
+<p>Venue: KL Wellness City Gallery, Kuala Lumpur, Malaysia</p>
+<p>The Event programme, activities, classes, timings, speakers, instructors, vendors and participating partners are subject to change.</p>
+<p>The Organiser reserves the right to amend, reschedule, postpone or cancel any part of the Event where reasonably necessary.</p>
+<h4>2. Event Access &amp; Eligibility</h4>
+<p>The Event may consist of different zones, activities and programmes, each of which may have its own access requirements.</p>
+<h5>2.1 General Event / Marketplace Areas</h5>
+<p>General event areas, including participating vendor booths, F&amp;B areas and designated public activities, may be open to members of the public, subject to venue capacity, safety requirements and applicable age restrictions.</p>
+<p>Children must be accompanied and supervised by a parent or legal guardian at all times.</p>
+<h5>2.2 Ticketed / Wristband Activities</h5>
+<p>Certain activities, classes, workshops, fitness sessions, recovery activities or other designated programmes may require a valid Event ticket, wristband or separate registration.</p>
+<p>Participants must comply with all age, capacity, safety and participation requirements applicable to the relevant activity.</p>
+<p>The Organiser reserves the right to verify a Participant’s eligibility and/or request proof of registration or identification where reasonably necessary.</p>
+<p>The Organiser may refuse or withdraw access to any activity where a Participant does not meet the applicable requirements or where continued participation may pose a safety concern.</p>
+<h4>3. Tickets &amp; Wristbands</h4>
+<p>Where applicable:</p>
+<ol>
+<li>Entry to ticketed areas or activities requires a valid Event ticket, registration confirmation and/or wristband.</li>
+<li>Wristbands must be worn visibly and presented upon request by the Organiser or Event crew.</li>
+<li>Wristbands and tickets are strictly non-transferable unless otherwise expressly permitted by the Organiser.</li>
+<li>All ticket and wristband purchases are final and are non-refundable and non-exchangeable, except where required by applicable law or expressly determined by the Organiser.</li>
+<li>Lost, damaged or stolen wristbands may not be replaced. Any replacement will be subject to the Organiser’s discretion and may be subject to applicable replacement charges.</li>
+<li>The Organiser reserves the right to refuse entry where a ticket, registration or wristband is invalid, duplicated, altered, damaged or cannot be verified.</li>
+<li>Participants are responsible for ensuring that their registration information is accurate and complete.</li>
+</ol>
+<h4>4. Event Programme &amp; Changes</h4>
+<p>The Organiser reserves the right to make reasonable changes to:</p>
+<ul>
+<li>Event programme and schedule;</li>
+<li>Fitness classes and workshops;</li>
+<li>Instructors, speakers and performers;</li>
+<li>Vendors and participating partners;</li>
+<li>Venue layout;</li>
+<li>Activity locations;</li>
+<li>Event timings; and</li>
+<li>Any other Event arrangements.</li>
+</ul>
+<p>Such changes may be made without prior notice where circumstances require.</p>
+<p>Participants should refer to the Event’s official communication channels and registration platform for the latest programme and announcements.</p>
+<h4>5. Fitness, Wellness &amp; Physical Activities</h4>
+<p>Participation in fitness classes, workouts, runs, recovery activities, workshops, games and other physical or wellness activities at the Event is voluntary and undertaken at the Participant’s own risk.</p>
+<p>Participants are responsible for determining whether they are physically able and suitably prepared to participate in any activity.</p>
+<p>Participants are strongly encouraged to seek appropriate medical advice before participating, particularly if they have any existing medical condition, injury, physical limitation or other concern that may affect their ability to participate safely.</p>
+<p>Participants must:</p>
+<ul>
+<li>Follow all instructions given by instructors, medical personnel, safety marshals and Event crew;</li>
+<li>Inform the relevant instructor or Event crew of any injury, medical condition or physical limitation that may affect their participation;</li>
+<li>Stop participating immediately if they experience pain, dizziness, difficulty breathing, unusual discomfort, fatigue or any other concerning symptoms; and</li>
+<li>Comply with any instruction from medical personnel, instructors, safety marshals or Event crew to stop or withdraw from an activity.</li>
+</ul>
+<p>The Organiser reserves the right to stop or restrict a Participant’s participation where the Organiser, instructor, medical personnel or Event crew reasonably considers it necessary for the Participant’s safety or the safety of others.</p>
+<p>To the extent permitted by applicable law, the Organiser shall not be responsible for injury, illness, loss or damage arising from a Participant’s voluntary participation in physical activities, except where such liability cannot lawfully be excluded.</p>
+<h4>6. Health Screening &amp; Wellness Consultations</h4>
+<p>The Event may include health screening, wellness assessments, nutrition consultations, educational sessions and/or other health-related activities conducted by participating healthcare professionals, nutritionists, students, organisations or Event partners.</p>
+<p>These activities are provided for general educational and wellness purposes only and do not constitute medical diagnosis, treatment or professional medical advice, unless expressly stated otherwise by the relevant qualified healthcare provider.</p>
+<p>Participants should consult their own qualified medical practitioner for medical advice, diagnosis or treatment.</p>
+<p>Any health information, screening results or recommendations provided during the Event should not be treated as a substitute for professional medical consultation.</p>
+<p>Participation in any health screening or wellness activity is voluntary.</p>
+<p>The Organiser is not responsible for any medical decision, diagnosis, treatment or action taken by a Participant based solely on information obtained through an Event activity.</p>
+<h4>7. Recovery Activities</h4>
+<p>Certain recovery or wellness activities, including but not limited to cold plunge, ice bath, stretching, mobility or recovery sessions, may involve physical risks.</p>
+<p>Participants must follow all instructions and safety requirements provided by the relevant instructor, operator or Event crew.</p>
+<p>The Organiser reserves the right to restrict participation based on age, health, safety considerations, capacity or other reasonable requirements.</p>
+<p>Participants are responsible for informing the relevant operator or Event crew of any medical condition or physical limitation that may affect their participation.</p>
+<h4>8. Lucky Draw, Games &amp; Contests</h4>
+<p>Where lucky draws, games, contests or giveaways are conducted:</p>
+<ol>
+<li>Participation is subject to the specific rules announced for the relevant activity.</li>
+<li>Winners may be required to present their valid ticket, wristband, registration details or other proof of eligibility.</li>
+<li>Unless otherwise stated, winners must be physically present at the time of announcement to claim their prize.</li>
+<li>If a winner is not present or fails to claim the prize within the stipulated period, the prize may be forfeited and/or re-drawn at the Organiser’s discretion.</li>
+<li>Prizes are non-transferable and cannot be exchanged for cash or other items unless otherwise stated.</li>
+<li>The Organiser reserves the right to verify the eligibility of any winner and disqualify any entry that does not comply with the applicable rules.</li>
+<li>The Organiser’s decision in relation to the administration of the lucky draw, game or contest shall be final, subject to applicable law.</li>
+</ol>
+<h4>9. Goodie Bags, Door Gifts &amp; Complimentary Items</h4>
+<p>Goodie bags, merchandise, samples, gifts, rewards and other complimentary items are subject to availability and while stocks last.</p>
+<p>The Organiser reserves the right to substitute any item with another item of comparable value or nature without prior notice where necessary.</p>
+<p>Colours, designs, packaging, sizes and materials shown in promotional materials are for illustration purposes only and may differ from the actual items provided.</p>
+<h4>10. Personal Belongings</h4>
+<p>Participants are responsible for their own personal belongings throughout the Event.</p>
+<p>The Organiser shall not be responsible for any loss, theft, damage or disappearance of personal belongings, including but not limited to mobile phones, wallets, bags, jewellery, clothing or other personal items.</p>
+<p>Participants are advised not to bring valuables to the Event or to leave personal belongings unattended.</p>
+<h4>11. Photography, Filming &amp; Media</h4>
+<p>By attending the Event, Participants acknowledge and agree that photography, video recording and/or audio recording may take place throughout the Event.</p>
+<p>The Organiser and its appointed photographers, videographers, media partners and representatives may capture images, video or recordings containing Participants for purposes including:</p>
+<ul>
+<li>Event documentation;</li>
+<li>Publicity and marketing;</li>
+<li>Social media content;</li>
+<li>Advertising and promotional materials;</li>
+<li>Press and media coverage;</li>
+<li>Website and digital communications; and</li>
+<li>Future Event or brand communications.</li>
+</ul>
+<p>Such materials may be used without additional payment or compensation to the Participant.</p>
+<p>Participants who do not wish to be intentionally photographed or filmed should notify Event staff at the designated information or media point where available.</p>
+<p>However, the Organiser cannot guarantee that an individual will be excluded from incidental appearance in wide-angle, crowd, background or general Event footage.</p>
+<h4>12. Personal Data Protection</h4>
+<p>Participants acknowledge that personal data may be collected, processed, stored, used and/or disclosed by the Organiser and relevant Event partners for purposes relating to:</p>
+<ul>
+<li>Event registration and administration;</li>
+<li>Ticketing and access management;</li>
+<li>Event operations and communication;</li>
+<li>Participant safety;</li>
+<li>Event planning and statistical analysis;</li>
+<li>Customer service;</li>
+<li>Marketing and promotional communications, where permitted; and</li>
+<li>Other purposes stated in the applicable Personal Data Protection Notice.</li>
+</ul>
+<p>By registering for the Event, Participants acknowledge that they have read and understood the applicable Personal Data Protection Notice.</p>
+<p>Personal data will be handled in accordance with applicable personal data protection laws and the Organiser’s applicable privacy and personal data policies.</p>
+<p>Participants should ensure that all information submitted during registration is accurate, complete and up to date.</p>
+<h4>13. Communications</h4>
+<p>The Organiser may contact Participants using the contact details provided during registration for purposes relating to the Event, including Event updates, schedule changes, registration matters, safety information and other relevant communications.</p>
+<p>Participants are responsible for ensuring that their registered contact details remain accurate and accessible.</p>
+<p>The Organiser shall not be responsible for failure to receive communications caused by incorrect, outdated or incomplete information provided by the Participant.</p>
+<h4>14. Cancellation, Postponement &amp; Force Majeure</h4>
+<p>The Organiser reserves the right to postpone, reschedule, alter or cancel the Event or any part of the Event due to circumstances beyond its reasonable control.</p>
+<p>Such circumstances may include, without limitation:</p>
+<ul>
+<li>Severe weather or adverse weather conditions;</li>
+<li>Flooding;</li>
+<li>Haze or air-quality concerns;</li>
+<li>Natural disasters;</li>
+<li>Fire;</li>
+<li>Public health emergencies;</li>
+<li>Government directives or restrictions;</li>
+<li>Security threats;</li>
+<li>Acts of God;</li>
+<li>Venue-related circumstances;</li>
+<li>Technical or operational failures; or</li>
+<li>Any other circumstances which, in the Organiser’s reasonable opinion, make it impractical or unsafe to conduct the Event.</li>
+</ul>
+<p>Where an Event is cancelled, postponed or materially changed, the Organiser will communicate the applicable arrangements through its official Event channels.</p>
+<p>To the extent permitted by applicable law, the Organiser shall not be liable for any indirect loss, travel expenses, accommodation expenses, inconvenience or other costs incurred by Participants as a result of any postponement, cancellation or change to the Event.</p>
+<p>Any refund or credit arrangements, if applicable, shall be determined and communicated by the Organiser in accordance with the circumstances and applicable law.</p>
+<h4>15. Venue Rules &amp; Participant Conduct</h4>
+<p>Participants must comply with:</p>
+<ul>
+<li>These Terms;</li>
+<li>Venue rules and regulations;</li>
+<li>Instructions issued by Event crew;</li>
+<li>Safety requirements;</li>
+<li>Activity-specific rules; and</li>
+<li>Applicable laws and regulations.</li>
+</ul>
+<p>The Organiser reserves the right to refuse entry to, remove from the Venue, or restrict participation by any person whose conduct is considered disruptive, unsafe, abusive, threatening or otherwise inappropriate.</p>
+<p>No Participant may engage in conduct that may endanger or cause harm, harassment or unreasonable disturbance to other Participants, Event personnel, vendors, instructors or members of the public.</p>
+<h4>16. Technical &amp; Registration Platform Issues</h4>
+<p>The Organiser shall not be responsible for technical interruptions, system errors, communication failures, payment gateway issues, website or registration platform downtime, network failures, unauthorised access, transmission delays or other technical issues beyond its reasonable control.</p>
+<p>Participants are responsible for ensuring that their registration and payment details are submitted correctly.</p>
+<h4>17. Participant Acknowledgement</h4>
+<p>By registering for or attending the Event, the Participant acknowledges that:</p>
+<ol>
+<li>They have read and understood these Terms;</li>
+<li>They agree to comply with all Event and Venue rules;</li>
+<li>Participation in physical activities is voluntary;</li>
+<li>They are responsible for assessing their own suitability for participation;</li>
+<li>They will follow reasonable safety instructions given by Event personnel; and</li>
+<li>They understand that the Event programme and arrangements may be subject to change.</li>
+</ol>
+<h4>18. Amendments To These Terms</h4>
+<p>The Organiser reserves the right to amend or update these Terms where reasonably necessary.</p>
+<p>The latest version of the Terms may be made available through the Event’s official communication channels and/or registration platform.</p>
+<p>Participants are responsible for reviewing the latest applicable Terms before attending the Event.</p>
+<h4>19. Governing Law</h4>
+<p>These Terms shall be governed by and construed in accordance with the laws of Malaysia.</p>
+<p>Any dispute arising in connection with these Terms or the Event shall be subject to the applicable jurisdiction of the Malaysian courts.</p>
+    <p class="tnc-foot">Make Health Easier Wellness Fest 2026<br>24&ndash;25 October 2026 | KL Wellness City Gallery, Kuala Lumpur<br>Presented by Wellous</p>
+    </div>
+  </div>
+</div>
+
 <footer>
   <div class="wrap footer-inner">
     <div>
@@ -2637,6 +2886,8 @@
       <a href="#venue">Venue</a>
       <a href="https://www.wellous.com/" target="_blank" rel="noopener">Wellous.com</a>
       <a href="https://www.instagram.com/wellous_official/" target="_blank" rel="noopener">Instagram</a>
+      <a href="#faq">FAQ</a>
+      <button type="button" class="footer-tnc" data-open-tnc>Terms &amp; Conditions</button>
     </div>
   </div>
   <div class="wrap footer-bottom">
@@ -2707,6 +2958,28 @@
   // appends each entry as a new row directly, bypasses Google Forms' own submission
   // validation entirely (no per-page-load token required), so this actually lands data.
   var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzTAdy-aFw-B_0KAu5MtDrDf-ya5cw5IXb_hdEFom3deV4Ectg0BmTAx5S7h42Iz4tr5w/exec';
+
+  // POST to the booking sheet, retrying when Google is momentarily overloaded. At a busy moment
+  // Apps Script can answer "Too many simultaneous invocations" (an HTML page, not JSON) or our own
+  // "Server busy" message; in both cases nothing was saved, so it's safe to try again shortly.
+  // (A repeated booking is also harmless: the sheet recognises the same phone + workshop.)
+  function backoff(n){ return new Promise(function(r){ setTimeout(r, 700 * Math.pow(2, n - 1) + Math.random() * 600); }); }
+  function scriptPost(body){
+    var attempt = 0;
+    function go(){
+      return fetch(APPS_SCRIPT_URL, { method: 'POST', body: body }).then(function(res){ return res.text(); }).then(function(text){
+        var busy = false;
+        try{ var j = JSON.parse(text); busy = !!(j && j.result === 'error' && /busy/i.test(j.message || '')); }
+        catch(e){ busy = true; }
+        if(busy && attempt++ < 4) return backoff(attempt).then(go);
+        return new Response(text, { headers: { 'Content-Type': 'application/json' } });
+      }, function(err){
+        if(attempt++ < 2) return backoff(attempt).then(go);
+        throw err;
+      });
+    }
+    return go();
+  }
 
   function submitToGoogleForm(data){
     try{
@@ -2906,7 +3179,7 @@
     var stored = storeGet(PASS_KEY);
     if(stored && stored.sessionId){
       showBookState('verifying');
-      loadWorkshopSlots();
+      loadWorkshopSlots(true);
       verifyPayment('session_id=' + encodeURIComponent(stored.sessionId))
         .catch(function(){
           showBookState('locked');
@@ -2917,7 +3190,7 @@
     }
     // First visit (or cleared browser data): workshops are shown, but locked.
     showBookState('locked');
-    loadWorkshopSlots();
+    loadWorkshopSlots(true);
     var reg = storeGet(REG_KEY);
     // Registered here before but never confirmed a payment: ask them to check eligibility.
     if(reg && reg.contactNumber) setTimeout(openPayCheck, 2200); // after the hero intro
@@ -3102,6 +3375,36 @@
     });
   }
 
+  // "Not you? Use a different number" on the unlocked pass: forget this device's pass and
+  // bookings, then start fresh at the "Already registered?" box so they can enter their own number.
+  var passSwitch = document.getElementById('passSwitch');
+  if(passSwitch){
+    passSwitch.addEventListener('click', function(){
+      try{
+        localStorage.removeItem(PASS_KEY);
+        localStorage.removeItem(REG_KEY);
+        Object.keys(localStorage).forEach(function(k){ if(k.indexOf(TOKEN_KEY_PREFIX) === 0) localStorage.removeItem(k); });
+        sessionStorage.setItem('wwf_switch_number', '1');
+      }catch(e){}
+      // reload without ?session_id so the old payment isn't re-confirmed
+      if(location.search) location.replace(location.pathname + '#book');
+      else { history.replaceState(null, '', location.pathname + '#book'); location.reload(); }
+    });
+  }
+  (function(){
+    var flag = null;
+    try{ flag = sessionStorage.getItem('wwf_switch_number'); sessionStorage.removeItem('wwf_switch_number'); }catch(e){}
+    if(!flag) return;
+    var input = document.getElementById('bookLookupPhone');
+    if(input) input.value = '';
+    if(bookSection) bookSection.classList.add('is-in');
+    setTimeout(function(){
+      var target = document.querySelector('.book-returning') || bookSection;
+      if(target) target.scrollIntoView({behavior:'smooth', block:'center'});
+      setTimeout(function(){ if(input) input.focus({preventScroll:true}); }, 700);
+    }, 300);
+  })();
+
   // Pricing-card BUY buttons now lead to the registration form with the pass pre-selected.
   document.querySelectorAll('[data-select-pass]').forEach(function(a){
     a.addEventListener('click', function(){
@@ -3188,9 +3491,35 @@
     applyDayCoverage(card);
   }
 
-  function loadWorkshopSlots(){
-    fetch(APPS_SCRIPT_URL + '?action=getSlots')
-      .then(function(res){ return res.json(); })
+  // Slot counts. The first load on a page view uses the site's cached copy (/api/slots, refreshed
+  // every few seconds) so a crowd of visitors doesn't overwhelm the booking sheet; refreshes
+  // right after a booking/cancel ask the sheet directly for the exact numbers.
+  function fetchSlotsDirect(){
+    var attempt = 0;
+    function go(){
+      return fetch(APPS_SCRIPT_URL + '?action=getSlots').then(function(res){ return res.text(); }).then(function(text){
+        var json = null;
+        try{ json = JSON.parse(text); }catch(e){}
+        if(json && json.slots) return json;
+        if(attempt++ < 3) return backoff(attempt).then(go);
+        throw new Error('Slots unavailable');
+      }, function(err){
+        if(attempt++ < 2) return backoff(attempt).then(go);
+        throw err;
+      });
+    }
+    return go();
+  }
+  function fetchSlots(cached){
+    var local = location.protocol === 'file:' || /^(localhost|127\.|\[::1\])/.test(location.hostname);
+    if(!cached || local) return fetchSlotsDirect();
+    return fetch('/api/slots')
+      .then(function(res){ if(!res.ok) throw new Error('cache miss'); return res.json(); })
+      .then(function(json){ if(!json || !json.slots) throw new Error('cache miss'); return json; })
+      .catch(fetchSlotsDirect);
+  }
+  function loadWorkshopSlots(cached){
+    fetchSlots(cached)
       .then(function(json){
         (json.slots || []).forEach(function(slot){
           var card = document.querySelector('.workshop-card[data-workshop-id="' + slot.id + '"]');
@@ -3265,7 +3594,6 @@
       '<li><b>First come, first served:</b> Arrive 5&ndash;10 minutes early for registration and verification.</li>' +
       '<li><b>10-minute grace period:</b> Reserved slots are held for 10 minutes after class starts.</li>' +
       '<li><b>Late arrival:</b> After 10 minutes, your slot may be released to participants on the waiting list.</li>' +
-      '<li><b>Queue number:</b> A queue number will be provided upon registration.</li>' +
     '</ul>' +
     '<p>Please arrive early to secure your spot and enjoy a smooth workshop experience.</p>' +
     '<p class="confirm-agree">By clicking &ldquo;Reserve my slot&rdquo;, you agree to these terms.</p>';
@@ -3303,7 +3631,7 @@
       body.append('fullName', lastRegistrant.fullName || '');
       body.append('contactNumber', normalisePhone(lastRegistrant.contactNumber || (verifiedPass && verifiedPass.phone) || ''));
       if(verifiedPass) body.append('sessionId', verifiedPass.sessionId || '');
-      fetch(APPS_SCRIPT_URL, { method: 'POST', body: body })
+      scriptPost(body)
         .then(function(res){ return res.json(); })
         .then(function(r){
           if(r.result === 'success'){
@@ -3348,7 +3676,7 @@
         body.append('regId', verifiedPass.regId || '');
       }
 
-      fetch(APPS_SCRIPT_URL, { method: 'POST', body: body })
+      scriptPost(body)
         .then(function(res){ return res.json(); })
         .then(function(result){
           if(result.result === 'success'){
@@ -3404,7 +3732,7 @@
       body.append('workshopId', workshopId);
       body.append('token', token);
 
-      fetch(APPS_SCRIPT_URL, { method: 'POST', body: body })
+      scriptPost(body)
         .then(function(res){ return res.json(); })
         .then(function(result){
           btn.disabled = false;
@@ -3475,7 +3803,7 @@
     var body = new URLSearchParams();
     body.append('action', 'getBookingsByContact');
     body.append('contactNumber', phone);
-    fetch(APPS_SCRIPT_URL, { method: 'POST', body: body })
+    scriptPost(body)
       .then(function(res){ return res.json(); })
       .then(function(result){
         if(result.result !== 'success') return;
@@ -3536,7 +3864,7 @@
         body.append('action', 'cancelSlotByContact');
         body.append('workshopId', b.workshopId);
         body.append('contactNumber', phone);
-        fetch(APPS_SCRIPT_URL, { method: 'POST', body: body })
+        scriptPost(body)
           .then(function(res){ return res.json(); })
           .then(function(result){
             if(result.result === 'success'){
@@ -3579,7 +3907,7 @@
       var body = new URLSearchParams();
       body.append('action', 'getBookingsByContact');
       body.append('contactNumber', phone);
-      fetch(APPS_SCRIPT_URL, { method: 'POST', body: body })
+      scriptPost(body)
         .then(function(res){ return res.json(); })
         .then(function(result){
           if(result.result !== 'success'){
@@ -3629,7 +3957,7 @@
     var body = new URLSearchParams();
     body.append('action', 'checkPhone');
     body.append('contactNumber', phone);
-    return fetch(APPS_SCRIPT_URL, { method: 'POST', body: body })
+    return scriptPost(body)
       .then(function(res){ return res.json(); })
       .then(function(r){ return r && r.result === 'success' ? r : null; })
       .catch(function(){ return null; });
@@ -4068,7 +4396,7 @@
           io.unobserve(entry.target);
         }
       });
-    }, {threshold:0.08, rootMargin:'0px 0px -6% 0px'});
+    }, {threshold:0, rootMargin:'0px 0px -6% 0px'});
     sections.forEach(function(sec){
       // anything already on screen at load (e.g. after a refresh mid-page) shows straight away
       var r = sec.getBoundingClientRect();
@@ -4206,6 +4534,37 @@
     update();
   })();
 
+
+  // Terms & Conditions pop-up (footer button, FAQ link, "*Terms & Conditions apply" notes)
+  (function(){
+    var modal = document.getElementById('tncModal');
+    if(!modal) return;
+    var lastFocus = null;
+    function open(){
+      lastFocus = document.activeElement;
+      modal.hidden = false;
+      document.body.style.overflow = 'hidden';
+      modal.querySelector('.paycheck-card').scrollTop = 0;
+      modal.querySelector('[data-close-tnc]').focus();
+    }
+    function close(){
+      modal.hidden = true;
+      document.body.style.overflow = '';
+      if(lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+    document.querySelectorAll('.cta-note, .bag-note').forEach(function(n){
+      n.setAttribute('data-open-tnc', ''); n.classList.add('note-link'); n.setAttribute('role', 'button'); n.tabIndex = 0;
+    });
+    document.addEventListener('click', function(e){
+      if(e.target.closest('[data-open-tnc]')){ e.preventDefault(); open(); return; }
+      if(e.target.closest('[data-close-tnc]') || e.target === modal) close();
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape' && !modal.hidden) close();
+      if((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('.note-link')){ e.preventDefault(); open(); }
+    });
+  })();
+
   // ---------- Vendor videos ----------
   // Add a vendor by adding a line here. "video" is the normal link to an Instagram reel/post
   // or a TikTok video. noEmbed: Instagram marks the post age-restricted, so it can't play
@@ -4229,6 +4588,7 @@
     { name: 'Wellous', logo: 'images/vendor-logo-wellous.jpg', instagram: 'wellous_official', video: 'https://www.instagram.com/p/Dd01jzOvq0M/', blurb: 'Make health easier with your festival host.' },
     { name: 'Jung Kwan Jang', logo: 'images/vendor-logo-jkj.jpg', instagram: 'jungkwanjang.my.official', video: 'https://www.instagram.com/reel/DUnlVkgjIyF/', blurb: 'Korean red ginseng since 1899.' },
     { name: 'Afyaa', logo: 'images/vendor-logo-afyaa.jpg', instagram: 'afyaaofficial', video: 'https://www.instagram.com/p/DZJUyY2Snqh/', blurb: 'Functional food for everyday wellness.' },
+    { name: 'Niang Jia', logo: 'images/vendor-logo-niangjia.jpg', instagram: 'niang_jia', video: 'https://www.instagram.com/reel/DXtif-PjlHG/', blurb: '' },
     { name: 'NADI', logo: 'images/vendor-logo-nadi.jpg', instagram: 'nadiclinic', video: 'https://www.instagram.com/reel/Db2kVkbiChH/', blurb: 'Wellness made simple.' }
   ];
   // Instagram reel/post or TikTok video link -> { platform, embed URL }
