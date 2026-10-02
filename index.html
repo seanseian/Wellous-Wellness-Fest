@@ -228,11 +228,15 @@
     margin-top:16px; border-top:1px solid var(--line); padding-top:18px;
   }
   .partner-row img{height:64px; width:auto; max-width:150px; object-fit:contain; border-radius:12px;}
-  .partner-word{font-family:'Mark Pro'; font-weight:800; color:var(--green-dark); font-size:1rem; letter-spacing:-0.01em;}
+  /* plain wordmarks fill their whole box, so they're drawn smaller to sit at the same visual weight as the other logos */
+  .partner-row img.logo-wordmark{height:26px; max-width:96px;}
+  .partner-word{font-family:'Mark Pro'; font-weight:800; color:var(--green-dark); font-size:0.82rem; line-height:1.05; letter-spacing:-0.01em; text-align:center;}
   @media (max-width:640px){
     .refresh-card{padding:16px 18px; border-radius:18px; margin-top:24px;}
     .partner-row{gap:14px 16px; justify-content:center;}
     .partner-row img{height:46px; max-width:110px;}
+    .partner-row img.logo-wordmark{height:20px; max-width:76px;}
+    .partner-word{font-size:0.72rem;}
     .partner-row{gap:14px 18px;}
   }
 
@@ -714,10 +718,14 @@
   .faq-item summary::-webkit-details-marker{display:none;}
   .faq-item summary::after{
     content:'+'; position:absolute; right:18px; top:50%; transform:translateY(-50%); width:26px; height:26px; border-radius:50%;
-    display:grid; place-items:center; background:var(--green-pale); color:var(--green-dark); font-size:1.2rem; transition:transform .2s;
+    display:grid; place-items:center; background:var(--green-pale); color:var(--green-dark); font-size:1.2rem;
+    transition:transform .35s cubic-bezier(.22,.61,.36,1), background .25s, color .25s;
   }
-  .faq-item[open] summary::after{content:'\2212';}
-  .faq-a{padding:0 20px 16px; color:var(--text-muted); font-size:0.94rem; line-height:1.55;}
+  /* the + turns into an x as the answer opens */
+  .faq-item.is-open summary::after{transform:translateY(-50%) rotate(135deg); background:var(--green-dark); color:#fff;}
+  .faq-item{transition:border-color .25s, box-shadow .25s;}
+  .faq-item.is-open{border-color:rgba(47,138,23,0.35); box-shadow:0 14px 30px -22px rgba(47,138,23,0.6);}
+  .faq-a{padding:0 20px 16px; color:var(--text-muted); font-size:0.94rem; line-height:1.55; overflow:hidden;}
   .faq-a p{margin:0;}
   .faq-a a, .tnc-link{color:var(--green-dark); font-weight:700;}
   .tnc-link{background:none; border:0; padding:0; font:inherit; text-decoration:underline; cursor:pointer;}
@@ -1734,7 +1742,7 @@
       <div class="partner-row">
         <img src="images/partner-logo-nowwacoffee.png" alt="NOWWA Caf&eacute;" loading="lazy">
         <img src="images/vendor-logo-flaky.jpg" alt="flaky" loading="lazy">
-        <span class="partner-word" role="img" aria-label="goodmusclefood">goodmusclefood</span>
+        <span class="partner-word" role="img" aria-label="goodmusclefood">goodmuscle<br>food</span>
         <img src="images/partner-logo-juiceworks.png" alt="Juice Works" loading="lazy">
         <img src="images/vendor-logo-niangjia.jpg" alt="Niang Jia" loading="lazy">
         <img src="images/vendor-logo-wellous.jpg" alt="Wellous" loading="lazy">
@@ -1750,7 +1758,7 @@
         <img src="images/partner-logo-sweatspa.png" alt="Sweatspa" loading="lazy">
         <img src="images/partner-logo-tefal.png" alt="Tefal" loading="lazy">
         <img src="images/vendor-logo-myhera.jpg" alt="Myhera" loading="lazy">
-        <img src="images/vendor-logo-upbound.jpg" alt="Upbound" loading="lazy">
+        <img class="logo-wordmark" src="images/vendor-logo-upbound.jpg" alt="Upbound" loading="lazy">
       </div>
     </div>
   </div>
@@ -1815,6 +1823,8 @@
       <ul class="bag-list">
         <li><img src="images/bag-tote.webp" alt="" loading="lazy"><div><b>Make Health Easier tote bag</b><small>Yours to keep, and handy for every wellness day after</small></div></li>
         <li><img src="images/vendor-logo-wellous.jpg" alt="" loading="lazy" style="border-radius:8px;"><div><b>Wellous wellness products</b><small>A curated selection for you to try at home</small></div></li>
+        <li><img src="images/bag-voucher.png" alt="" loading="lazy"><div><b>Exclusive vouchers</b><small>Festival-only deals to enjoy with our partners</small></div></li>
+        <li><img src="images/bag-gift-b.png" alt="" loading="lazy"><div><b>Sponsored items from vendors</b><small>Extra goodies from the brands joining us</small></div></li>
       </ul>
       <a href="#best-deal" class="btn" style="margin-top:22px;">Get your pass &amp; your bag</a>
       <p class="bag-note">*Terms &amp; Conditions apply.</p>
@@ -4534,6 +4544,37 @@
     update();
   })();
 
+
+  // FAQ: answers slide open and closed, and opening one closes the others
+  (function(){
+    var items = [].slice.call(document.querySelectorAll('.faq-item'));
+    var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var EASE = 'cubic-bezier(.22,.61,.36,1)';
+    function setOpen(d, open){
+      var a = d.querySelector('.faq-a');
+      if(d._anim){ d._anim.cancel(); d._anim = null; }
+      d.classList.toggle('is-open', open);
+      if(still || !a.animate){ d.open = open; return; }
+      if(open){
+        d.open = true;
+        var h = a.offsetHeight;
+        d._anim = a.animate([{height:'0px', opacity:0, paddingBottom:'0px'}, {height:h + 'px', opacity:1, paddingBottom:'16px'}], {duration:380, easing:EASE});
+      } else {
+        var from = a.offsetHeight;
+        d._anim = a.animate([{height:from + 'px', opacity:1}, {height:'0px', opacity:0, paddingBottom:'0px'}], {duration:300, easing:EASE});
+        d._anim.onfinish = function(){ d.open = false; d._anim = null; };
+      }
+    }
+    items.forEach(function(d){
+      d.classList.toggle('is-open', d.open);
+      d.querySelector('summary').addEventListener('click', function(e){
+        e.preventDefault();
+        var opening = !d.classList.contains('is-open');
+        if(opening) items.forEach(function(o){ if(o !== d && o.classList.contains('is-open')) setOpen(o, false); });
+        setOpen(d, opening);
+      });
+    });
+  })();
 
   // Terms & Conditions pop-up (footer button, FAQ link, "*Terms & Conditions apply" notes)
   (function(){
