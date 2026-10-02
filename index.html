@@ -230,12 +230,14 @@
   .partner-row img{height:64px; width:auto; max-width:150px; object-fit:contain; border-radius:12px;}
   /* plain wordmarks fill their whole box, so they're drawn smaller to sit at the same visual weight as the other logos */
   .partner-row img.logo-wordmark{height:26px; max-width:96px;}
+  .partner-row img.logo-zenso{height:40px; max-width:84px;}
   .partner-word{font-family:'Mark Pro'; font-weight:800; color:var(--green-dark); font-size:0.82rem; line-height:1.05; letter-spacing:-0.01em; text-align:center;}
   @media (max-width:640px){
     .refresh-card{padding:16px 18px; border-radius:18px; margin-top:24px;}
     .partner-row{gap:14px 16px; justify-content:center;}
     .partner-row img{height:46px; max-width:110px;}
     .partner-row img.logo-wordmark{height:20px; max-width:76px;}
+    .partner-row img.logo-zenso{height:30px; max-width:62px;}
     .partner-word{font-size:0.72rem;}
     .partner-row{gap:14px 18px;}
   }
@@ -717,12 +719,15 @@
   }
   .faq-item summary::-webkit-details-marker{display:none;}
   .faq-item summary::after{
-    content:'+'; position:absolute; right:18px; top:50%; transform:translateY(-50%); width:26px; height:26px; border-radius:50%;
-    display:grid; place-items:center; background:var(--green-pale); color:var(--green-dark); font-size:1.2rem;
-    transition:transform .35s cubic-bezier(.22,.61,.36,1), background .25s, color .25s;
+    /* the + is drawn with two bars (not a text character) so it sits dead centre and rotates around its middle */
+    content:''; position:absolute; right:18px; top:50%; transform:translateY(-50%); width:26px; height:26px; border-radius:50%;
+    color:var(--green-dark); background-color:var(--green-pale);
+    background-image:linear-gradient(currentColor, currentColor), linear-gradient(currentColor, currentColor);
+    background-size:12px 2px, 2px 12px; background-position:center; background-repeat:no-repeat;
+    transition:transform .35s cubic-bezier(.22,.61,.36,1), background-color .25s, color .25s;
   }
   /* the + turns into an x as the answer opens */
-  .faq-item.is-open summary::after{transform:translateY(-50%) rotate(135deg); background:var(--green-dark); color:#fff;}
+  .faq-item.is-open summary::after{transform:translateY(-50%) rotate(135deg); background-color:var(--green-dark); color:#fff;}
   .faq-item{transition:border-color .25s, box-shadow .25s;}
   .faq-item.is-open{border-color:rgba(47,138,23,0.35); box-shadow:0 14px 30px -22px rgba(47,138,23,0.6);}
   .faq-a{padding:0 20px 16px; color:var(--text-muted); font-size:0.94rem; line-height:1.55; overflow:hidden;}
@@ -1748,7 +1753,7 @@
         <img src="images/vendor-logo-wellous.jpg" alt="Wellous" loading="lazy">
         <img src="images/vendor-logo-immority.jpg" alt="Immority" loading="lazy">
         <img src="images/vendor-logo-tigrox.jpg" alt="Tigrox" loading="lazy">
-        <img src="images/vendor-logo-zenso.jpg" alt="Zenso" loading="lazy">
+        <img class="logo-zenso" src="images/vendor-logo-zenso.jpg" alt="Zenso" loading="lazy">
         <img src="images/vendor-logo-femoire.jpg" alt="Femoire" loading="lazy">
         <img src="images/vendor-logo-jkj.jpg" alt="Jung Kwan Jang" loading="lazy">
         <img src="images/vendor-logo-afyaa.jpg" alt="Afyaa" loading="lazy">
@@ -3042,11 +3047,18 @@
   // Flow: register → Stripe Payment Link (carries client_reference_id) → Stripe redirects
   // back to /?session_id={CHECKOUT_SESSION_ID}#book → /api/verify-payment asks Stripe
   // whether it was really paid → only then are the workshop slots shown.
-  var STRIPE_LINKS = {
-    'Day 1': 'https://buy.stripe.com/5kQ00lff36g56zO2bre3e02', // TEST: RM2 product, swap back before going live
+  // TESTING: every pass currently goes to the RM2 test product. Before going live, set
+  // TEST_PAYMENTS to false (and remove ALLOW_TEST_PAYMENTS from Vercel's environment variables).
+  var TEST_PAYMENTS = true;
+  var TEST_PAYMENT_LINK = 'https://buy.stripe.com/5kQ00lff36g56zO2bre3e02'; // RM2 test product
+  var LIVE_STRIPE_LINKS = {
+    'Day 1': 'https://buy.stripe.com/5kQ00lff36g56zO2bre3e02', // still the RM2 link: replace with the live RM35 Day 1 link
     'Day 2': 'https://buy.stripe.com/28EdRb1odeMB4rG3fve3e04',
     'Both days': 'https://buy.stripe.com/6oUbJ3eaZ6g5gaoeYde3e05'
   };
+  var STRIPE_LINKS = TEST_PAYMENTS
+    ? { 'Day 1': TEST_PAYMENT_LINK, 'Day 2': TEST_PAYMENT_LINK, 'Both days': TEST_PAYMENT_LINK }
+    : LIVE_STRIPE_LINKS;
   var VERIFY_URL = '/api/verify-payment';
   var REG_KEY = 'wellnessfest_registration';
   var PASS_KEY = 'wellnessfest_verified_pass';
