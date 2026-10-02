@@ -71,12 +71,19 @@ function verifyStripeSignature(rawBody, signatureHeader, secret, toleranceSecond
   return matches ? { ok: true } : { ok: false, reason: 'Signature does not match payload.' };
 }
 
-async function markPaid(regId) {
+async function markPaid(regId, session) {
   const url = new URL(process.env.APPS_SCRIPT_URL);
+  const details = (session && session.customer_details) || {};
   const body = new URLSearchParams({
     action: 'markPaid',
     regId,
     secret: process.env.MARK_PAID_SECRET || '',
+    // Used by the Apps Script to send the "your pass is confirmed" email.
+    email: details.email || '',
+    name: details.name || '',
+    amount: String(session && session.amount_total != null ? session.amount_total : ''),
+    currency: String((session && session.currency) || ''),
+    sessionId: (session && session.id) || '',
   });
   const res = await fetch(url.toString(), {
     method: 'POST',
@@ -152,7 +159,7 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const result = await markPaid(ref);
+    const result = await markPaid(ref, session);
     if (!result.ok) {
       console.error('markPaid call did not succeed:', result.status, result.data);
       // Still return 200 so Stripe doesn't hammer retries for a problem on our
