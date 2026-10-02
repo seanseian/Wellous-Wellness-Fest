@@ -3222,9 +3222,7 @@
       else if(state !== 'unlocked') showLockedState(card);
     });
   }
-  function scrollToBook(){
-    if(bookSection) bookSection.scrollIntoView({behavior:'smooth', block:'start'});
-  }
+  function scrollToBook(){ goToSection('book'); }
 
   // Ticket artwork for the pass (2-Day or 1-Day)
   function showTicket(img, twoDay){
@@ -3541,28 +3539,36 @@
     }, 300);
   })();
 
-  // Links to the registration form land exactly on its top ("Registration" heading), just
-  // below the sticky header. Positions are measured without the scroll fade-in offset, and
-  // re-checked once the scroll ends in case images above finished loading on the way.
+  // Links to the registration form and to My Bookings land exactly on the section's top
+  // (its "Registration" / "Workshop Booking" label), just below the sticky header. Positions are
+  // measured without the scroll fade-in offset, and re-checked once the scroll ends in case
+  // images above (or the booking section's own content) changed size on the way.
   function pageTop(el){ var y = 0; while(el){ y += el.offsetTop; el = el.offsetParent; } return y; }
-  function goToRegistration(){
-    var section = document.getElementById('register');
+  function goToSection(id){
+    var section = document.getElementById(id);
     if(!section) return;
     section.classList.add('is-in');
     var target = section.querySelector('.eyebrow-tag') || section;
     var header = document.querySelector('header.nav');
+    var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     function y(){ return Math.max(0, pageTop(target) - (header ? header.offsetHeight : 76) - 16); }
-    window.scrollTo({ top: y(), behavior: reduceMotionUI ? 'auto' : 'smooth' });
-    [700, 1400].forEach(function(ms){
-      setTimeout(function(){ if(Math.abs(window.scrollY - y()) > 4) window.scrollTo({ top: y(), behavior: 'smooth' }); }, ms);
+    window.scrollTo({ top: y(), behavior: still ? 'auto' : 'smooth' });
+    // stop correcting as soon as the guest scrolls by themselves
+    var userMoved = false;
+    function stop(){ userMoved = true; }
+    ['wheel', 'touchstart', 'keydown'].forEach(function(ev){ window.addEventListener(ev, stop, { once: true, passive: true }); });
+    [700, 1400, 2200].forEach(function(ms){
+      setTimeout(function(){ if(!userMoved && Math.abs(window.scrollY - y()) > 4) window.scrollTo({ top: y(), behavior: 'smooth' }); }, ms);
     });
   }
+  var SECTION_LINKS = { '#register': 'register', '#regForm': 'register', '#book': 'book' };
   document.addEventListener('click', function(e){
-    var a = e.target.closest && e.target.closest('a[href="#register"], a[href="#regForm"]');
+    var a = e.target.closest && e.target.closest('a[href="#register"], a[href="#regForm"], a[href="#book"]');
     if(!a || e.defaultPrevented) return;
+    var id = SECTION_LINKS[a.getAttribute('href')];
     e.preventDefault();
-    try{ history.replaceState(null, '', '#register'); }catch(err){}
-    goToRegistration();
+    try{ history.replaceState(null, '', '#' + id); }catch(err){}
+    goToSection(id);
   });
 
   // Pricing-card BUY buttons now lead to the registration form with the pass pre-selected.
