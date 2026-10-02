@@ -938,6 +938,9 @@
     border-radius:50%; font-size:1.3rem; line-height:1; color:var(--grey-ink); cursor:pointer;
   }
   .paycheck-emoji{font-size:2rem; line-height:1; margin-bottom:6px;}
+  .paycheck-change{display:block; width:100%; margin-top:10px; padding:11px 16px; border-radius:999px; background:var(--surface);
+    border:1.5px solid var(--line); color:var(--text); font:inherit; font-weight:800; font-size:0.9rem; cursor:pointer;}
+  .paycheck-change:hover{border-color:var(--green-dark); color:var(--green-dark); background:var(--green-pale);}
   .paycheck-phone{
     display:flex; flex-direction:column; gap:2px; background:var(--green-pale); border-radius:14px; padding:12px 16px; margin-bottom:12px;
   }
@@ -1160,6 +1163,7 @@
 
   /* ---------- PAID-ONLY WORKSHOP BOOKING ---------- */
   .pay-note{font-size:0.85rem; margin-top:18px !important;}
+  .pass-rule-note{margin:12px 0 0; padding:10px 14px; border-radius:12px; background:var(--green-pale); color:var(--text); font-size:0.82rem; line-height:1.5;}
   .pay-note a{color:var(--green-dark); font-weight:800;}
   .book-section{display:block;}
   .book-head{text-align:center;}
@@ -2286,6 +2290,7 @@
           <label class="choice"><input type="radio" name="days" value="Day 2" data-price="35"><span class="choice-text">Day 2 <small>Sun, 25 Oct</small></span><span class="choice-price">RM35</span></label>
         </div>
         <div class="field-error">Please pick which day(s) you'll attend.</div>
+        <p class="pass-rule-note">&#9432; Passes are <b>non-refundable</b> and valid <b>only for the day(s) you choose</b>. You can still change your pass any time <b>before</b> you pay. Not sure which day suits you? The 2-Day Pass covers both days for just RM15 more.</p>
         <div class="price-preview" id="pricePreview" style="display:none;">
           <span>Pass price</span>
           <span class="amt" id="priceAmt">RM0</span>
@@ -2673,6 +2678,7 @@
     </div>
     <div class="paycheck-summary" id="payCheckSummary"></div>
     <a class="btn paycheck-btn" id="payCheckPay" href="#">Complete payment to finish registration</a>
+    <button type="button" class="paycheck-change" id="payCheckChange">Want a different day? Change my pass</button>
     <p class="paycheck-switch">Not your number? <button type="button" id="payCheckSwitch">Switch to your number</button></p>
     <button type="button" class="paycheck-later" id="payCheckLater">Not now</button>
   </div>
@@ -2712,7 +2718,7 @@
       <details class="faq-item"><summary>Can I cancel a workshop booking?</summary><div class="faq-a"><p>Yes, cancel anytime in <a href="#book">Reserve your workshop slots</a>. Your spot is passed to the next person on the wait list, so please cancel if you can&rsquo;t make it.</p></div></details>
       <details class="faq-item"><summary>What if I&rsquo;m late for a workshop?</summary><div class="faq-a"><p>Your spot is held for 10 minutes after the class starts. After that, it may be given to someone on the wait list, so do come 5&ndash;10 minutes early.</p></div></details>
       <details class="faq-item"><summary>I paid but didn&rsquo;t get a confirmation email.</summary><div class="faq-a"><p>It can take a few minutes, and sometimes lands in spam or promotions. You can also come back to this page on the same phone and your pass will show in <a href="#book">Reserve your workshop slots</a>.</p></div></details>
-      <details class="faq-item"><summary>Can I get a refund or transfer my pass?</summary><div class="faq-a"><p>Passes are non-refundable and non-transferable, except where required by law. See the full <button type="button" class="tnc-link" data-open-tnc>Terms &amp; Conditions</button>.</p></div></details>
+      <details class="faq-item"><summary>Can I get a refund or transfer my pass?</summary><div class="faq-a"><p>Passes are non-refundable and non-transferable, except where required by law, and a 1-Day Pass is only valid for its own day. Changed your mind before paying? Just go back to the form and pick a different pass. See the full <button type="button" class="tnc-link" data-open-tnc>Terms &amp; Conditions</button>.</p></div></details>
     </div>
   </div>
 </section>
@@ -2750,6 +2756,7 @@
 <li>Wristbands must be worn visibly and presented upon request by the Organiser or Event crew.</li>
 <li>Wristbands and tickets are strictly non-transferable unless otherwise expressly permitted by the Organiser.</li>
 <li>All ticket and wristband purchases are final and are non-refundable and non-exchangeable, except where required by applicable law or expressly determined by the Organiser.</li>
+<li>A 1-Day Pass is valid only for the date stated on it (24 October 2026 or 25 October 2026). It cannot be used on, transferred to, or exchanged for the other Event day, and no refund will be given if the Participant is unable to attend on that date. Participants may change their pass selection only before payment is made.</li>
 <li>Lost, damaged or stolen wristbands may not be replaced. Any replacement will be subject to the Organiser’s discretion and may be subject to applicable replacement charges.</li>
 <li>The Organiser reserves the right to refuse entry where a ticket, registration or wristband is invalid, duplicated, altered, damaged or cannot be verified.</li>
 <li>Participants are responsible for ensuring that their registration information is accurate and complete.</li>
@@ -3454,6 +3461,24 @@
     document.getElementById('payCheckPay').addEventListener('click', function(){
       if(this.getAttribute('href') === '#regForm') closePayCheck();
     });
+    // Want a different day: reopen the form with their details filled in and their current pass
+    // selected. Submitting updates the same (unpaid) registration instead of being blocked.
+    document.getElementById('payCheckChange').addEventListener('click', function(){
+      var reg = storeGet(REG_KEY) || {};
+      closePayCheck();
+      var f = document.getElementById('regForm'), panel = document.getElementById('confirmPanel');
+      if(!f) return;
+      if(panel) panel.classList.remove('show');
+      f.style.display = '';
+      var nameEl = document.getElementById('fullName'), phoneEl = document.getElementById('contactNumber');
+      if(nameEl && !nameEl.value) nameEl.value = reg.fullName || '';
+      if(phoneEl && !phoneEl.value) phoneEl.value = reg.contactNumber || '';
+      var radio = f.querySelector('#dayChoices input[value="' + (reg.attendance || '') + '"]');
+      if(radio){ radio.checked = true; radio.dispatchEvent(new Event('change', { bubbles: true })); }
+      var target = document.getElementById('g-days') || f;
+      if(f.closest('.fade-section')) f.closest('.fade-section').classList.add('is-in');
+      target.scrollIntoView({behavior:'smooth', block:'center'});
+    });
     // Not their number: forget this browser's saved registration and take them to the
     // "Already registered?" box to check their own number.
     document.getElementById('payCheckSwitch').addEventListener('click', function(){
@@ -4123,13 +4148,14 @@
       if(submitBtn){ submitBtn.disabled = true; submitBtn.textContent = 'Checking…'; }
       checkPhoneRegistered(normalisePhone(contact)).then(function(found){
         if(submitBtn){ submitBtn.disabled = false; submitBtn.innerHTML = submitHtml; }
-        // Coming back from "Go back to change my details": the unpaid registration this browser
-        // just made is theirs, so it's not a duplicate. The new details replace it in the sheet.
-        var ownUnpaid = found && found.registered && !found.paid && editingRegId && found.regId === editingRegId;
-        if(found && found.registered && !ownUnpaid){
+        // Rule: until a payment is made, the registration for a number can still be changed
+        // (e.g. they went back from checkout and picked a different day). Only a PAID number is
+        // blocked as a duplicate; an unpaid one is updated in place with the new details and pass.
+        if(found && found.registered && found.paid){
           showDuplicatePhone(found);
           return;
         }
+        if(found && found.registered && !found.paid && found.regId && !editingRegId) editingRegId = found.regId;
         proceed();
       });
 
