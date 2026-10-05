@@ -24,11 +24,13 @@ const STRIPE_API = 'https://api.stripe.com/v1';
 
 // Expected pass prices in sen (RM35 = 3500). Used to make sure nobody pays for the
 // cheaper pass and then edits the reference to claim the 2-day pass.
-const PASS_PRICES = { D1: 3500, D2: 3500, BOTH: 5000 };
-const PASS_LABELS = { D1: 'Day 1', D2: 'Day 2', BOTH: 'Both days' };
+const PASS_PRICES = { D1: 3500, D2: 3500, BOTH: 5000, UPG: 1500 };
+const PASS_LABELS = { D1: 'Day 1', D2: 'Day 2', BOTH: 'Both days', UPG: 'Upgrade to 2-Day' };
 
 // Reference format written by the registration form: WWF_<PASS>_<phone digits>_<random>
-const REF_RE = /^WWF_(D1|D2|BOTH)_(\d{6,15})_[A-Za-z0-9]{4,20}$/;
+// The RM15 top-up (a 1-Day holder upgrading to both days) is
+// WWF_UPG_<phone digits>_<the Checkout Session id of their 1-Day Pass>.
+const REF_RE = /^WWF_(D1|D2|BOTH|UPG)_(\d{6,15})_([A-Za-z0-9_]{4,220})$/;
 
 function normalisePhone(raw) {
   let d = String(raw || '').replace(/\D/g, '');
@@ -119,6 +121,26 @@ function passResult(session, pass, m, ref) {
   };
 }
 
+// A top-up only counts together with the 1-Day Pass it was bought for: same phone number, and
+// that pass must itself be a valid paid pass. Returns the guest as a 2-Day holder, or null.
+async function resolveUpgrade(up, passLinks) {
+  const m = REF_RE.exec(up.regId || '');
+  const baseId = m && m[3];
+  if (!baseId || !/^cs_(test|live)_[A-Za-z0-9]{10,200}$/.test(baseId)) return null;
+  const base = evaluateSession(await stripeGet('/checkout/sessions/' + encodeURIComponent(baseId)), passLinks);
+  if (!base || base.pass === 'UPG' || normalisePhone(base.phone) !== normalisePhone(up.phone)) return null;
+  return asUpgraded(base, up);
+}
+function asUpgraded(base, up) {
+  return Object.assign({}, base, {
+    pass: 'BOTH',
+    attendance: PASS_LABELS.BOTH,
+    upgradedFrom: base.pass === 'BOTH' ? null : base.pass,
+    sessionId: up.sessionId, // later checks with this id keep returning the 2-Day Pass
+    email: base.email || up.email,
+  });
+}
+
 async function findByPhone(phone, passLinks) {
   const params = { status: 'complete', limit: '100' };
   if (process.env.LOOKUP_SINCE) {
@@ -132,7 +154,7 @@ async function findByPhone(phone, passLinks) {
   const scopes = linkIds.length ? linkIds.map((id) => ({ payment_link: id })) : [{}];
 
   const RANK = { BOTH: 2, D1: 1, D2: 1 };
-  let best = null;
+  let best = null, upgrade = null;
   const seenPasses = new Set();
 
   for (const scope of scopes) {
@@ -148,6 +170,7 @@ async function findByPhone(phone, passLinks) {
         const refPhone = ev.regId ? REF_RE.exec(ev.regId)[2] : null;
         const custPhone = normalisePhone(s.customer_details && s.customer_details.phone);
         if (normalisePhone(refPhone) !== phone && custPhone !== phone) continue;
+        if (ev.pass === 'UPG') { if (!upgrade) upgrade = ev; continue; }
         seenPasses.add(ev.pass);
         if (!best || RANK[ev.pass] > RANK[best.pass]) best = ev;
       }
@@ -160,6 +183,8 @@ async function findByPhone(phone, passLinks) {
   if (best && seenPasses.has('D1') && seenPasses.has('D2')) {
     best = Object.assign({}, best, { pass: 'BOTH', attendance: PASS_LABELS.BOTH });
   }
+  // A 1-Day Pass plus a paid RM15 top-up = a 2-Day Pass.
+  if (best && upgrade && best.pass !== 'BOTH') best = asUpgraded(best, upgrade);
   return best;
 }
 
@@ -190,7 +215,13 @@ module.exports = async function handler(req, res) {
         return res.status(400).json({ paid: false, error: 'Invalid payment reference.' });
       }
       const session = await stripeGet('/checkout/sessions/' + encodeURIComponent(sessionId));
-      const result = evaluateSession(session, passLinks);
+      let result = evaluateSession(session, passLinks);
+      if (result && result.pass === 'UPG') {
+        result = await resolveUpgrade(result, passLinks);
+        if (!result) {
+          return res.status(200).json({ paid: false, error: 'We could not find the 1-Day Pass this top-up belongs to. Please contact us and we will sort it out.' });
+        }
+      }
       if (!result) {
         return res.status(200).json({
           paid: false,
@@ -198,6 +229,16 @@ module.exports = async function handler(req, res) {
           payment_status: session.payment_status,
           error: 'We could not confirm a completed payment for this checkout.',
         });
+      }
+      // A 1-Day holder may have bought the other day separately (same phone): then they hold
+      // both days, even though this one checkout is only for one of them.
+      if ((result.pass === 'D1' || result.pass === 'D2') && result.phone) {
+        try {
+          const all = await findByPhone(normalisePhone(result.phone), passLinks);
+          if (all && all.pass === 'BOTH') result = Object.assign({}, result, { pass: 'BOTH', attendance: PASS_LABELS.BOTH });
+        } catch (e) {
+          console.error('verify-payment: combined-pass lookup failed:', e.message);
+        }
       }
       // Name is only returned for the session-based check (the payer just came from Stripe).
       result.name = (session.customer_details && session.customer_details.name) || null;
@@ -226,4 +267,4 @@ module.exports = async function handler(req, res) {
   }
 };
 
-module.exports._internal = { evaluateSession, normalisePhone, parsePassLinks };
+module.exports._internal = { evaluateSession, normalisePhone, parsePassLinks, asUpgraded, REF_RE };

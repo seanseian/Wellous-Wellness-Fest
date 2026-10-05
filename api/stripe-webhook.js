@@ -19,7 +19,7 @@
 
 const crypto = require('crypto');
 
-const REF_RE = /^WWF_(D1|D2|BOTH)_(\d{6,15})_[A-Za-z0-9]{4,20}$/;
+const REF_RE = /^WWF_(D1|D2|BOTH|UPG)_(\d{6,15})_([A-Za-z0-9_]{4,220})$/; // UPG = RM15 top-up to 2-Day
 
 module.exports.config = {
   api: { bodyParser: false },
