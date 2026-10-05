@@ -3754,7 +3754,9 @@
   function goToSection(id){
     var section = document.getElementById(id);
     if(!section) return;
-    goToElement(section.querySelector('.eyebrow-tag') || section, section);
+    // the first label that is actually showing (the sales-closed panel has its own, hidden while sales are open)
+    var label = Array.prototype.filter.call(section.querySelectorAll('.eyebrow-tag'), function(el){ return el.offsetParent !== null; })[0];
+    goToElement(label || section, section);
   }
   function goToElement(target, section){
     if(!target) return;
@@ -3772,16 +3774,10 @@
       setTimeout(function(){ if(!userMoved && Math.abs(window.scrollY - y()) > 4) window.scrollTo({ top: y(), behavior: 'smooth' }); }, ms);
     });
   }
-  // "Get Your Pass" / "COUNT ME IN" buttons land on the form itself (its first field just below
-  // the sticky header). If the form isn't showing, they land on whatever is there instead:
-  // the "Almost there!" panel after registering, or the sales-closed panel.
-  function goToForm(){
-    var f = document.getElementById('regForm'), panel = document.getElementById('confirmPanel');
-    var section = document.getElementById('register');
-    if(f && f.style.display !== 'none' && f.offsetParent !== null) goToElement(f, section);
-    else if(panel && panel.classList.contains('show')) goToElement(panel);
-    else goToSection('register');
-  }
+  // Pass buttons (hero pass chips, "Get Your Pass", "COUNT ME IN") land on the top of the
+  // registration form section, starting from its "Registration" label just below the sticky
+  // header (when sales are closed, that's the "Pass sales are now closed" panel's label).
+  function goToForm(){ goToSection('register'); }
   var SECTION_LINKS = { '#register': 'register', '#regForm': 'register', '#book': 'book' };
   document.addEventListener('click', function(e){
     var a = e.target.closest && e.target.closest('a[href="#register"], a[href="#regForm"], a[href="#book"]');
