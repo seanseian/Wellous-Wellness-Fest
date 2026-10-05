@@ -1912,7 +1912,7 @@
         <li><img src="images/bag-voucher.png" alt="" loading="lazy"><div><b>Exclusive vouchers</b><small>Festival-only deals to enjoy with our partners</small></div></li>
         <li><img src="images/bag-gift-b.png" alt="" loading="lazy"><div><b>Sponsored items from vendors</b><small>Extra goodies from the brands joining us</small></div></li>
       </ul>
-      <a href="#best-deal" class="btn" style="margin-top:22px;">Get your pass &amp; your bag</a>
+      <a href="#regForm" class="btn" style="margin-top:22px;">Get your pass &amp; your bag</a>
       <p class="bag-note">*Terms &amp; Conditions apply.</p>
     </div>
     <div class="bag-stage" aria-hidden="true">
@@ -2787,7 +2787,7 @@
     </div>
     <div class="faq-list">
       <details class="faq-item"><summary>When and where is the Fest?</summary><div class="faq-a"><p>Saturday &amp; Sunday, 24&ndash;25 October 2026, from 9:00 AM to 7:00 PM daily, at KL Wellness City Gallery, Bukit Jalil, Kuala Lumpur. Some workout classes start a little earlier or end a little later, so check the agenda for exact times. Directions are just above in <a href="#venue">See you there!</a></p></div></details>
-      <details class="faq-item"><summary>How much is a pass?</summary><div class="faq-a"><p>A 1-Day Pass is RM35 (choose Day 1 or Day 2) and the 2-Day Pass is RM50 for both days. <a href="#best-deal">Get your pass here</a>.</p></div></details>
+      <details class="faq-item"><summary>How much is a pass?</summary><div class="faq-a"><p>A 1-Day Pass is RM35 (choose Day 1 or Day 2) and the 2-Day Pass is RM50 for both days. <a href="#regForm">Get your pass here</a>.</p></div></details>
       <details class="faq-item"><summary>What does my pass include?</summary><div class="faq-a"><p>Unlimited wellness activities and workshops, health talks, complimentary health screenings, snacks and refreshments, games and festival-only deals, plus a goodie bag with Wellous products worth RM150*.</p></div></details>
       <details class="faq-item"><summary>Do kids need a pass?</summary><div class="faq-a"><p>Kids 12 and below enter for free! Children must be with a parent or guardian at all times.</p></div></details>
       <details class="faq-item"><summary>Do I need to book workshops separately?</summary><div class="faq-a"><p>Yes. Your pass gets you into the Fest, and workshops have limited spots, so reserve the ones you&rsquo;d like in <a href="#book">Reserve your workshop slots</a> after you get your pass. Booking is free with your pass.</p></div></details>
@@ -3772,6 +3772,16 @@
       setTimeout(function(){ if(!userMoved && Math.abs(window.scrollY - y()) > 4) window.scrollTo({ top: y(), behavior: 'smooth' }); }, ms);
     });
   }
+  // "Get Your Pass" / "COUNT ME IN" buttons land on the form itself (its first field just below
+  // the sticky header). If the form isn't showing, they land on whatever is there instead:
+  // the "Almost there!" panel after registering, or the sales-closed panel.
+  function goToForm(){
+    var f = document.getElementById('regForm'), panel = document.getElementById('confirmPanel');
+    var section = document.getElementById('register');
+    if(f && f.style.display !== 'none' && f.offsetParent !== null) goToElement(f, section);
+    else if(panel && panel.classList.contains('show')) goToElement(panel);
+    else goToSection('register');
+  }
   var SECTION_LINKS = { '#register': 'register', '#regForm': 'register', '#book': 'book' };
   document.addEventListener('click', function(e){
     var a = e.target.closest && e.target.closest('a[href="#register"], a[href="#regForm"], a[href="#book"]');
@@ -3779,7 +3789,7 @@
     var id = SECTION_LINKS[a.getAttribute('href')];
     e.preventDefault();
     try{ history.replaceState(null, '', '#' + id); }catch(err){}
-    goToSection(id);
+    if(id === 'register') goToForm(); else goToSection(id);
   });
 
   // "Add a Day 2 pass to join": open the form with that day picked and their details filled in.
@@ -3796,7 +3806,7 @@
     if(phoneEl && !phoneEl.value) phoneEl.value = lastRegistrant.contactNumber || (verifiedPass && verifiedPass.phone) || '';
     var radio = document.querySelector('#dayChoices input[value="' + a.getAttribute('data-add-day') + '"]');
     if(radio){ radio.checked = true; radio.dispatchEvent(new Event('change', { bubbles: true })); }
-    goToSection('register');
+    goToForm();
   }, true);
 
   // Pricing-card BUY buttons now lead to the registration form with the pass pre-selected.
@@ -4420,7 +4430,7 @@
       editingRegId = lastSubmittedRegId;
       confirmPanel.classList.remove('show');
       form.style.display = '';
-      goToSection('register');
+      goToForm();
     });
   }
   var confirmSummary = document.getElementById('confirmSummary');
