@@ -725,6 +725,31 @@
   .booking-toast button{flex:none; border:0; background:var(--green-pale); color:var(--green-dark); font:inherit; font-weight:800; padding:7px 14px; border-radius:999px; cursor:pointer;}
   @media (prefers-reduced-motion: reduce){ .booking-toast{transition:none;} }
 
+
+  /* ---------- Pass sales closed (PASS_SALES_OPEN = false) ---------- */
+  .sales-closed-card{margin-top:14px; background:var(--surface); border:1.5px solid var(--line); border-radius:28px; padding:40px 32px; text-align:center; box-shadow:var(--shadow);}
+  .sales-closed-icon{font-size:2.6rem; line-height:1; margin-bottom:10px;}
+  .sales-closed-card .section-title{margin:0 auto; max-width:100%;}
+  .sales-closed-lead{color:var(--text-muted); max-width:520px; margin:12px auto 0; font-size:1rem; line-height:1.55;}
+  .sales-closed-box{display:flex; flex-direction:column; align-items:center; gap:6px; max-width:460px; margin:24px auto 0; padding:20px; border-radius:18px; background:var(--green-pale);}
+  .sales-closed-box b{font-family:'Mark Pro'; font-weight:800; font-size:1.05rem; color:var(--text);}
+  .sales-closed-box span{color:var(--text-muted); font-size:0.9rem; line-height:1.5;}
+  .sales-closed-box .btn{margin-top:10px;}
+  .sales-closed-note{color:var(--text-muted); font-size:0.88rem; line-height:1.55; margin:22px auto 0; max-width:480px;}
+  .sales-closed-note a{color:var(--green-dark); font-weight:800;}
+  body.sales-closed #register > .wrap-narrow > :not(.sales-closed-panel){display:none !important;}
+  body.sales-closed .pass-bar{display:none !important;}
+  body.sales-closed .ticket-chip{position:relative; opacity:0.75; filter:grayscale(0.5);}
+  body.sales-closed .ticket-chip .price{text-decoration:line-through;}
+  body.sales-closed .ticket-row{gap:16px;}
+  body.sales-closed .ticket-chip{overflow:visible;}
+  body.sales-closed .ticket-chip::after{
+    content:'Sales closed'; position:absolute; top:-9px; right:12px; background:#6B7280; color:#fff;
+    font-family:'Mark Pro'; font-weight:800; font-size:0.66rem; letter-spacing:0.03em; text-transform:uppercase; padding:3px 9px; border-radius:999px;
+  }
+  .buy-closed{background:var(--grey-pale) !important; color:var(--grey-ink) !important; box-shadow:none !important; border-color:transparent !important;}
+  @media (max-width:640px){ .sales-closed-card{padding:30px 20px;} }
+
   /* ---------- FAQ ---------- */
   .faq-head{text-align:center;}
   .faq-list{margin-top:26px; display:grid; gap:10px;}
@@ -762,6 +787,10 @@
   .tnc-body p{margin:0 0 10px; color:var(--text-muted);}
   .tnc-body ul, .tnc-body ol{margin:0 0 10px; padding-left:22px; color:var(--text-muted);}
   .tnc-body li{margin:3px 0;}
+  .tnc-updated{font-size:0.8rem; font-weight:700; color:var(--text-muted) !important; margin:-2px 0 14px !important;}
+  .agree-row{display:flex; align-items:flex-start; gap:10px; cursor:pointer; font-size:0.9rem; line-height:1.5; color:var(--text); background:#fff; border:1.5px solid var(--line); border-radius:12px; padding:12px 14px;}
+  .agree-row input{accent-color:var(--green-dark); width:18px; height:18px; flex:none; margin-top:2px;}
+  .f-group.error .agree-row{border-color:var(--red);}
   .tnc-foot{margin-top:22px !important; padding-top:14px; border-top:1px solid var(--line); font-weight:700; color:var(--text) !important;}
 
   /* ---------- AGENDA ---------- */
@@ -984,6 +1013,9 @@
   .confirm-body li::before{content:"\2713"; position:absolute; left:0; top:0; color:var(--green-dark); font-weight:800;}
   .confirm-body p{margin:0 0 10px; font-size:0.9rem; line-height:1.5; color:var(--text-muted);}
   .confirm-body .confirm-agree{font-weight:800; color:var(--text); background:#FFF8E1; border-radius:10px; padding:10px 12px; margin:12px 0 0;}
+  .confirm-workshop:empty{display:none;}
+  .single-day-tip{background:#FFF8E1; border-radius:12px; padding:12px 14px; margin:0 0 14px; font-size:0.92rem; line-height:1.5; color:var(--text);}
+  .single-day-tip .btn{width:100%; justify-content:center; margin-top:10px;}
   .confirm-actions{display:flex; flex-direction:column; gap:8px; margin-top:18px;}
   .confirm-actions .btn{width:100%; justify-content:center;}
   .confirm-actions .btn.danger{background:var(--red); color:#fff;}
@@ -1603,7 +1635,7 @@
         </div>
         <div class="fact-row">
           <svg class="fact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2" stroke-linecap="round"/></svg>
-          <div><b>9 AM – 9 PM</b><span>Both festival days</span></div>
+          <div><b>9:00 AM – 7:00 PM</b><span>Daily, on both festival days</span></div>
         </div>
         <div class="fact-row">
           <svg class="fact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.4"/></svg>
@@ -2244,6 +2276,20 @@
 
 <section id="register">
   <div class="wrap-narrow">
+    <div class="sales-closed-panel" id="salesClosedPanel" hidden>
+      <span class="eyebrow-tag yellow">Registration</span>
+      <div class="sales-closed-card">
+        <div class="sales-closed-icon" aria-hidden="true">&#127903;</div>
+        <h2 class="section-title">Pass sales are now closed</h2>
+        <p class="sales-closed-lead">Thank you for the amazing response to Make Health Easier Wellness Fest 2026! Online pass sales have now closed.</p>
+        <div class="sales-closed-box">
+          <b>Already have a pass?</b>
+          <span>You&rsquo;re all set! Look up your phone number to see your pass and book or manage your workshops.</span>
+          <a href="#book" class="btn">Go to my workshops</a>
+        </div>
+        <p class="sales-closed-note">See you on <b>24 &amp; 25 October 2026</b> at KL Wellness City Gallery, Bukit Jalil. For updates, follow <a href="https://www.instagram.com/wellous_official/" target="_blank" rel="noopener">@wellous_official</a> on Instagram.</p>
+      </div>
+    </div>
     <span class="eyebrow-tag yellow">Registration</span>
     <h2 class="section-title" style="max-width:100%;">Reserve your spot at the Fest.</h2>
     <p class="section-lead">Slots are limited and given on a first-come, first-served basis. Fill in your details below and our team will follow up to confirm your pass.</p>
@@ -2305,11 +2351,19 @@
           <label class="choice"><input type="radio" name="days" value="Day 2" data-price="35"><span class="choice-text">Day 2 <small>Sun, 25 Oct</small></span><span class="choice-price">RM35</span></label>
         </div>
         <div class="field-error">Please pick which day(s) you'll attend.</div>
-        <p class="pass-rule-note">&#9432; Passes are <b>non-refundable</b> and valid <b>only for the day(s) you choose</b>. You can still change your pass any time <b>before</b> you pay. Not sure which day suits you? The 2-Day Pass covers both days for just RM15 more.</p>
+        <p class="pass-rule-note">&#9432; Passes are <b>non-refundable</b> and valid <b>only for the day(s) you choose</b>. You can still change your pass any time <b>before</b> you pay. Not sure which day suits you? The 2-Day Pass covers both days for just RM15 more, and a 1-Day Pass can be upgraded later with an RM15 top-up.</p>
         <div class="price-preview" id="pricePreview" style="display:none;">
           <span>Pass price</span>
           <span class="amt" id="priceAmt">RM0</span>
         </div>
+      </div>
+
+      <div class="f-group" id="g-agree">
+        <label class="agree-row">
+          <input type="checkbox" id="agreeTerms" name="agreeTerms">
+          <span>I have read and agree to the <button type="button" class="tnc-link" data-open-tnc>Terms &amp; Conditions</button> and the <button type="button" class="tnc-link" data-open-privacy>Privacy Policy</button>, including how my personal data is used for this event.</span>
+        </label>
+        <div class="field-error">Please tick the box to agree to the Terms &amp; Conditions and Privacy Policy before registering.</div>
       </div>
 
       <div class="submit-row">
@@ -2318,7 +2372,7 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </button>
       </div>
-      <p class="form-note">*Limited slots are available on a first-come, first-served basis. Your information will only be used for event-related communication.</p>
+      <p class="form-note">*Limited slots are available on a first-come, first-served basis. Your information is used to run this event, as explained in our <button type="button" class="tnc-link" data-open-privacy>Privacy Policy</button>.</p>
     </form>
 
     <iframe name="gformHiddenFrame" style="display:none" title="Registration submission target"></iframe>
@@ -2732,7 +2786,7 @@
       <h2 class="section-title">Questions? We&rsquo;ve got you.</h2>
     </div>
     <div class="faq-list">
-      <details class="faq-item"><summary>When and where is the Fest?</summary><div class="faq-a"><p>Saturday &amp; Sunday, 24&ndash;25 October 2026, from 9 AM to 9 PM both days, at KL Wellness City Gallery, Bukit Jalil, Kuala Lumpur. Directions are just above in <a href="#venue">See you there!</a></p></div></details>
+      <details class="faq-item"><summary>When and where is the Fest?</summary><div class="faq-a"><p>Saturday &amp; Sunday, 24&ndash;25 October 2026, from 9:00 AM to 7:00 PM daily, at KL Wellness City Gallery, Bukit Jalil, Kuala Lumpur. Directions are just above in <a href="#venue">See you there!</a></p></div></details>
       <details class="faq-item"><summary>How much is a pass?</summary><div class="faq-a"><p>A 1-Day Pass is RM35 (choose Day 1 or Day 2) and the 2-Day Pass is RM50 for both days. <a href="#best-deal">Get your pass here</a>.</p></div></details>
       <details class="faq-item"><summary>What does my pass include?</summary><div class="faq-a"><p>Unlimited wellness activities and workshops, health talks, complimentary health screenings, snacks and refreshments, games and festival-only deals, plus a goodie bag with Wellous products worth RM150*.</p></div></details>
       <details class="faq-item"><summary>Do kids need a pass?</summary><div class="faq-a"><p>Kids 12 and below enter for free! Children must be with a parent or guardian at all times.</p></div></details>
@@ -2741,7 +2795,7 @@
       <details class="faq-item"><summary>Can I cancel a workshop booking?</summary><div class="faq-a"><p>Yes, cancel anytime in <a href="#book">Reserve your workshop slots</a>. Your spot is passed to the next person on the wait list, so please cancel if you can&rsquo;t make it.</p></div></details>
       <details class="faq-item"><summary>What if I&rsquo;m late for a workshop?</summary><div class="faq-a"><p>Your spot is held for 10 minutes after the class starts. After that, it may be given to someone on the wait list, so do come 5&ndash;10 minutes early.</p></div></details>
       <details class="faq-item"><summary>I paid but didn&rsquo;t get a confirmation email.</summary><div class="faq-a"><p>It can take a few minutes, and sometimes lands in spam or promotions. You can also come back to this page on the same phone and your pass will show in <a href="#book">Reserve your workshop slots</a>.</p></div></details>
-      <details class="faq-item"><summary>I have a 1-Day Pass. Can I come on the other day too?</summary><div class="faq-a"><p>Yes! Top up your 1-Day Pass to the full 2-Day Pass for just <b>RM15</b>: look for the &ldquo;Top up for RM15&rdquo; offer on your booking page or in your confirmation email. Once paid, you&rsquo;re all set for both days and can book workshops on both.</p></div></details>
+      <details class="faq-item"><summary>I have a 1-Day Pass. Can I come on the other day too?</summary><div class="faq-a"><p data-topup-on hidden>Yes! Top up your 1-Day Pass to the full 2-Day Pass for just <b>RM15</b>: look for the &ldquo;Top up for RM15&rdquo; offer on your booking page or in your confirmation email. Once paid, you&rsquo;re all set for both days and can book workshops on both. You can also top up RM15 upon ticket collection at the counter, subject to availability.</p><p data-topup-off>Yes! Register again with the <b>same phone number</b> and choose the other day&rsquo;s 1-Day Pass. Once paid, your passes together cover both days, and you can book workshops on both. You can also upgrade to the 2-Day Pass with an RM15 top-up upon ticket collection at the counter, subject to availability.</p></div></details>
       <details class="faq-item"><summary>Can I get a refund or transfer my pass?</summary><div class="faq-a"><p>Passes are non-refundable and non-transferable, except where required by law, and a 1-Day Pass is only valid for its own day. Changed your mind before paying? Just go back to the form and pick a different pass. See the full <button type="button" class="tnc-link" data-open-tnc>Terms &amp; Conditions</button>.</p></div></details>
     </div>
   </div>
@@ -2753,183 +2807,242 @@
     <p class="tnc-kicker">Make Health Easier Wellness Fest 2026 &middot; Presented by Wellous</p>
     <h3 id="tncTitle">Terms &amp; Conditions</h3>
     <div class="tnc-body">
-<p>Please read these Terms &amp; Conditions (“Terms”) carefully before registering for, purchasing a ticket or wristband for, or attending Make Health Easier Wellness Fest 2026 (“Event”).</p>
-<p>By registering for, purchasing a ticket or wristband for, participating in, or attending the Event, each individual (“Participant”) acknowledges that they have read, understood, accepted and agreed to be bound by these Terms.</p>
-<p>Where the Participant is a minor, these Terms shall be accepted and agreed to by the Participant’s parent, guardian or legal representative on the Participant’s behalf.</p>
-<p>The Event is presented and organised by Wellous and/or its appointed event partners, vendors, contractors and representatives (collectively, the “Organiser”).</p>
+<p class="tnc-updated">Last updated: 5 October 2026</p>
+<p>Please read these Terms &amp; Conditions (&ldquo;Terms&rdquo;) carefully before registering for, buying a pass for, booking a workshop at, or attending Make Health Easier Wellness Fest 2026 (&ldquo;Event&rdquo;).</p>
+<p>By registering for, buying a pass for, booking a workshop at, participating in or attending the Event, each individual (&ldquo;Participant&rdquo;) confirms that they have read, understood and agreed to be bound by these Terms and the Event <button type="button" class="tnc-link" data-open-privacy>Privacy Policy</button>.</p>
+<p>Where the Participant is under 18 years of age, these Terms must be accepted by the Participant&rsquo;s parent, guardian or legal representative on the Participant&rsquo;s behalf.</p>
+<p>The Event is presented and organised by Wellous and/or its appointed event partners, vendors, contractors and representatives (collectively, the &ldquo;Organiser&rdquo;).</p>
+
 <h4>1. Event Details</h4>
-<p>The Event will be held on:</p>
-<p>Date: 24 &amp; 25 October 2026</p>
-<p>Venue: KL Wellness City Gallery, Kuala Lumpur, Malaysia</p>
-<p>The Event programme, activities, classes, timings, speakers, instructors, vendors and participating partners are subject to change.</p>
-<p>The Organiser reserves the right to amend, reschedule, postpone or cancel any part of the Event where reasonably necessary.</p>
+<p>Date: Saturday &amp; Sunday, 24 &amp; 25 October 2026<br>Event timing: 9:00 AM &ndash; 7:00 PM daily<br>Venue: KL Wellness City Gallery, Bukit Jalil, Kuala Lumpur, Malaysia (&ldquo;Venue&rdquo;)</p>
+<p>The Event programme, activities, classes, workshops, timings, speakers, instructors, vendors and participating partners are subject to change. The Organiser reserves the right to amend, reschedule, postpone or cancel any part of the Event where reasonably necessary.</p>
+
 <h4>2. Event Access &amp; Eligibility</h4>
-<p>The Event may consist of different zones, activities and programmes, each of which may have its own access requirements.</p>
 <h5>2.1 General Event / Marketplace Areas</h5>
-<p>General event areas, including participating vendor booths, F&amp;B areas and designated public activities, may be open to members of the public, subject to venue capacity, safety requirements and applicable age restrictions.</p>
-<p>Children must be accompanied and supervised by a parent or legal guardian at all times.</p>
-<h5>2.2 Ticketed / Wristband Activities</h5>
-<p>Certain activities, classes, workshops, fitness sessions, recovery activities or other designated programmes may require a valid Event ticket, wristband or separate registration.</p>
-<p>Participants must comply with all age, capacity, safety and participation requirements applicable to the relevant activity.</p>
-<p>The Organiser reserves the right to verify a Participant’s eligibility and/or request proof of registration or identification where reasonably necessary.</p>
-<p>The Organiser may refuse or withdraw access to any activity where a Participant does not meet the applicable requirements or where continued participation may pose a safety concern.</p>
-<h4>3. Tickets &amp; Wristbands</h4>
-<p>Where applicable:</p>
+<p>General Event areas, including participating vendor booths, F&amp;B areas and designated public activities, may be open to members of the public, subject to Venue capacity, safety requirements and applicable age restrictions.</p>
+<h5>2.2 Pass-Holder Activities</h5>
+<p>Workshops, fitness classes, health talks, health screenings, goodie bags and other designated programmes require a valid Event pass and, where stated, a workshop booking.</p>
+<p>Participants must comply with all age, capacity, safety and participation requirements applicable to the relevant activity. The Organiser may verify a Participant&rsquo;s eligibility and request proof of registration or identification where reasonably necessary, and may refuse or withdraw access where a Participant does not meet the applicable requirements or where continued participation may pose a safety concern.</p>
+<h5>2.3 Children</h5>
+<p>Children aged 12 and below may enter the Event free of charge. Children must be accompanied and supervised by a parent or legal guardian at all times. Certain activities may have their own minimum age or may require a parent or guardian to take part together with the child.</p>
+
+<h4>3. Passes &amp; Prices</h4>
 <ol>
-<li>Entry to ticketed areas or activities requires a valid Event ticket, registration confirmation and/or wristband.</li>
-<li>Wristbands must be worn visibly and presented upon request by the Organiser or Event crew.</li>
-<li>Wristbands and tickets are strictly non-transferable unless otherwise expressly permitted by the Organiser.</li>
-<li>All ticket and wristband purchases are final and are non-refundable and non-exchangeable, except where required by applicable law or expressly determined by the Organiser.</li>
-<li>A 1-Day Pass is valid only for the date stated on it (24 October 2026 or 25 October 2026). It cannot be used on, transferred to, or exchanged for the other Event day, and no refund will be given if the Participant is unable to attend on that date. Participants may change their pass selection only before payment is made.</li>
-<li>Lost, damaged or stolen wristbands may not be replaced. Any replacement will be subject to the Organiser’s discretion and may be subject to applicable replacement charges.</li>
-<li>The Organiser reserves the right to refuse entry where a ticket, registration or wristband is invalid, duplicated, altered, damaged or cannot be verified.</li>
-<li>Participants are responsible for ensuring that their registration information is accurate and complete.</li>
+<li>The following passes are available, priced in Malaysian Ringgit (RM): the <b>2-Day Pass</b> (RM50), valid on both 24 and 25 October 2026; and the <b>1-Day Pass</b> (RM35), valid only on the day chosen at registration (Day 1, 24 October 2026, or Day 2, 25 October 2026).</li>
+<li>Pass benefits are as described on the Event website at the time of purchase. Items marked with an asterisk (*), including goodie bags, snacks and refreshments, are subject to availability and while stocks last.</li>
+<li>The 2-Day Pass includes access to 3 workout classes per day, subject to the classes being non-overlapping in time and booked through the Event website in accordance with Section 7.</li>
+<li>Passes are sold on a first-come, first-served basis while available. The Organiser may close pass sales at any time without prior notice, including when capacity is reached.</li>
 </ol>
-<h4>4. Event Programme &amp; Changes</h4>
-<p>The Organiser reserves the right to make reasonable changes to:</p>
-<ul>
-<li>Event programme and schedule;</li>
-<li>Fitness classes and workshops;</li>
-<li>Instructors, speakers and performers;</li>
-<li>Vendors and participating partners;</li>
-<li>Venue layout;</li>
-<li>Activity locations;</li>
-<li>Event timings; and</li>
-<li>Any other Event arrangements.</li>
-</ul>
-<p>Such changes may be made without prior notice where circumstances require.</p>
-<p>Participants should refer to the Event’s official communication channels and registration platform for the latest programme and announcements.</p>
-<h4>5. Fitness, Wellness &amp; Physical Activities</h4>
-<p>Participation in fitness classes, workouts, runs, recovery activities, workshops, games and other physical or wellness activities at the Event is voluntary and undertaken at the Participant’s own risk.</p>
-<p>Participants are responsible for determining whether they are physically able and suitably prepared to participate in any activity.</p>
-<p>Participants are strongly encouraged to seek appropriate medical advice before participating, particularly if they have any existing medical condition, injury, physical limitation or other concern that may affect their ability to participate safely.</p>
+
+<h4>4. Registration</h4>
+<ol>
+<li>Each pass is registered to one person and one mobile phone number. Only one registration may be made per phone number, except that a holder of a 1-Day Pass may buy the other day&rsquo;s 1-Day Pass using the same phone number.</li>
+<li>Participants must provide accurate and complete information, including their full name as per their identity card or passport, so that their pass can be verified at the Event.</li>
+<li>The registered phone number is used to confirm the Participant&rsquo;s pass and to view, book and cancel workshop bookings on the Event website. Participants should keep it private and are responsible for any bookings made with it.</li>
+<li>A registration is only complete once payment has been confirmed. Before payment, a Participant may go back and change their details or pass; an unpaid registration may be replaced by a new one with the same phone number.</li>
+</ol>
+
+<h4>5. Payment</h4>
+<ol>
+<li>Payments are processed securely by Stripe, our payment provider. The Organiser does not receive or store full card details.</li>
+<li>A payment confirmation will be sent to the email address entered at checkout. Participants should check that the email address is correct and keep the confirmation for pass collection.</li>
+<li>Promotional or discount codes, where offered, are subject to their own conditions, cannot be exchanged for cash and may be withdrawn at any time.</li>
+<li>The Organiser may cancel any registration or pass obtained through fraudulent, unauthorised or reversed payments, or in breach of these Terms.</li>
+</ol>
+
+<h4>6. Changes, Upgrades &amp; Refunds</h4>
+<ol>
+<li>All pass purchases are final. Passes are non-refundable, non-transferable and non-exchangeable, except where required by applicable law or expressly determined by the Organiser.</li>
+<li>Participants may change their pass selection only before payment is made. Once a pass is purchased, no changes or cancellations can be made, except as set out in paragraph 3 below.</li>
+<li>A 1-Day Pass may be upgraded to a 2-Day Pass by paying a top-up of RM15, either online via the Event website&rsquo;s booking page (while this option is available) or upon pass collection at the ticket counter, subject to availability. Top-up payments are non-refundable.</li>
+<li>A 1-Day Pass is valid only for the date stated on it. It cannot be used on, transferred to, or exchanged for the other Event day, and no refund will be given if the Participant is unable to attend on that date.</li>
+</ol>
+
+<h4>7. Workshop Bookings &amp; Wait List</h4>
+<ol>
+<li>Workshops and classes have limited spots. Booking is free with a valid pass and is offered on a first-come, first-served basis through the &ldquo;Workshop Booking&rdquo; section of the Event website.</li>
+<li>Participants can only book workshops on the day(s) covered by their pass, and cannot hold bookings for workshops that overlap in time.</li>
+<li>A booking is confirmed only when the Event website shows it as reserved. Booking confirmations may also be sent by email.</li>
+<li>Participants may cancel a booking at any time through the Event website. Participants who can no longer attend are asked to cancel so that the spot can be offered to others.</li>
+<li>When a workshop is full, Participants may join its wait list. If a spot becomes available, it is given automatically to the next person on the wait list, who will be notified by email.</li>
+<li>Booked spots are held until 10 minutes after the workshop starts. After that, the spot may be given to someone on the wait list or another Participant.</li>
+<li>Workshop bookings are personal and cannot be transferred or sold.</li>
+</ol>
+
+<h4>8. Pass Collection, Wristbands &amp; Entry</h4>
+<ol>
+<li>Participants must collect their pass and/or wristband at the ticket counter at the Venue by presenting their payment confirmation and/or registered phone number. Identification may be requested.</li>
+<li>Wristbands must be worn visibly at all times and presented upon request by Event crew.</li>
+<li>Lost, damaged or stolen wristbands may not be replaced. Any replacement is at the Organiser&rsquo;s discretion and may be subject to a replacement charge.</li>
+<li>The Organiser reserves the right to refuse entry where a pass, registration or wristband is invalid, duplicated, altered, damaged or cannot be verified.</li>
+</ol>
+
+<h4>9. Event Programme &amp; Changes</h4>
+<p>The Organiser reserves the right to make reasonable changes to the Event programme and schedule, fitness classes and workshops, instructors, speakers and performers, vendors and participating partners, Venue layout, activity locations, Event timings and any other Event arrangements. Such changes may be made without prior notice where circumstances require. Participants should refer to the Event website and official Wellous channels for the latest programme and announcements.</p>
+
+<h4>10. Fitness, Wellness &amp; Physical Activities</h4>
+<p>Participation in fitness classes, workouts, runs, recovery activities, workshops, games and other physical or wellness activities at the Event is voluntary and undertaken at the Participant&rsquo;s own risk.</p>
+<p>Participants are responsible for determining whether they are physically able and suitably prepared to participate, and are strongly encouraged to seek medical advice before participating, particularly if they have any existing medical condition, injury, pregnancy, physical limitation or other concern.</p>
 <p>Participants must:</p>
 <ul>
 <li>Follow all instructions given by instructors, medical personnel, safety marshals and Event crew;</li>
-<li>Inform the relevant instructor or Event crew of any injury, medical condition or physical limitation that may affect their participation;</li>
-<li>Stop participating immediately if they experience pain, dizziness, difficulty breathing, unusual discomfort, fatigue or any other concerning symptoms; and</li>
-<li>Comply with any instruction from medical personnel, instructors, safety marshals or Event crew to stop or withdraw from an activity.</li>
+<li>Inform the instructor or Event crew of any injury, medical condition or physical limitation that may affect their participation;</li>
+<li>Stop immediately if they experience pain, dizziness, difficulty breathing, unusual discomfort, fatigue or any other concerning symptoms; and</li>
+<li>Comply with any instruction to stop or withdraw from an activity.</li>
 </ul>
-<p>The Organiser reserves the right to stop or restrict a Participant’s participation where the Organiser, instructor, medical personnel or Event crew reasonably considers it necessary for the Participant’s safety or the safety of others.</p>
-<p>To the extent permitted by applicable law, the Organiser shall not be responsible for injury, illness, loss or damage arising from a Participant’s voluntary participation in physical activities, except where such liability cannot lawfully be excluded.</p>
-<h4>6. Health Screening &amp; Wellness Consultations</h4>
-<p>The Event may include health screening, wellness assessments, nutrition consultations, educational sessions and/or other health-related activities conducted by participating healthcare professionals, nutritionists, students, organisations or Event partners.</p>
-<p>These activities are provided for general educational and wellness purposes only and do not constitute medical diagnosis, treatment or professional medical advice, unless expressly stated otherwise by the relevant qualified healthcare provider.</p>
-<p>Participants should consult their own qualified medical practitioner for medical advice, diagnosis or treatment.</p>
-<p>Any health information, screening results or recommendations provided during the Event should not be treated as a substitute for professional medical consultation.</p>
-<p>Participation in any health screening or wellness activity is voluntary.</p>
-<p>The Organiser is not responsible for any medical decision, diagnosis, treatment or action taken by a Participant based solely on information obtained through an Event activity.</p>
-<h4>7. Recovery Activities</h4>
-<p>Certain recovery or wellness activities, including but not limited to cold plunge, ice bath, stretching, mobility or recovery sessions, may involve physical risks.</p>
-<p>Participants must follow all instructions and safety requirements provided by the relevant instructor, operator or Event crew.</p>
-<p>The Organiser reserves the right to restrict participation based on age, health, safety considerations, capacity or other reasonable requirements.</p>
-<p>Participants are responsible for informing the relevant operator or Event crew of any medical condition or physical limitation that may affect their participation.</p>
-<h4>8. Lucky Draw, Games &amp; Contests</h4>
-<p>Where lucky draws, games, contests or giveaways are conducted:</p>
+<p>The Organiser may stop or restrict a Participant&rsquo;s participation where reasonably necessary for the Participant&rsquo;s safety or the safety of others.</p>
+<p>To the extent permitted by applicable law, the Organiser shall not be responsible for injury, illness, loss or damage arising from a Participant&rsquo;s voluntary participation in physical activities, except where such liability cannot lawfully be excluded.</p>
+
+<h4>11. Health Screening &amp; Wellness Consultations</h4>
+<p>Health screenings, wellness assessments, nutrition consultations, chiropractic or posture assessments, talks and other health-related activities at the Event are conducted by participating healthcare professionals, organisations or Event partners for general educational and wellness purposes only. They do not constitute medical diagnosis, treatment or professional medical advice, unless expressly stated otherwise by the relevant qualified healthcare provider.</p>
+<p>Participation is voluntary. Participants should consult their own qualified medical practitioner for medical advice, diagnosis or treatment. The Organiser is not responsible for any medical decision or action taken by a Participant based solely on information obtained at the Event.</p>
+<p>Any health information collected during a screening is collected by the relevant provider for that screening and is handled under that provider&rsquo;s own privacy terms.</p>
+
+<h4>12. Recovery Activities</h4>
+<p>Certain recovery or wellness activities, including but not limited to cold plunge, ice bath, sauna or spa experiences, stretching, mobility or recovery sessions, may involve physical risks. Participants must follow all instructions and safety requirements provided by the relevant instructor, operator or Event crew, and inform them of any medical condition or physical limitation. The Organiser may restrict participation based on age, health, safety considerations, capacity or other reasonable requirements.</p>
+
+<h4>13. Lucky Draws, Games &amp; Contests</h4>
 <ol>
 <li>Participation is subject to the specific rules announced for the relevant activity.</li>
-<li>Winners may be required to present their valid ticket, wristband, registration details or other proof of eligibility.</li>
-<li>Unless otherwise stated, winners must be physically present at the time of announcement to claim their prize.</li>
-<li>If a winner is not present or fails to claim the prize within the stipulated period, the prize may be forfeited and/or re-drawn at the Organiser’s discretion.</li>
+<li>Winners may be required to present their valid pass, wristband, registration details or other proof of eligibility.</li>
+<li>Unless otherwise stated, winners must be physically present at the time of announcement to claim their prize. Unclaimed prizes may be forfeited and/or re-drawn at the Organiser&rsquo;s discretion.</li>
 <li>Prizes are non-transferable and cannot be exchanged for cash or other items unless otherwise stated.</li>
-<li>The Organiser reserves the right to verify the eligibility of any winner and disqualify any entry that does not comply with the applicable rules.</li>
-<li>The Organiser’s decision in relation to the administration of the lucky draw, game or contest shall be final, subject to applicable law.</li>
+<li>The Organiser may verify the eligibility of any winner and disqualify any entry that does not comply with the applicable rules. The Organiser&rsquo;s decision shall be final, subject to applicable law.</li>
 </ol>
-<h4>9. Goodie Bags, Door Gifts &amp; Complimentary Items</h4>
-<p>Goodie bags, merchandise, samples, gifts, rewards and other complimentary items are subject to availability and while stocks last.</p>
-<p>The Organiser reserves the right to substitute any item with another item of comparable value or nature without prior notice where necessary.</p>
-<p>Colours, designs, packaging, sizes and materials shown in promotional materials are for illustration purposes only and may differ from the actual items provided.</p>
-<h4>10. Personal Belongings</h4>
-<p>Participants are responsible for their own personal belongings throughout the Event.</p>
-<p>The Organiser shall not be responsible for any loss, theft, damage or disappearance of personal belongings, including but not limited to mobile phones, wallets, bags, jewellery, clothing or other personal items.</p>
-<p>Participants are advised not to bring valuables to the Event or to leave personal belongings unattended.</p>
-<h4>11. Photography, Filming &amp; Media</h4>
-<p>By attending the Event, Participants acknowledge and agree that photography, video recording and/or audio recording may take place throughout the Event.</p>
-<p>The Organiser and its appointed photographers, videographers, media partners and representatives may capture images, video or recordings containing Participants for purposes including:</p>
+
+<h4>14. Goodie Bags, Samples, Vouchers &amp; Complimentary Items</h4>
+<p>Goodie bags, merchandise, samples, vouchers, gifts, rewards and other complimentary items are subject to availability and while stocks last. Goodie bag values stated are approximate retail values.</p>
+<p>The Organiser may substitute any item with another item of comparable value or nature without prior notice. Items shown in promotional materials are for illustration purposes only. Vendor offers, vouchers and festival-only deals are provided by the relevant vendor and are subject to that vendor&rsquo;s own terms.</p>
+
+<h4>15. Personal Belongings</h4>
+<p>Participants are responsible for their own personal belongings throughout the Event. The Organiser shall not be responsible for any loss, theft or damage to personal belongings. Participants are advised not to bring valuables or leave belongings unattended.</p>
+
+<h4>16. Photography, Filming &amp; Media</h4>
+<p>Photography, video and/or audio recording will take place throughout the Event. The Organiser and its appointed photographers, videographers, media partners and representatives may capture images or recordings containing Participants and use them, without payment, for Event documentation, publicity, marketing, social media, advertising, press coverage, websites and future Event or brand communications.</p>
+<p>Participants who do not wish to be intentionally photographed or filmed should inform Event crew at the information counter. The Organiser cannot guarantee that an individual will be excluded from incidental appearance in crowd, background or general Event footage.</p>
+
+<h4>17. Personal Data</h4>
+<p>Personal data provided during registration, payment, workshop booking and at the Event is collected, used, stored and disclosed in accordance with the Event <button type="button" class="tnc-link" data-open-privacy>Privacy Policy</button>, the Wellous <a href="https://www.wellous.com/privacy-notice" target="_blank" rel="noopener">Privacy Notice</a> and Malaysia&rsquo;s Personal Data Protection Act 2010.</p>
+
+<h4>18. Communications</h4>
+<p>The Organiser may contact Participants using the phone number and email address provided for purposes relating to the Event, including payment and booking confirmations, wait-list updates, schedule changes, safety information and other Event matters. The Organiser is not responsible for communications not received because of incorrect or outdated contact details, or because emails were filtered as spam.</p>
+
+<h4>19. Cancellation, Postponement &amp; Force Majeure</h4>
+<p>The Organiser reserves the right to postpone, reschedule, alter or cancel the Event or any part of it due to circumstances beyond its reasonable control, including severe weather, flooding, haze, natural disasters, fire, public health emergencies, government directives, security threats, Venue-related circumstances, technical or operational failures, or any other circumstances which, in the Organiser&rsquo;s reasonable opinion, make it impractical or unsafe to conduct the Event.</p>
+<p>Where the Event is cancelled, postponed or materially changed, the Organiser will communicate the applicable arrangements through the Event website and official Wellous channels. Any refund or credit arrangements, if applicable, will be determined in accordance with the circumstances and applicable law. To the extent permitted by law, the Organiser shall not be liable for indirect losses, travel or accommodation expenses or other costs incurred as a result.</p>
+
+<h4>20. Venue Rules &amp; Participant Conduct</h4>
+<p>Participants must comply with these Terms, Venue rules, instructions from Event crew, safety requirements, activity-specific rules and applicable laws. The Organiser may refuse entry to, remove from the Venue, or restrict participation by any person whose conduct is disruptive, unsafe, abusive, threatening or otherwise inappropriate, without refund.</p>
+
+<h4>21. Website, Booking System &amp; Technical Issues</h4>
+<p>Workshop availability shown on the Event website is updated in near real time and may change between viewing and booking. The Organiser shall not be responsible for technical interruptions, system errors, payment gateway issues, website downtime, network failures, transmission delays or other technical issues beyond its reasonable control. Where an error results in an incorrect booking, price or pass, the Organiser may correct it.</p>
+
+<h4>22. Participant Acknowledgement</h4>
+<p>By registering for or attending the Event, the Participant acknowledges that they have read and understood these Terms and the Privacy Policy; will comply with all Event and Venue rules; participate in physical activities voluntarily and are responsible for assessing their own suitability; will follow reasonable safety instructions; and understand that the Event programme and arrangements may change.</p>
+
+<h4>23. Amendments to These Terms</h4>
+<p>The Organiser may amend or update these Terms where reasonably necessary. The latest version will be published on the Event website, and the version in force at the time of the Event will apply.</p>
+
+<h4>24. Governing Law</h4>
+<p>These Terms shall be governed by the laws of Malaysia, and any dispute arising in connection with these Terms or the Event shall be subject to the jurisdiction of the Malaysian courts.</p>
+
+<h4>25. Contact</h4>
+<p>Questions about these Terms: <a href="mailto:info@wellous.com">info@wellous.com</a>. Questions about your personal data: <a href="mailto:dpo@wellous.com">dpo@wellous.com</a>.</p>
+<p class="tnc-foot">Make Health Easier Wellness Fest 2026<br>24&ndash;25 October 2026 | 9:00 AM &ndash; 7:00 PM daily<br>KL Wellness City Gallery, Bukit Jalil, Kuala Lumpur<br>Presented by Wellous</p>
+    </div>
+  </div>
+</div>
+
+<div class="paycheck-overlay tnc-overlay" id="privacyModal" hidden role="dialog" aria-modal="true" aria-labelledby="privacyTitle">
+  <div class="paycheck-card tnc-card">
+    <button type="button" class="paycheck-close" data-close-privacy aria-label="Close">&times;</button>
+    <p class="tnc-kicker">Make Health Easier Wellness Fest 2026 &middot; Presented by Wellous</p>
+    <h3 id="privacyTitle">Privacy Policy</h3>
+    <div class="tnc-body">
+<p class="tnc-updated">Last updated: 5 October 2026</p>
+<p>This Privacy Policy explains how Wellous (&ldquo;we&rdquo;, &ldquo;us&rdquo;) collects, uses and protects your personal data when you use the Make Health Easier Wellness Fest 2026 website, register, buy a pass, book workshops or attend the Event. It supplements the Wellous <a href="https://www.wellous.com/privacy-notice" target="_blank" rel="noopener">Privacy Notice</a> and is issued in line with Malaysia&rsquo;s Personal Data Protection Act 2010 (&ldquo;PDPA&rdquo;).</p>
+
+<h4>1. Personal data we collect</h4>
+<h5>When you register</h5>
 <ul>
-<li>Event documentation;</li>
-<li>Publicity and marketing;</li>
-<li>Social media content;</li>
-<li>Advertising and promotional materials;</li>
-<li>Press and media coverage;</li>
-<li>Website and digital communications; and</li>
-<li>Future Event or brand communications.</li>
+<li>Full name (as per IC / passport)</li>
+<li>Gender</li>
+<li>Mobile phone number</li>
+<li>Referrer / Health Consultant ID (optional)</li>
+<li>Wellous products you have purchased (optional)</li>
+<li>Your pass choice (Day 1, Day 2 or both days) and the time you registered</li>
 </ul>
-<p>Such materials may be used without additional payment or compensation to the Participant.</p>
-<p>Participants who do not wish to be intentionally photographed or filmed should notify Event staff at the designated information or media point where available.</p>
-<p>However, the Organiser cannot guarantee that an individual will be excluded from incidental appearance in wide-angle, crowd, background or general Event footage.</p>
-<h4>12. Personal Data Protection</h4>
-<p>Participants acknowledge that personal data may be collected, processed, stored, used and/or disclosed by the Organiser and relevant Event partners for purposes relating to:</p>
+<h5>When you pay</h5>
 <ul>
-<li>Event registration and administration;</li>
-<li>Ticketing and access management;</li>
-<li>Event operations and communication;</li>
-<li>Participant safety;</li>
-<li>Event planning and statistical analysis;</li>
-<li>Customer service;</li>
-<li>Marketing and promotional communications, where permitted; and</li>
-<li>Other purposes stated in the applicable Personal Data Protection Notice.</li>
+<li>Your email address and name as entered at checkout, the amount paid and a payment reference.</li>
+<li>Card and payment details are entered directly with our payment provider, Stripe. <b>We never see or store your full card number.</b></li>
 </ul>
-<p>By registering for the Event, Participants acknowledge that they have read and understood the applicable Personal Data Protection Notice.</p>
-<p>Personal data will be handled in accordance with applicable personal data protection laws and the Organiser’s applicable privacy and personal data policies.</p>
-<p>Participants should ensure that all information submitted during registration is accurate, complete and up to date.</p>
-<h4>13. Communications</h4>
-<p>The Organiser may contact Participants using the contact details provided during registration for purposes relating to the Event, including Event updates, schedule changes, registration matters, safety information and other relevant communications.</p>
-<p>Participants are responsible for ensuring that their registered contact details remain accurate and accessible.</p>
-<p>The Organiser shall not be responsible for failure to receive communications caused by incorrect, outdated or incomplete information provided by the Participant.</p>
-<h4>14. Cancellation, Postponement &amp; Force Majeure</h4>
-<p>The Organiser reserves the right to postpone, reschedule, alter or cancel the Event or any part of the Event due to circumstances beyond its reasonable control.</p>
-<p>Such circumstances may include, without limitation:</p>
+<h5>When you book workshops</h5>
 <ul>
-<li>Severe weather or adverse weather conditions;</li>
-<li>Flooding;</li>
-<li>Haze or air-quality concerns;</li>
-<li>Natural disasters;</li>
-<li>Fire;</li>
-<li>Public health emergencies;</li>
-<li>Government directives or restrictions;</li>
-<li>Security threats;</li>
-<li>Acts of God;</li>
-<li>Venue-related circumstances;</li>
-<li>Technical or operational failures; or</li>
-<li>Any other circumstances which, in the Organiser’s reasonable opinion, make it impractical or unsafe to conduct the Event.</li>
+<li>The workshops you book, cancel or join the wait list for, with the date and time of each action.</li>
 </ul>
-<p>Where an Event is cancelled, postponed or materially changed, the Organiser will communicate the applicable arrangements through its official Event channels.</p>
-<p>To the extent permitted by applicable law, the Organiser shall not be liable for any indirect loss, travel expenses, accommodation expenses, inconvenience or other costs incurred by Participants as a result of any postponement, cancellation or change to the Event.</p>
-<p>Any refund or credit arrangements, if applicable, shall be determined and communicated by the Organiser in accordance with the circumstances and applicable law.</p>
-<h4>15. Venue Rules &amp; Participant Conduct</h4>
-<p>Participants must comply with:</p>
+<h5>At the Event</h5>
 <ul>
-<li>These Terms;</li>
-<li>Venue rules and regulations;</li>
-<li>Instructions issued by Event crew;</li>
-<li>Safety requirements;</li>
-<li>Activity-specific rules; and</li>
-<li>Applicable laws and regulations.</li>
+<li>Pass collection and entry records, lucky draw or contest entries, and photographs and video recorded at the Event (see the Terms &amp; Conditions, &ldquo;Photography, Filming &amp; Media&rdquo;).</li>
+<li>Health screenings at vendor booths are run by the relevant provider, who handles any health information under its own privacy terms. We do not receive your screening results.</li>
 </ul>
-<p>The Organiser reserves the right to refuse entry to, remove from the Venue, or restrict participation by any person whose conduct is considered disruptive, unsafe, abusive, threatening or otherwise inappropriate.</p>
-<p>No Participant may engage in conduct that may endanger or cause harm, harassment or unreasonable disturbance to other Participants, Event personnel, vendors, instructors or members of the public.</p>
-<h4>16. Technical &amp; Registration Platform Issues</h4>
-<p>The Organiser shall not be responsible for technical interruptions, system errors, communication failures, payment gateway issues, website or registration platform downtime, network failures, unauthorised access, transmission delays or other technical issues beyond its reasonable control.</p>
-<p>Participants are responsible for ensuring that their registration and payment details are submitted correctly.</p>
-<h4>17. Participant Acknowledgement</h4>
-<p>By registering for or attending the Event, the Participant acknowledges that:</p>
-<ol>
-<li>They have read and understood these Terms;</li>
-<li>They agree to comply with all Event and Venue rules;</li>
-<li>Participation in physical activities is voluntary;</li>
-<li>They are responsible for assessing their own suitability for participation;</li>
-<li>They will follow reasonable safety instructions given by Event personnel; and</li>
-<li>They understand that the Event programme and arrangements may be subject to change.</li>
-</ol>
-<h4>18. Amendments To These Terms</h4>
-<p>The Organiser reserves the right to amend or update these Terms where reasonably necessary.</p>
-<p>The latest version of the Terms may be made available through the Event’s official communication channels and/or registration platform.</p>
-<p>Participants are responsible for reviewing the latest applicable Terms before attending the Event.</p>
-<h4>19. Governing Law</h4>
-<p>These Terms shall be governed by and construed in accordance with the laws of Malaysia.</p>
-<p>Any dispute arising in connection with these Terms or the Event shall be subject to the applicable jurisdiction of the Malaysian courts.</p>
-    <p class="tnc-foot">Make Health Easier Wellness Fest 2026<br>24&ndash;25 October 2026 | KL Wellness City Gallery, Kuala Lumpur<br>Presented by Wellous</p>
+<h5>Automatically</h5>
+<ul>
+<li>Our website host keeps standard technical logs (such as IP address, browser type and pages requested) for security and to keep the site running.</li>
+</ul>
+
+<h4>2. Why we use your personal data</h4>
+<ul>
+<li>To register you, process your payment and issue and verify your pass;</li>
+<li>To let you look up your pass and book, cancel and manage workshop spots and wait lists using your phone number;</li>
+<li>To send you payment, booking and wait-list confirmations and important Event updates;</li>
+<li>To check you in, hand out goodie bags and run lucky draws and contests;</li>
+<li>To recognise the Health Consultant who invited you, if you entered a Referrer ID;</li>
+<li>To keep the Event safe, prevent fraud and duplicate registrations, and handle questions and complaints;</li>
+<li>To understand attendance and product interest (in summary form) so we can plan better events; and</li>
+<li>To meet our legal and accounting obligations.</li>
+</ul>
+<p>We will only send you marketing messages that are not about this Event if you have separately agreed to receive them, and you can opt out at any time.</p>
+
+<h4>3. Who we share it with</h4>
+<p>We do not sell your personal data. We share it only as needed with:</p>
+<ul>
+<li><b>Service providers</b> that run this website and its systems on our behalf: Stripe (payments), Google (secure storage of registrations and bookings, and sending confirmation emails) and Vercel (website hosting);</li>
+<li><b>Wellous group companies and appointed event partners and crew</b>, only as needed to run the Event (for example, to check you in at the ticket counter);</li>
+<li><b>Professional advisers, authorities or law enforcement</b> where required by law or to protect the safety of attendees.</li>
+</ul>
+<p>Some of these providers store data on servers outside Malaysia. Where this happens, we take reasonable steps so that your data receives a level of protection comparable to the PDPA.</p>
+
+<h4>4. Data stored on your device</h4>
+<p>To save you re-entering details, this website saves your registration details, pass status and workshop booking codes in your browser&rsquo;s local storage on your own device. You can remove them at any time by clearing your browser&rsquo;s site data, or by tapping &ldquo;Not you? Use a different number&rdquo; on the booking page.</p>
+<p>We do not use advertising or analytics cookies on this website. The vendor videos on this page are embedded from Instagram, which may set its own cookies when you play them, under Instagram&rsquo;s privacy policy.</p>
+
+<h4>5. How long we keep it</h4>
+<p>We keep your Event registration, payment and booking records for up to 12 months after the Event, unless a longer period is required for accounting, tax, legal or dispute purposes. After that, we delete them or keep only anonymised summaries.</p>
+
+<h4>6. How we protect it</h4>
+<p>Access to registration and booking records is limited to authorised staff and service providers who need it. Payments are handled by Stripe over encrypted connections. As your phone number is used to look up your pass and bookings, please keep it private and let us know if you think someone else has used it.</p>
+
+<h4>7. Children</h4>
+<p>If you are under 18, please ask a parent or guardian to register for you or with you. By registering a person under 18, the parent or guardian consents to this Privacy Policy on their behalf.</p>
+
+<h4>8. Your choices and rights</h4>
+<p>Under the PDPA, you may ask to:</p>
+<ul>
+<li>Access the personal data we hold about you, and receive a copy;</li>
+<li>Correct personal data that is inaccurate, incomplete or out of date;</li>
+<li>Withdraw your consent or limit how we use your data, for example to stop marketing messages; and</li>
+<li>Ask questions or make a complaint about how your data is handled.</li>
+</ul>
+<p>Email <a href="mailto:dpo@wellous.com">dpo@wellous.com</a> with your name and registered phone number. We may need to verify your identity and will reply within the time required by law. Name, phone number and pass choice are needed to register; without them, or if you withdraw consent before the Event, we may not be able to issue your pass or keep your workshop bookings.</p>
+
+<h4>9. Changes to this Policy</h4>
+<p>We may update this Policy from time to time. The latest version will always be on this website, with the date it was last updated shown at the top.</p>
+
+<h4>10. Contact us</h4>
+<p>Data protection enquiries: <a href="mailto:dpo@wellous.com">dpo@wellous.com</a><br>General enquiries: <a href="mailto:info@wellous.com">info@wellous.com</a><br>Wellous, No 1-1, Jalan Tasik Utama 3, Medan Niaga Tasik Damai, Lakefield Sungai Besi, 57000 Kuala Lumpur</p>
+<p>If there is any inconsistency between the English version of this Policy and any translation, the English version prevails.</p>
+<p class="tnc-foot">Make Health Easier Wellness Fest 2026<br>24&ndash;25 October 2026 | 9:00 AM &ndash; 7:00 PM daily<br>KL Wellness City Gallery, Bukit Jalil, Kuala Lumpur<br>Presented by Wellous</p>
     </div>
   </div>
 </div>
@@ -2951,6 +3064,7 @@
       <a href="https://www.instagram.com/wellous_official/" target="_blank" rel="noopener">Instagram</a>
       <a href="#faq">FAQ</a>
       <button type="button" class="footer-tnc" data-open-tnc>Terms &amp; Conditions</button>
+      <button type="button" class="footer-tnc" data-open-privacy>Privacy Policy</button>
     </div>
   </div>
   <div class="wrap footer-bottom">
@@ -3164,12 +3278,39 @@
     ? { 'Day 1': TEST_PAYMENT_LINK, 'Day 2': TEST_PAYMENT_LINK, 'Both days': TEST_PAYMENT_LINK }
     : LIVE_STRIPE_LINKS;
 
+  // ---------- PASS SALES SWITCH ----------
+  // Set to false to close pass sales: every buy button turns into "Sales closed", the registration
+  // form is replaced by the "Pass sales are now closed" panel, the floating pass bar and payment
+  // reminder stop, and the RM15 top-up / add-a-day offers are hidden. Pass holders can still look up
+  // their number and book or cancel workshops. To stop anyone paying through a saved checkout
+  // link, also deactivate the pass links in Stripe (Payment links > Deactivate).
+  var PASS_SALES_OPEN = true;
+  function applySalesClosed(){
+    if(PASS_SALES_OPEN) return;
+    document.body.classList.add('sales-closed');
+    var panel = document.getElementById('salesClosedPanel'); if(panel) panel.hidden = false;
+    var f = document.getElementById('regForm'); if(f) f.style.display = 'none';
+    var c = document.getElementById('confirmPanel'); if(c) c.classList.remove('show');
+    document.querySelectorAll('a[href="#register"], a[href="#regForm"], a[href="#best-deal"]').forEach(function(a){
+      a.removeAttribute('data-select-pass');
+      if(a.classList.contains('ticket-chip')) return; // greyed out with a "Sales closed" tag by CSS
+      a.classList.add('buy-closed');
+      a.textContent = a.classList.contains('buy-btn') ? 'SALES CLOSED' : (a.id === 'navCta' || a.closest('#mobilePanel') ? 'Sales Closed' : 'Pass sales closed');
+    });
+    var cta = document.querySelector('#book .book-cta');
+    if(cta) cta.innerHTML = '<div class="book-cta-text"><b>Pass sales are now closed.</b><span>Already have a pass? Enter the phone number you registered with to see your pass and book your workshops.</span></div>';
+  }
+  applySalesClosed();
+
   // ---------- RM15 top-up (1-Day Pass -> both days) ----------
-  // Offered to every 1-Day holder throughout their journey: right after paying, on the other
-  // day's workshop cards, in the pass email and on the registration form.
+  // When on, offered to every 1-Day holder throughout their journey: right after paying, on the
+  // other day's workshop cards and on the registration form. ON/OFF SWITCH: TOP_UP_ENABLED below.
+  // (The pass email has its own switch: Apps Script > Script properties > TOP_UP_ENABLED = false turns it off.)
+  // While off, 1-Day holders are offered the other day's pass instead.
+  var TOP_UP_ENABLED = true;
   var LIVE_UPGRADE_LINK = 'https://buy.stripe.com/9B628t6Ix1ZPbU8aHXe3e06'; // RM15 top-up to the 2-Day Pass
   var UPGRADE_LINK = TEST_PAYMENTS ? TEST_PAYMENT_LINK : LIVE_UPGRADE_LINK;
-  function topUpAvailable(){ return !!UPGRADE_LINK; }
+  function topUpAvailable(){ return PASS_SALES_OPEN && TOP_UP_ENABLED && !!UPGRADE_LINK; }
   // The reference ties the top-up to the 1-Day Pass it belongs to (phone + that pass's payment id).
   function upgradeHref(pass){
     if(!topUpAvailable() || !pass || !pass.sessionId || (pass.pass !== 'D1' && pass.pass !== 'D2')) return '';
@@ -3233,6 +3374,7 @@
     // 1-Day holder: offer the RM15 top-up (or, if no top-up link is set, the other day's pass;
     // same phone number, together = both days)
     var topUp = upgradeHref(verifiedPass);
+    if(!PASS_SALES_OPEN){ if(addLink) addLink.remove(); return; } // sales closed: nothing to buy
     if(btn && !addLink){
       addLink = document.createElement('a');
       addLink.className = 'add-day-link';
@@ -3274,6 +3416,11 @@
     img.alt = twoDay ? 'Your 2-Day Pass' : 'Your 1-Day Pass';
     img.hidden = false;
   }
+  // FAQ wording follows the top-up switch
+  document.querySelectorAll('[data-topup-on]').forEach(function(el){ el.hidden = !topUpAvailable(); });
+  document.querySelectorAll('[data-topup-off]').forEach(function(el){ el.hidden = topUpAvailable(); });
+  // sales closed: the "can I add the other day?" answer no longer applies
+  if(!PASS_SALES_OPEN) document.querySelectorAll('[data-topup-off]').forEach(function(el){ var item = el.closest('.faq-item'); if(item) item.hidden = true; });
   // Top-up box under the pass: shown to 1-Day holders only.
   function refreshUpgradeBox(){
     var box = document.getElementById('upgradeBox'); if(!box) return;
@@ -3417,6 +3564,13 @@
         lastRegistrant.fullName = reg.fullName || '';
       }
       verifyPayment('phone=' + encodeURIComponent(lastRegistrant.contactNumber), { silent: true })
+        .then(function(){
+          // Found their pass: the box they typed in disappears, so take them straight to the
+          // top of Workshop Booking where the "Payment confirmed" pass and their slots now show.
+          var input = document.getElementById('bookLookupPhone');
+          if(input) input.blur(); // close the phone keyboard first so the position is measured right
+          setTimeout(scrollToBook, 50);
+        })
         .catch(function(msg){
           if(isUnpaidReply(msg)){
             statusEl.textContent = '';
@@ -3490,6 +3644,7 @@
   var payCheck = document.getElementById('payCheck');
   function closePayCheck(){ if(payCheck) payCheck.hidden = true; }
   function openPayCheck(){
+    if(!PASS_SALES_OPEN) return; // sales closed: don't ask unpaid visitors to pay
     var reg = storeGet(REG_KEY);
     if(!payCheck || !reg || !reg.contactNumber) return;
     var phone = normalisePhone(reg.contactNumber);
@@ -3811,7 +3966,10 @@
       }
       function onClick(e){
         var t = e.target.closest ? e.target.closest('[data-confirm]') : null;
-        if(t) done(t.getAttribute('data-confirm') === 'yes');
+        if(t){
+          var v = t.getAttribute('data-confirm');
+          done(v === 'switch' ? 'switch' : v === 'yes'); // 'switch' only exists in the single-day pass pop-up
+        }
         else if(e.target === confirmModal) done(false);
       }
       function onKey(e){ if(e.key === 'Escape') done(false); }
@@ -4331,13 +4489,16 @@
       var genderErr = !gender;
       var contactErr = contact.replace(/[^0-9]/g,'').length < 7;
       var daysErr = !days;
+      var agreeBox = document.getElementById('agreeTerms');
+      var agreeErr = !!agreeBox && !agreeBox.checked;
 
       setError('g-name', nameErr);
       setError('g-gender', genderErr);
       setError('g-contact', contactErr);
       setError('g-days', daysErr);
+      setError('g-agree', agreeErr);
 
-      if(nameErr || genderErr || contactErr || daysErr){
+      if(nameErr || genderErr || contactErr || daysErr || agreeErr){
         var firstError = document.querySelector('.f-group.error');
         if(firstError) firstError.scrollIntoView({behavior:'smooth', block:'center'});
         return;
@@ -4367,8 +4528,36 @@
           return;
         }
         if(found && found.registered && !found.paid && found.regId && !editingRegId) editingRegId = found.regId;
-        proceed();
+        confirmSingleDay().then(function(go){ if(go) proceed(); });
       });
+
+      // Single-day pass: one friendly check before checkout, with a one-tap switch to the 2-Day Pass.
+      // Resolves true to continue (with the pass now selected), false to go back to the form.
+      function confirmSingleDay(){
+        if(days.value !== 'Day 1' && days.value !== 'Day 2') return Promise.resolve(true);
+        var later = topUpAvailable()
+          ? 'online from your booking page, or upon ticket collection at the counter (subject to availability)'
+          : 'upon ticket collection at the counter, subject to availability';
+        return askConfirm({
+          title: 'Are you sure you want the ' + days.value + ' Single-Day Pass?',
+          bodyHtml:
+            '<div class="single-day-tip">&#128161; The <b>2-Day Festival Pass is only RM50</b> and gives you access to both days of the festival.' +
+              '<button type="button" class="btn btn-outline" data-confirm="switch">Switch to the 2-Day Pass (RM50)</button></div>' +
+            '<p>Once your pass is purchased, no changes or cancellations can be made.</p>' +
+            '<p>Decide later that you&rsquo;d love to come on both days? You can upgrade to the 2-Day Festival Pass by topping up <b>RM15</b>, ' + later + '.</p>',
+          yes: 'Yes, continue with ' + days.value + ' (RM35)',
+          no: 'Go back',
+          fallback: 'Continue with the ' + days.value + ' Single-Day Pass? The 2-Day Pass is only RM50.'
+        }).then(function(answer){
+          if(answer !== 'switch') return !!answer;
+          var both = form.querySelector('input[name=days][value="Both days"]');
+          if(!both) return true;
+          both.checked = true;
+          both.dispatchEvent(new Event('change', { bubbles: true })); // refresh the price preview
+          days = both;
+          return true;
+        });
+      }
 
       function proceed(){
         var referrerId = document.getElementById('referrerId').value.trim();
@@ -4921,6 +5110,38 @@
         setOpen(d, opening);
       });
     });
+  })();
+
+  // Ticking the agreement box clears its error straight away
+  var agreeTerms = document.getElementById('agreeTerms');
+  if(agreeTerms) agreeTerms.addEventListener('change', function(){ if(agreeTerms.checked) setError('g-agree', false); });
+
+  // Privacy Policy pop-up (footer, registration checkbox, links inside the T&C). Opening one
+  // policy from inside the other swaps the pop-ups instead of stacking them.
+  (function(){
+    var modal = document.getElementById('privacyModal'), tnc = document.getElementById('tncModal');
+    if(!modal) return;
+    var lastFocus = null;
+    function open(){
+      if(tnc && !tnc.hidden) tnc.hidden = true;
+      else lastFocus = document.activeElement;
+      modal.hidden = false;
+      document.body.style.overflow = 'hidden';
+      modal.querySelector('.paycheck-card').scrollTop = 0;
+      modal.querySelector('[data-close-privacy]').focus();
+    }
+    function close(){
+      modal.hidden = true;
+      document.body.style.overflow = '';
+      if(lastFocus && lastFocus.focus) lastFocus.focus({preventScroll:true});
+    }
+    document.addEventListener('click', function(e){
+      if(e.target.closest('[data-open-privacy]')){ e.preventDefault(); open(); return; }
+      if(modal.hidden) return;
+      if(e.target.closest('[data-open-tnc]')){ modal.hidden = true; return; } // the T&C pop-up opens in its place
+      if(e.target.closest('[data-close-privacy]') || e.target === modal) close();
+    });
+    document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && !modal.hidden) close(); });
   })();
 
   // Terms & Conditions pop-up (footer button, FAQ link, "*Terms & Conditions apply" notes)
