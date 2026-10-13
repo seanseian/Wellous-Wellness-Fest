@@ -106,6 +106,10 @@
   /* phones & tablets (burger menu): menu-bar masthead 50% larger than before (48px -> 72px, 40px -> 60px) */
   @media (max-width:860px){ .brand img.nav-masthead{height:72px;} .nav-inner{padding-top:8px; padding-bottom:8px;} }
   @media (max-width:520px){ .brand img.nav-masthead{height:60px;} }
+  /* KL Wellness City logo beside the masthead, matched to its height */
+  .brand img.nav-klwc{height:48px; margin-left:10px; padding-left:12px; border-left:1px solid rgba(0,0,0,0.12);}
+  @media (max-width:860px){ .brand img.nav-klwc{height:72px;} }
+  @media (max-width:520px){ .brand{min-width:0; flex:1 1 auto;} .brand img.nav-masthead{height:auto; max-height:60px; min-width:0; flex:0 1 auto; max-width:72%;} .brand img.nav-klwc{height:auto; max-height:60px; flex:0 1 auto; min-width:0; max-width:26%; margin-left:6px; padding-left:6px;} }
   @media (max-width:520px){.nav-wellous-logo{display:none;}}
   nav.links{display:flex; gap:28px; align-items:center;}
   nav.links a{
@@ -1684,6 +1688,7 @@
   <div class="nav-inner">
     <a href="#home" class="brand">
       <img src="images/nav-masthead.png" alt="Make Health Easier Wellness Fest, presented by Wellous" class="nav-masthead">
+      <img src="images/klwc-logo.png" alt="KL Wellness City" class="nav-klwc">
     </a>
     <nav class="links">
       <a href="#about">About</a>
