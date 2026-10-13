@@ -268,6 +268,7 @@
   .partner-row img.logo-wide{height:26px; max-width:100px;}
   .partner-row img.logo-heal{height:30px;}
   .partner-row img.logo-lafre{height:22px;}
+  .partner-row img.logo-recircle{height:20px; max-width:100px;}
   .partner-row img.logo-evenon{width:64px; height:64px; box-sizing:border-box; object-fit:contain; background:#739db7; padding:10px 8px; border-radius:12px;}
   .partner-row img.logo-tile{height:48px; border-radius:10px;}
   .partner-word{font-family:'Mark Pro'; font-weight:800; color:var(--green-dark); font-size:0.82rem; line-height:1.05; letter-spacing:-0.01em; text-align:center;}
@@ -280,6 +281,7 @@
     .partner-row img.logo-wide{height:19px; max-width:74px;}
     .partner-row img.logo-heal{height:22px;}
     .partner-row img.logo-lafre{height:16px;}
+    .partner-row img.logo-recircle{height:15px; max-width:76px;}
     .partner-row img.logo-evenon{width:46px; height:46px; padding:7px 6px;}
     .partner-row img.logo-tile{height:36px;}
     .partner-word{font-size:0.72rem;}
@@ -849,6 +851,22 @@
   .screening-small{font-size:0.8rem !important;}
   .screening-cta{margin-top:6px;}
   .tnc-num{font-weight:800; color:var(--text); margin-right:4px;}
+  .tnc-body strong{color:var(--text); font-weight:800;}
+  /* T&C pop-up: wide on desktop so more is visible at once; compact type on phones for faster reading */
+  #tncModal{padding:16px;}
+  #tncModal .tnc-card{max-width:1040px; max-height:calc(100vh - 32px); padding:30px 40px 24px;}
+  @media (max-width:640px){
+    #tncModal{padding:8px;}
+    #tncModal .tnc-card{max-height:calc(100vh - 16px); max-height:calc(100dvh - 16px); padding:18px 16px 14px; border-radius:16px;}
+    #tncModal .tnc-kicker{font-size:0.66rem; margin-bottom:2px;}
+    #tncModal h3{font-size:1.1rem; margin-bottom:4px;}
+    #tncModal .tnc-body{font-size:0.78rem; line-height:1.48;}
+    #tncModal .tnc-body h4{font-size:0.88rem; margin:14px 0 4px;}
+    #tncModal .tnc-body h5{font-size:0.8rem; margin:9px 0 3px;}
+    #tncModal .tnc-body p{margin:0 0 7px;}
+    #tncModal .tnc-body ol, #tncModal .tnc-body ul{margin:0 0 7px; padding-left:18px;}
+    #tncModal .tnc-updated{font-size:0.7rem; margin-bottom:8px !important;}
+  }
   .tnc-body ol.tnc-alpha{list-style-type:lower-alpha;}
   .tnc-updated{font-size:0.8rem; font-weight:700; color:var(--text-muted) !important; margin:-2px 0 14px !important;}
   .agree-row{display:flex; align-items:flex-start; gap:10px; cursor:pointer; font-size:0.9rem; line-height:1.5; color:var(--text); background:#fff; border:1.5px solid var(--line); border-radius:12px; padding:12px 14px;}
@@ -1929,6 +1947,8 @@
         <img class="logo-wide" src="images/vendor-logo-yoshin.png" alt="Yoshin Wellness" loading="lazy">
         <img class="logo-lafre" src="images/vendor-logo-lafre.png" alt="Lafre" loading="lazy">
         <img class="logo-heal" src="images/vendor-logo-heal.png" alt="Heal Nutrition" loading="lazy">
+        <img src="images/vendor-logo-mala.jpg" alt="Mala Bistronome" loading="lazy">
+        <img class="logo-recircle" src="images/vendor-logo-recircle.png" alt="Recircle" loading="lazy">
         <img class="logo-wordmark" src="images/vendor-logo-upbound.jpg" alt="Upbound" loading="lazy">
       </div>
     </div>
@@ -2027,7 +2047,7 @@
       <ol class="bag-items">
         <li><img src="images/partner-logo-nowwacoffee.png" alt="Nowwacafe" loading="lazy"><div><b>NOWWACAFE</b><span>Ambassador Yang Yang Postcard × 1</span></div></li>
         <li><img src="images/partner-logo-juiceworks.png" alt="Juice Works" loading="lazy"><div><b>Juice Works</b><span>RM5 Juice Works Voucher (min. spend RM15) × 1</span></div></li>
-        <li><img src="images/vendor-logo-flaky.jpg" alt="Flaky" loading="lazy"><div><b>Flaky</b><span>Buy 8, Get 2 Free Voucher × 1</span></div></li>
+        <li><img src="images/vendor-logo-flaky.jpg" alt="Flaky" loading="lazy"><div><b>Flaky</b><span>Free 1 Tart Voucher with Any Purchase × 1</span></div></li>
         <li><img src="images/vendor-logo-myhera-v2.png" alt="MyHera" loading="lazy"><div><b>MyHera</b><span>RM20 Cash Voucher (min. spend RM200) × 1</span></div></li>
         <li><img src="images/vendor-logo-yoshin.png" alt="Yoshin Wellness" loading="lazy"><div><b>YOSHIN WELLNESS</b><span>50% Off Combo Treatment Voucher × 1</span></div></li>
         <li><img src="images/vendor-logo-heal.png" alt="Heal Nutrition" loading="lazy"><div><b>Heal Nutrition</b><span>Chocolate Protein Bar (38g) × 1</span></div></li>
@@ -2968,13 +2988,13 @@
     <h3 id="tncTitle">Terms &amp; Conditions</h3>
     <div class="tnc-body">
 <p class="tnc-updated">Last updated: 9th October 2026</p>
-<p>Please read these Terms and Conditions (“Terms”) carefully before registering for, buying a pass for, booking a workshop at or attending Make Health Easier Wellness Fest 2026 (“Event”).</p>
-<p>By registering for, buying a pass for, booking a workshop at, participating in or attending the Event, each individual (“Participant”) confirms that they have read, understood and agreed to be bound by these Terms and acknowledges the Organiser’s privacy notice available at <a href="https://www.wellous.com/privacy-notice" target="_blank" rel="noopener">https://www.wellous.com/privacy-notice</a> (“Privacy Notice”).</p>
+<p>Please read these Terms and Conditions (“<strong>Terms</strong>”) carefully before registering for, buying a pass for, booking a workshop at or attending Make Health Easier Wellness Fest 2026 (“<strong>Event</strong>”).</p>
+<p>By registering for, buying a pass for, booking a workshop at, participating in or attending the Event, each individual (“<strong>Participant</strong>”) confirms that they have read, understood and agreed to be bound by these Terms and acknowledges the Organiser’s privacy notice available at <a href="https://www.wellous.com/privacy-notice" target="_blank" rel="noopener">https://www.wellous.com/privacy-notice</a> (“<strong>Privacy Notice</strong>”).</p>
 <p>Where a Participant is under 18 years of age, the Participant’s parent or legal guardian must accept these Terms on the Participant’s behalf, provide any required activity-specific consent and accompany and supervise the Participant throughout the Event. Entry, registration or booking does not override the age, safety or participation requirements in Section 2 these Terms.</p>
-<p>The Event is presented and organised by Wellous Sdn Bhd [Registration No.: 201601035931 (1206872-W)] (“Organiser” or “Wellous”) with assistance from its appointed event partners, vendors, contractors, service providers and representatives. Independent event partners, vendors, contractors, service providers and representatives are not parties to the Participant’s contract with the Organiser merely because they participate in the Event.</p>
+<p>The Event is presented and organised by Wellous Sdn Bhd [Registration No.: 201601035931 (1206872-W)] (“<strong>Organiser</strong>” or “<strong>Wellous</strong>”) with assistance from its appointed event partners, vendors, contractors, service providers and representatives. Independent event partners, vendors, contractors, service providers and representatives are not parties to the Participant’s contract with the Organiser merely because they participate in the Event.</p>
 <p>Payments may be collected by Swipe as the Organiser’s authorised payment collection agent. Receipts may be issued by Trader2u Sdn Bhd on behalf of the Organiser. Successful payment to the authorised collection agent satisfies the Participant’s corresponding payment obligation to the Organiser. These arrangements do not change the Participant’s contracting party or relieve the Organiser of its obligations under these Terms, including any refund required by applicable law.</p>
 <h4>1. Event Details</h4>
-<p>Date: Saturday &amp; Sunday, 24th &amp; 25th October 2026<br>Event timing: 9:00 AM – 7:00 PM daily<br>Venue: KL Wellness City Gallery, Bukit Jalil, Kuala Lumpur, Malaysia (“Venue”)</p>
+<p>Date: Saturday &amp; Sunday, 24th &amp; 25th October 2026<br>Event timing: 9:00 AM – 7:00 PM daily<br>Venue: KL Wellness City Gallery, Bukit Jalil, Kuala Lumpur, Malaysia (“<strong>Venue</strong>”)</p>
 <p><span class="tnc-num">1.1</span> Certain workout classes, workshops and activities may start before or after the Event timing, as shown in the Event agenda and workshop booking details. Access for these sessions is limited to Participants who meet admission and eligibility requirements under Section 2 and where applicable, have a confirmed booking under Section 7 these Terms.</p>
 <p><span class="tnc-num">1.2</span> The Event programme, activities, classes, workshops, timings, speakers, instructors, vendors and participating partners are subject to change. The Organiser reserves the right to amend, reschedule, postpone or cancel any part of the Event, where reasonably necessary.</p>
 <h4>2. Event Access and Eligibility</h4>
@@ -2984,7 +3004,7 @@
 </ol>
 <h5>2.2 Programme eligibility</h5>
 <ol type="a" class="tnc-alpha">
-<li>Participation in Event programmes, including workshops, fitness classes, health talks, health screenings, recovery activities, games and contests, is restricted to persons aged 18 and above, except Create &amp; Connect: DIY Creative Tent for Parents &amp; Kids and Little Hands, Big Memories: A Parent &amp; Kids Bonding Workshop under 18 years of age may participate only in those workshops, subject to the published minimum age, booking, consent, supervision and safety requirements.</li>
+<li>Participation in Event programmes, including workshops, fitness classes, health talks, health screenings, recovery activities, games and contests, is restricted to persons aged 18 and above, except <strong>Create &amp; Connect: DIY Creative Tent for Parents &amp; Kids </strong>and<strong> Little Hands, Big Memories: A Parent &amp; Kids Bonding Workshop </strong>under 18 years of age may participate only in those workshops, subject to the published minimum age, booking, consent, supervision and safety requirements.</li>
 </ol>
 <h5>2.3 Children and parental responsibility</h5>
 <ol type="a" class="tnc-alpha">
@@ -5296,7 +5316,9 @@
     { name: 'NADI', logo: 'images/vendor-logo-nadi.jpg', instagram: 'nadiclinic', video: 'https://www.instagram.com/reel/Db2kVkbiChH/', blurb: 'Wellness made simple.' },
     { name: 'Yoshin Wellness', logo: 'images/vendor-logo-yoshin.png', instagram: 'yoshinwellness', video: 'https://www.instagram.com/reel/DdeerOYsK_q/', blurb: 'Free gua sha at the health screening area.' },
     { name: 'Lafre', logo: 'images/vendor-logo-lafre.png', instagram: 'lafreglobal', video: 'https://www.instagram.com/reel/DRgDUMYgQxD/', blurb: 'Women\u2019s wellness & intimate care.' },
-    { name: 'Heal Nutrition', logo: 'images/vendor-logo-heal.png', instagram: 'healnutrition.co', video: 'https://www.instagram.com/reel/DeJk3-IhpqA/', blurb: 'Protein-packed snacks for busy days.' }
+    { name: 'Heal Nutrition', logo: 'images/vendor-logo-heal.png', instagram: 'healnutrition.co', video: 'https://www.instagram.com/reel/DeJk3-IhpqA/', blurb: 'Protein-packed snacks for busy days.' },
+    { name: 'Mala Bistronome', logo: 'images/vendor-logo-mala.jpg', instagram: 'malabistronome', video: 'https://www.instagram.com/reel/DeOlM5mBibE/', blurb: 'Mala bowls with a kick.' },
+    { name: 'Recircle', logo: 'images/vendor-logo-recircle.png', instagram: 'recirclemy', video: 'https://www.instagram.com/reel/CwFSggIpOUL/', blurb: 'Recycle and get rewarded.' }
   ];
   // Instagram reel/post or TikTok video link -> { platform, embed URL }
   function vendorEmbed(url){
