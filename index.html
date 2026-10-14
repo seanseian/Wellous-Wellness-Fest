@@ -859,20 +859,20 @@
   .screening-cta{margin-top:6px;}
   .tnc-num{font-weight:800; color:var(--text); margin-right:4px;}
   .tnc-body strong{color:var(--text); font-weight:800;}
-  /* T&C pop-up: wide on desktop so more is visible at once; compact type on phones for faster reading */
-  #tncModal{padding:16px;}
-  #tncModal .tnc-card{max-width:1040px; max-height:calc(100vh - 32px); padding:30px 40px 24px;}
+  /* T&C and IMD waiver pop-ups: wide on desktop so more is visible at once; compact type on phones for faster reading */
+  #tncModal, #imdWaiverModal{padding:16px;}
+  #tncModal .tnc-card, #imdWaiverModal .tnc-card{max-width:1040px; max-height:calc(100vh - 32px); padding:30px 40px 24px;}
   @media (max-width:640px){
-    #tncModal{padding:8px;}
-    #tncModal .tnc-card{max-height:calc(100vh - 16px); max-height:calc(100dvh - 16px); padding:18px 16px 14px; border-radius:16px;}
-    #tncModal .tnc-kicker{font-size:0.66rem; margin-bottom:2px;}
-    #tncModal h3{font-size:1.1rem; margin-bottom:4px;}
-    #tncModal .tnc-body{font-size:0.78rem; line-height:1.48;}
-    #tncModal .tnc-body h4{font-size:0.88rem; margin:14px 0 4px;}
-    #tncModal .tnc-body h5{font-size:0.8rem; margin:9px 0 3px;}
-    #tncModal .tnc-body p{margin:0 0 7px;}
-    #tncModal .tnc-body ol, #tncModal .tnc-body ul{margin:0 0 7px; padding-left:18px;}
-    #tncModal .tnc-updated{font-size:0.7rem; margin-bottom:8px !important;}
+    #tncModal, #imdWaiverModal{padding:8px;}
+    #tncModal .tnc-card, #imdWaiverModal .tnc-card{max-height:calc(100vh - 16px); max-height:calc(100dvh - 16px); padding:18px 16px 14px; border-radius:16px;}
+    #tncModal .tnc-kicker, #imdWaiverModal .tnc-kicker{font-size:0.66rem; margin-bottom:2px;}
+    #tncModal h3, #imdWaiverModal h3{font-size:1.1rem; margin-bottom:4px;}
+    #tncModal .tnc-body, #imdWaiverModal .tnc-body{font-size:0.78rem; line-height:1.48;}
+    #tncModal .tnc-body h4, #imdWaiverModal .tnc-body h4{font-size:0.88rem; margin:14px 0 4px;}
+    #tncModal .tnc-body h5, #imdWaiverModal .tnc-body h5{font-size:0.8rem; margin:9px 0 3px;}
+    #tncModal .tnc-body p, #imdWaiverModal .tnc-body p{margin:0 0 7px;}
+    #tncModal .tnc-body ol, #tncModal .tnc-body ul, #imdWaiverModal .tnc-body ol, #imdWaiverModal .tnc-body ul{margin:0 0 7px; padding-left:18px;}
+    #tncModal .tnc-updated, #imdWaiverModal .tnc-updated{font-size:0.7rem; margin-bottom:8px !important;}
   }
   .tnc-body ol.tnc-alpha{list-style-type:lower-alpha;}
   .tnc-updated{font-size:0.8rem; font-weight:700; color:var(--text-muted) !important; margin:-2px 0 14px !important;}
@@ -2064,6 +2064,7 @@
         <li><img src="images/vendor-logo-flaky.jpg" alt="Flaky" loading="lazy"><div><b>Flaky</b><span>Free 1 Tart Voucher with Any Purchase × 1</span></div></li>
         <li><img src="images/vendor-logo-myhera-v2.png" alt="MyHera" loading="lazy"><div><b>MyHera</b><span>RM20 Cash Voucher (min. spend RM200) × 1</span></div></li>
         <li><img src="images/vendor-logo-yoshin.png" alt="Yoshin Wellness" loading="lazy"><div><b>YOSHIN WELLNESS</b><span>50% Off Combo Treatment Voucher × 1</span></div></li>
+        <li><img src="images/vendor-logo-imd.jpg" alt="IMD Breathwork" loading="lazy"><div><b>IMD (Breathwork)</b><span>50% Off Promotion (RM199) × 1</span></div></li>
         <li><img src="images/vendor-logo-heal.png" alt="Heal Nutrition" loading="lazy"><div><b>Heal Nutrition</b><span>Chocolate Protein Bar (38g) × 1</span></div></li>
         <li><img src="images/vendor-logo-immority.jpg" alt="Immority" loading="lazy"><div><b>IMMORITY</b><span>LiveOn Sachet × 1 + MoveOn Sachet × 1</span></div></li>
         <li><img src="images/vendor-logo-tigrox.jpg" alt="Tigrox" loading="lazy"><div><b>Tigrox</b><span>TMK Sachet × 1</span></div></li>
