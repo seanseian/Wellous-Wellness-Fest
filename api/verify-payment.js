@@ -19,9 +19,9 @@
 //                      request sends it in the X-Internal-Key header, the payer's email
 //                      (from Stripe Checkout) is included so the workshop confirmation
 //                      email can be sent. Browsers never get the email.
-//   WELLFAM_*          (optional) Wellfam members get a free pass: a phone lookup with no Stripe
-//                      payment still counts as paid when the number is a registered Wellfam
-//                      member ({ waived: true }). See api/_wellfam.js.
+//   WELLFAM_*          (optional) Wellfam VVIPs get a free pass: a phone lookup with no Stripe
+//                      payment still counts as paid when the number is a VVIP whose free pass
+//                      was confirmed in the sheet ({ waived: true }). See api/_wellfam.js.
 
 const { wellfamPass } = require('./_wellfam');
 

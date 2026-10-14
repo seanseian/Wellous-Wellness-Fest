@@ -1,15 +1,21 @@
-// Shared helpers for Wellfam members (free pass). Not an endpoint: Vercel skips files starting with _.
+// Shared helpers for Wellfam VVIPs (free pass). Not an endpoint: Vercel skips files starting with _.
 //
-// The member list never reaches the browser. The website only ever learns "this number is / isn't
-// a Wellfam member", and every free pass is re-checked here on the server.
+// A guest gets the free pass when Wellfam's own API confirms their phone number belongs to a VVIP
+// AND the birthday on that Wellfam account matches the birthday they typed. The comparison happens
+// here on the server: the browser never sees a Wellfam birthday, only verified / no_dob / mismatch / none.
 //
-// Where the list lives (Vercel → Project → Settings → Environment Variables):
-//   WELLFAM_LOOKUP_URL  the /exec URL of the Wellfam lookup Apps Script (apps-script/wellfam-lookup.gs),
-//                       which reads the member numbers from a private Google Sheet
-//   WELLFAM_SECRET      must match the WELLFAM_SECRET Script Property of that Apps Script
-//   WELLFAM_PHONES      (optional) placeholder list for testing before IT's list is in, e.g.
-//                       0123456789,0198765432. Numbers here count as members too.
-// With none of these set, nobody is a member and the site works exactly as before.
+// Environment variables (Vercel → Project → Settings → Environment Variables):
+//   WELLFAM_API_URL   Wellfam's VVIP lookup endpoint (from IT). Called as GET <url>?phone=0123456789
+//   WELLFAM_API_KEY   (optional) sent as "Authorization: Bearer <key>"
+//   WELLFAM_PHONES    (optional) placeholder VVIPs for testing before IT's API is ready, comma separated.
+//                     "0123456789:1990-05-12" is a VVIP with that birthday; "0123456789" alone is a
+//                     VVIP who hasn't added a birthday on Wellfam yet.
+// With none of these set, nobody is a VVIP and the site works exactly as before.
+//
+// Expected API answer (lookupVvip below is the only place to change if IT's format differs):
+//   { "member": true, "dob": "1990-05-12" }   VVIP with a birthday on file
+//   { "member": true, "dob": null }           VVIP, no birthday on file yet
+//   { "member": false }                       not a VVIP
 
 const DEFAULT_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzTAdy-aFw-B_0KAu5MtDrDf-ya5cw5IXb_hdEFom3deV4Ectg0BmTAx5S7h42Iz4tr5w/exec';
 const PASS_CODES = { 'Day 1': 'D1', 'Day 2': 'D2', 'Both days': 'BOTH' };
@@ -22,29 +28,54 @@ function normalisePhone(raw) {
   return d;
 }
 
-function wellfamConfigured() {
-  return Boolean(process.env.WELLFAM_PHONES || (process.env.WELLFAM_LOOKUP_URL && process.env.WELLFAM_SECRET));
+// Any common date shape → "YYYY-MM-DD", or '' if it isn't a real date.
+// Day-first for slashes and dashes (12/05/1990 = 12 May), as written in Malaysia.
+function normaliseDob(raw) {
+  const s = String(raw || '').trim();
+  let y, m, d;
+  let x = /^(\d{4})-(\d{1,2})-(\d{1,2})/.exec(s); // 1990-05-12, also ISO date-times
+  if (x) [, y, m, d] = x;
+  else if ((x = /^(\d{1,2})[/.-](\d{1,2})[/.-](\d{4})$/.exec(s))) [, d, m, y] = x;
+  else if ((x = /^(\d{4})(\d{2})(\d{2})$/.exec(s))) [, y, m, d] = x; // 19900512
+  else return '';
+  const dt = new Date(Date.UTC(+y, +m - 1, +d));
+  if (dt.getUTCFullYear() !== +y || dt.getUTCMonth() !== +m - 1 || dt.getUTCDate() !== +d) return '';
+  return dt.toISOString().slice(0, 10);
 }
 
-// true / false. Throws only if the lookup sheet can't be reached (callers decide what that means).
-async function isWellfamMember(rawPhone) {
-  const phone = normalisePhone(rawPhone);
-  if (phone.length < 9 || phone.length > 12) return false;
+function wellfamConfigured() {
+  return Boolean(process.env.WELLFAM_PHONES || process.env.WELLFAM_API_URL);
+}
 
-  const placeholder = String(process.env.WELLFAM_PHONES || '')
-    .split(/[,;\n]+/)
-    .map(normalisePhone)
-    .filter(Boolean);
-  if (placeholder.includes(phone)) return true;
+// { member: boolean, dob: 'YYYY-MM-DD' | null }. Throws if Wellfam's API can't be reached.
+async function lookupVvip(phone) {
+  for (const entry of String(process.env.WELLFAM_PHONES || '').split(/[,;\n]+/)) {
+    const [p, dob] = entry.split(/[:=]/);
+    if (p && normalisePhone(p) === phone) return { member: true, dob: normaliseDob(dob) || null };
+  }
+  if (!process.env.WELLFAM_API_URL) return { member: false, dob: null };
 
-  if (!process.env.WELLFAM_LOOKUP_URL || !process.env.WELLFAM_SECRET) return false;
-  const url = new URL(process.env.WELLFAM_LOOKUP_URL);
+  const url = new URL(process.env.WELLFAM_API_URL);
   url.searchParams.set('phone', phone);
-  url.searchParams.set('secret', process.env.WELLFAM_SECRET);
-  const res = await fetch(url.toString(), { redirect: 'follow' });
-  const data = JSON.parse(await res.text());
-  if (!data || typeof data.member !== 'boolean') throw new Error('Unexpected Wellfam lookup response');
-  return data.member;
+  const headers = { Accept: 'application/json' };
+  if (process.env.WELLFAM_API_KEY) headers.Authorization = 'Bearer ' + process.env.WELLFAM_API_KEY;
+  const res = await fetch(url.toString(), { headers, redirect: 'follow' });
+  if (res.status === 404) return { member: false, dob: null };
+  if (!res.ok) throw new Error('Wellfam API answered ' + res.status);
+  const data = await res.json();
+  const member = Boolean(data && (data.member ?? data.vvip ?? data.found));
+  const dob = data && (data.dob ?? data.birthday ?? data.dateOfBirth);
+  return { member, dob: member ? normaliseDob(dob) || null : null };
+}
+
+// 'verified' (free pass) | 'no_dob' (VVIP, birthday not on Wellfam yet) | 'mismatch' | 'none'
+async function checkVvip(rawPhone, rawDob) {
+  const phone = normalisePhone(rawPhone);
+  if (phone.length < 9 || phone.length > 12 || !wellfamConfigured()) return 'none';
+  const vvip = await lookupVvip(phone);
+  if (!vvip.member) return 'none';
+  if (!vvip.dob) return 'no_dob';
+  return vvip.dob === normaliseDob(rawDob) ? 'verified' : 'mismatch';
 }
 
 function appsScriptPost(fields) {
@@ -65,13 +96,14 @@ async function findRegistration(phone) {
   return r && r.result === 'success' ? r : null;
 }
 
-// A registered Wellfam member, shaped like a verify-payment result, or null.
+// A VVIP's free pass, shaped like a verify-payment result, or null. Phone lookups carry no birthday,
+// so this relies on the sheet: the row is only marked paid after /api/wellfam verified the birthday.
 async function wellfamPass(phone) {
   phone = normalisePhone(phone);
-  if (!wellfamConfigured() || !(await isWellfamMember(phone))) return null;
+  if (!wellfamConfigured() || !(await lookupVvip(phone)).member) return null;
   const reg = await findRegistration(phone);
-  if (!reg || !reg.registered) return null;
-  const held = reg.paid && reg.paidPasses && reg.paidPasses.length ? reg.paidPasses : [reg.attendance];
+  if (!reg || !reg.registered || !reg.paid) return null;
+  const held = reg.paidPasses && reg.paidPasses.length ? reg.paidPasses : [reg.attendance];
   const pass =
     held.includes('Both days') || (held.includes('Day 1') && held.includes('Day 2'))
       ? 'BOTH'
@@ -117,4 +149,4 @@ async function markWaived(regId) {
   return false;
 }
 
-module.exports = { normalisePhone, wellfamConfigured, isWellfamMember, wellfamPass, markWaived };
+module.exports = { normalisePhone, normaliseDob, checkVvip, wellfamPass, markWaived };
