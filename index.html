@@ -1470,6 +1470,13 @@
   .field-error a{color:var(--green-dark); text-decoration:underline;}
   .f-group.error input[type=text], .f-group.error input[type=tel]{border-color:var(--red);}
   .f-group.error .field-error{display:block;}
+  /* Wellfam members: free pass, shown under the contact number */
+  .wellfam-note{
+    margin-top:8px; padding:10px 14px; border-radius:12px; background:var(--green-pale); color:var(--brand);
+    font-weight:800; font-size:0.88rem; line-height:1.4; border:1.5px solid var(--green);
+  }
+  .wellfam-note.checking{background:transparent; border-color:transparent; padding:0; color:var(--text-muted); font-weight:700;}
+  .price-preview.waived span.amt{color:var(--green-dark);}
 
   .confirm-panel{
     display:none; background:var(--surface); color:var(--text); border-radius:28px; padding:44px;
@@ -2476,8 +2483,10 @@
 
       <div class="f-group" id="g-contact">
         <label class="f-title" for="contactNumber">Contact number</label>
+        <span class="hint">Wellfam member? Use the phone number linked to your Wellfam account and your pass is on us.</span>
         <input type="tel" id="contactNumber" name="contactNumber" placeholder="e.g. 012-345 6789">
         <div class="field-error">Please enter a valid contact number.</div>
+        <div class="wellfam-note" id="wellfamNote" role="status" hidden></div>
       </div>
 
       <div class="f-group">
@@ -2552,6 +2561,10 @@
 
       <a href="#" class="btn" style="margin-top:28px;" id="paymentBtn">
         Pay now &amp; secure my pass
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <a href="#book" class="btn" style="margin-top:28px; display:none;" id="wellfamBookBtn">
+        Book my workshops
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
       <button type="button" class="edit-details-btn" id="editDetailsBtn">
@@ -3297,6 +3310,7 @@
       addField('marketingConsent', data.marketingConsent || 'No');
       if(data.regId) addField('regId', data.regId);
       if(data.replacesRegId) addField('replacesRegId', data.replacesRegId);
+      if(data.wellfam) addField('wellfam', 'Yes');
 
       document.body.appendChild(f);
       f.submit();
@@ -3555,7 +3569,7 @@
     var badge = document.getElementById('passBadge');
     if(badge){
       badge.innerHTML =
-        '<span>&#10003; Payment confirmed</span>' +
+        '<span>&#10003; ' + (pass.waived ? 'Wellfam member &middot; free pass' : 'Payment confirmed') + '</span>' +
         '<b>' + escapeHtml((PASS_NAMES[pass.pass] || pass.attendance || '') + (pass.upgradedFrom ? ' (topped up)' : '')) + '</b>' +
         (lastRegistrant.fullName ? '<span>' + escapeHtml(lastRegistrant.fullName) + '</span>' : '');
     }
@@ -4597,6 +4611,98 @@
     });
   }
 
+  // ---------- Wellfam members: free pass ----------
+  // The member list stays on the server; /api/wellfam only answers yes or no for one number.
+  // A member skips Stripe: the server re-checks the number and marks the registration paid (RM0).
+  var wellfamNote = document.getElementById('wellfamNote');
+  var wellfamCache = {}; // phone -> Promise<boolean>
+  var wellfamMember = false; // for the number currently in the contact field
+  function checkWellfam(phone){
+    phone = normalisePhone(phone);
+    if(phone.length < 9 || phone.length > 12) return Promise.resolve(false);
+    if(!wellfamCache[phone]){
+      wellfamCache[phone] = fetch('/api/wellfam?phone=' + encodeURIComponent(phone), { cache: 'no-store' })
+        .then(function(res){ return res.json(); })
+        .then(function(r){ return !!(r && r.member); })
+        .catch(function(){ delete wellfamCache[phone]; return false; });
+    }
+    return wellfamCache[phone];
+  }
+  function applyWellfamPrice(){
+    var picked = form && form.querySelector('input[name=days]:checked');
+    if(pricePreview) pricePreview.classList.toggle('waived', wellfamMember);
+    if(!picked || !priceAmt) return;
+    priceAmt.innerHTML = wellfamMember ? '<s style="opacity:.5;font-size:.8em;">RM' + escapeHtml(picked.dataset.price) + '</s> RM0' : 'RM' + escapeHtml(picked.dataset.price);
+  }
+  function showWellfam(state){
+    wellfamMember = state === 'member';
+    if(wellfamNote){
+      wellfamNote.hidden = state !== 'member' && state !== 'checking';
+      wellfamNote.classList.toggle('checking', state === 'checking');
+      wellfamNote.innerHTML = state === 'member'
+        ? '&#127881; Wellfam member found! Your pass is <b>free</b>, no payment needed.'
+        : 'Checking Wellfam membership&hellip;';
+    }
+    applyWellfamPrice();
+  }
+  var wellfamTimer = null;
+  function refreshWellfam(){
+    clearTimeout(wellfamTimer);
+    var phone = normalisePhone(contactInput ? contactInput.value : '');
+    if(phone.length < 9){ showWellfam('none'); return; }
+    wellfamTimer = setTimeout(function(){
+      if(!wellfamCache[phone]) showWellfam('checking');
+      checkWellfam(phone).then(function(member){
+        if(normalisePhone(contactInput.value) === phone) showWellfam(member ? 'member' : 'none');
+      });
+    }, 400);
+  }
+  if(contactInput){
+    contactInput.addEventListener('input', refreshWellfam);
+    contactInput.addEventListener('change', refreshWellfam);
+    if(contactInput.value) refreshWellfam();
+  }
+  dayRadios.forEach(function(r){ r.addEventListener('change', applyWellfamPrice); });
+
+  // Confirm panel: the paid version (Stripe) or the Wellfam version (free, straight to booking).
+  var confirmTitle = confirmPanel && confirmPanel.querySelector('h3');
+  var confirmLead = confirmPanel && confirmPanel.querySelector('h3 + p');
+  var confirmTitleHtml = confirmTitle ? confirmTitle.innerHTML : '';
+  var confirmLeadHtml = confirmLead ? confirmLead.innerHTML : '';
+  var wellfamBookBtn = document.getElementById('wellfamBookBtn');
+  function setConfirmMode(waived){
+    if(confirmTitle) confirmTitle.innerHTML = waived ? 'You&rsquo;re in! Your Wellfam pass is free &#127881;' : confirmTitleHtml;
+    if(confirmLead) confirmLead.innerHTML = waived
+      ? 'Thanks for signing up for Make Health Easier Wellness Fest 2026! As a <b>Wellfam member</b>, your pass is on us, so there&rsquo;s nothing to pay. Collect your pass at the counter with your registered phone number, and reserve your workshop slots now.'
+      : confirmLeadHtml;
+    // a free pass has nothing to pay, and is already confirmed, so it can't go back and be edited
+    ['paymentBtn', 'editDetailsBtn'].forEach(function(id){
+      var el = document.getElementById(id); if(el) el.style.display = waived ? 'none' : '';
+    });
+    var payNote = confirmPanel && confirmPanel.querySelector('.pay-note');
+    if(payNote) payNote.style.display = waived ? 'none' : '';
+    if(wellfamBookBtn) wellfamBookBtn.style.display = waived ? '' : 'none';
+  }
+  var wellfamClaim = null; // Promise for the member registration just submitted
+  if(wellfamBookBtn){
+    wellfamBookBtn.addEventListener('click', function(e){
+      e.preventDefault();
+      var phone = lastRegistrant.contactNumber;
+      scrollToBook();
+      showBookState('verifying');
+      // Give the sheet a moment to save the row, then unlock booking like a paid pass.
+      (wellfamClaim || Promise.resolve()).then(function(){
+        return verifyPayment('phone=' + encodeURIComponent(phone), { silent: true });
+      }).catch(function(){
+        return new Promise(function(r){ setTimeout(r, 2500); }).then(function(){
+          return verifyPayment('phone=' + encodeURIComponent(phone), { silent: true });
+        });
+      }).catch(function(){
+        failWith('We couldn\'t load your Wellfam pass just yet.');
+      });
+    });
+  }
+
   if(form){
     form.addEventListener('submit', function(e){
       e.preventDefault();
@@ -4630,7 +4736,11 @@
       var submitBtn = document.getElementById('submitBtn');
       var submitHtml = submitBtn ? submitBtn.innerHTML : '';
       if(submitBtn){ submitBtn.disabled = true; submitBtn.textContent = 'Checking…'; }
-      checkPhoneRegistered(normalisePhone(contact)).then(function(found){
+      var waived = false;
+      Promise.all([checkPhoneRegistered(normalisePhone(contact)), checkWellfam(contact)]).then(function(results){
+        var found = results[0];
+        waived = results[1];
+        showWellfam(waived ? 'member' : 'none');
         if(submitBtn){ submitBtn.disabled = false; submitBtn.innerHTML = submitHtml; }
         // Rule: until a payment is made, the registration for a number can still be changed
         // (e.g. they went back from checkout and picked a different day). Only a PAID number is
@@ -4650,6 +4760,7 @@
           return;
         }
         if(found && found.registered && !found.paid && found.regId && !editingRegId) editingRegId = found.regId;
+        if(waived){ proceed(); return; } // free pass: no single-day upsell
         confirmSingleDay().then(function(go){ if(go) proceed(); });
       });
 
@@ -4696,8 +4807,9 @@
           referrerId: referrerId || null,
           products: products,
           attendance: days.value,
-          passPrice: 'RM' + days.dataset.price,
+          passPrice: waived ? 'RM0 (Wellfam)' : 'RM' + days.dataset.price,
           marketingConsent: (document.getElementById('marketingConsent') || {}).checked ? 'Yes' : 'No',
+          wellfam: waived,
           submittedAt: new Date().toISOString()
         };
 
@@ -4707,6 +4819,13 @@
         if(editingRegId) data.replacesRegId = editingRegId;
 
         submitToGoogleForm(data);
+        wellfamClaim = waived
+          ? new Promise(function(r){ setTimeout(r, 1200); }).then(function(){ // let the row land first
+              return fetch('/api/wellfam', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone: data.contactNumber, regId: data.regId }) });
+            }).catch(function(){})
+          : null;
+        setConfirmMode(waived);
         editingRegId = null;
         lastSubmittedRegId = data.regId;
         lastRegistrant.fullName = data.fullName;
