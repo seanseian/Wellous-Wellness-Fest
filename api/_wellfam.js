@@ -1,23 +1,23 @@
 // Shared helpers for Wellfam VVIPs (free pass). Not an endpoint: Vercel skips files starting with _.
 //
-// A guest gets the free pass when Wellfam's own API confirms their phone number belongs to a VVIP
-// AND the birthday on that Wellfam account matches the birthday they typed. The comparison happens
-// here on the server: the browser never sees a Wellfam birthday, only verified / no_dob / mismatch / none.
+// A guest gets the free pass when Wellous's membership API confirms that their phone number AND
+// birthday belong to a VVIP. The API is called from here only: its secret never reaches the browser,
+// which only hears back verified / mismatch / none.
 //
 // Environment variables (Vercel → Project → Settings → Environment Variables):
-//   WELLFAM_API_URL   Wellfam's VVIP lookup endpoint (from IT). Called as GET <url>?phone=0123456789
-//   WELLFAM_API_KEY   (optional) sent as "Authorization: Bearer <key>"
-//   WELLFAM_PHONES    (optional) placeholder VVIPs for testing before IT's API is ready, comma separated.
-//                     "0123456789:1990-05-12" is a VVIP with that birthday; "0123456789" alone is a
-//                     VVIP who hasn't added a birthday on Wellfam yet.
+//   WELLFAM_API_KEY     API key from Wellous IT
+//   WELLFAM_API_SECRET  API secret from Wellous IT
+//   WELLFAM_API_URL     (optional) defaults to the production checkVvip endpoint below
+//   WELLFAM_PHONES      (optional) placeholder VVIPs for testing without the API, comma separated,
+//                       e.g. 0123456789:1990-05-12
 // With none of these set, nobody is a VVIP and the site works exactly as before.
 //
-// Expected API answer (lookupVvip below is the only place to change if IT's format differs):
-//   { "member": true, "dob": "1990-05-12" }   VVIP with a birthday on file
-//   { "member": true, "dob": null }           VVIP, no birthday on file yet
-//   { "member": false }                       not a VVIP
+// API: "Wellous Membership · VVIP Check API" v1.0 (POST, HMAC-SHA256 signed).
+
+const crypto = require('crypto');
 
 const DEFAULT_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzTAdy-aFw-B_0KAu5MtDrDf-ya5cw5IXb_hdEFom3deV4Ectg0BmTAx5S7h42Iz4tr5w/exec';
+const DEFAULT_VVIP_URL = 'https://membership-api.wellous.com/openapi/member/checkVvip';
 const PASS_CODES = { 'Day 1': 'D1', 'Day 2': 'D2', 'Both days': 'BOTH' };
 const PASS_LABELS = { D1: 'Day 1', D2: 'Day 2', BOTH: 'Both days' };
 
@@ -44,38 +44,48 @@ function normaliseDob(raw) {
 }
 
 function wellfamConfigured() {
-  return Boolean(process.env.WELLFAM_PHONES || process.env.WELLFAM_API_URL);
+  return Boolean(process.env.WELLFAM_PHONES || (process.env.WELLFAM_API_KEY && process.env.WELLFAM_API_SECRET));
 }
 
-// { member: boolean, dob: 'YYYY-MM-DD' | null }. Throws if Wellfam's API can't be reached.
-async function lookupVvip(phone) {
-  for (const entry of String(process.env.WELLFAM_PHONES || '').split(/[,;\n]+/)) {
-    const [p, dob] = entry.split(/[:=]/);
-    if (p && normalisePhone(p) === phone) return { member: true, dob: normaliseDob(dob) || null };
-  }
-  if (!process.env.WELLFAM_API_URL) return { member: false, dob: null };
-
-  const url = new URL(process.env.WELLFAM_API_URL);
-  url.searchParams.set('phone', phone);
-  const headers = { Accept: 'application/json' };
-  if (process.env.WELLFAM_API_KEY) headers.Authorization = 'Bearer ' + process.env.WELLFAM_API_KEY;
-  const res = await fetch(url.toString(), { headers, redirect: 'follow' });
-  if (res.status === 404) return { member: false, dob: null };
-  if (!res.ok) throw new Error('Wellfam API answered ' + res.status);
-  const data = await res.json();
-  const member = Boolean(data && (data.member ?? data.vvip ?? data.found));
-  const dob = data && (data.dob ?? data.birthday ?? data.dateOfBirth);
-  return { member, dob: member ? normaliseDob(dob) || null : null };
+// One signed call to the VVIP Check API: 'verified' | 'mismatch' | 'none'. Throws on anything else
+// (auth failure, bad request, timeout), which callers report as "couldn't check right now".
+async function callVvipApi(phone, dob) {
+  const apiKey = process.env.WELLFAM_API_KEY;
+  const ts = Math.floor(Date.now() / 1000).toString();
+  const nonce = crypto.randomBytes(12).toString('hex'); // new for every request, retries included
+  const signature = crypto
+    .createHmac('sha256', nonce + process.env.WELLFAM_API_SECRET)
+    .update(ts + apiKey + nonce)
+    .digest('hex');
+  const res = await fetch(process.env.WELLFAM_API_URL || DEFAULT_VVIP_URL, {
+    method: 'POST',
+    headers: {
+      Authorization: `HMAC-SHA256 apikey=${apiKey} ts=${ts} nonce=${nonce} signature=${signature}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ mobilePrefix: '60', mobile: phone, birthday: dob }),
+    signal: AbortSignal.timeout(10000),
+  });
+  let body = null;
+  try { body = await res.json(); } catch (e) { /* not JSON: handled below */ }
+  if (res.ok && body && body.status === 'ok' && body.data) return body.data.isVvip === true ? 'verified' : 'none';
+  // A VVIP's number, but the birthday on Wellous's record is different or missing
+  if (body && body.error === 'birthday_mismatch') return 'mismatch';
+  throw new Error('VVIP API answered ' + res.status + ' ' + ((body && body.error) || ''));
 }
 
-// 'verified' (free pass) | 'no_dob' (VVIP, birthday not on Wellfam yet) | 'mismatch' | 'none'
+// 'verified' (free pass) | 'mismatch' (VVIP number, birthday wrong or not on record) | 'none'
 async function checkVvip(rawPhone, rawDob) {
   const phone = normalisePhone(rawPhone);
-  if (phone.length < 9 || phone.length > 12 || !wellfamConfigured()) return 'none';
-  const vvip = await lookupVvip(phone);
-  if (!vvip.member) return 'none';
-  if (!vvip.dob) return 'no_dob';
-  return vvip.dob === normaliseDob(rawDob) ? 'verified' : 'mismatch';
+  const dob = normaliseDob(rawDob);
+  if (phone.length < 9 || phone.length > 12 || !dob || !wellfamConfigured()) return 'none';
+
+  for (const entry of String(process.env.WELLFAM_PHONES || '').split(/[,;\n]+/)) {
+    const [p, d] = entry.split(/[:=]/);
+    if (p && normalisePhone(p) === phone) return normaliseDob(d) === dob ? 'verified' : 'mismatch';
+  }
+  if (!process.env.WELLFAM_API_KEY || !process.env.WELLFAM_API_SECRET) return 'none';
+  return callVvipApi(phone, dob);
 }
 
 function appsScriptPost(fields) {
@@ -97,10 +107,12 @@ async function findRegistration(phone) {
 }
 
 // A VVIP's free pass, shaped like a verify-payment result, or null. Phone lookups carry no birthday,
-// so this relies on the sheet: the row is only marked paid after /api/wellfam verified the birthday.
+// so it can't ask the VVIP API again. It relies on the sheet instead: /api/wellfam marks the row paid
+// (RM0, session WELLFAM) only after the API verified the phone number and birthday. Only reached when
+// Stripe has no payment for the number.
 async function wellfamPass(phone) {
   phone = normalisePhone(phone);
-  if (!wellfamConfigured() || !(await lookupVvip(phone)).member) return null;
+  if (!wellfamConfigured()) return null;
   const reg = await findRegistration(phone);
   if (!reg || !reg.registered || !reg.paid) return null;
   const held = reg.paidPasses && reg.paidPasses.length ? reg.paidPasses : [reg.attendance];

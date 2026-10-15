@@ -5,8 +5,8 @@
 // (see api/_wellfam.js).
 //
 //   GET  /api/wellfam?phone=0123456789&dob=1990-05-12
-//        → { status: 'verified' | 'no_dob' | 'mismatch' | 'none' }
-//          no_dob: a VVIP whose Wellfam account has no birthday yet (update it in Wellfam, then retry)
+//        → { status: 'verified' | 'mismatch' | 'none' }
+//          mismatch: a VVIP's number, but the birthday on Wellous's record is different or missing
 //   POST /api/wellfam  { phone, dob, regId }     → { waived: true, marked: true|false }
 //        called right after a VVIP's registration is submitted: re-checks phone + birthday and marks
 //        that registration "Paid" (RM0) in the sheet, instead of sending them to Stripe.

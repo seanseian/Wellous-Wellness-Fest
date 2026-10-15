@@ -4621,7 +4621,7 @@
 
   // ---------- Wellfam VVIPs: free pass ----------
   // Phone number + birthday are checked against the guest's Wellfam account on the server
-  // (/api/wellfam); the browser only hears back verified / no_dob / mismatch / none.
+  // (/api/wellfam); the browser only hears back verified / mismatch / none.
   // A verified VVIP skips Stripe: the server re-checks and marks the registration paid (RM0).
   var wellfamNote = document.getElementById('wellfamNote');
   var birthdayInput = document.getElementById('birthday');
@@ -4653,8 +4653,8 @@
   }
   var WELLFAM_MSG = {
     verified: '&#127881; Wellfam VVIP verified! Your pass is <b>free</b>, no payment needed.',
-    no_dob: 'This number is a Wellfam VVIP, but your Wellfam account doesn&rsquo;t have a birthday yet. Please add your birthday in Wellfam, then come back and tap <b>Confirm registration</b> again to get your free pass.',
-    mismatch: 'This birthday doesn&rsquo;t match the one on your Wellfam account. Please check it and try again.',
+    // wording from the Wellous VVIP Check API documentation
+    mismatch: 'Your date of birth does not match our membership records. Please update it in your membership profile, or contact our customer service if it has already been filled in.',
     error: 'We couldn&rsquo;t check Wellfam right now. Please try again in a moment.',
     checking: 'Checking Wellfam VVIP&hellip;'
   };
@@ -4663,7 +4663,7 @@
     if(wellfamNote){
       wellfamNote.hidden = !WELLFAM_MSG[state];
       wellfamNote.classList.toggle('checking', state === 'checking');
-      wellfamNote.classList.toggle('warn', state === 'no_dob' || state === 'mismatch' || state === 'error');
+      wellfamNote.classList.toggle('warn', state === 'mismatch' || state === 'error');
       wellfamNote.innerHTML = WELLFAM_MSG[state] || '';
     }
     applyWellfamPrice();
@@ -4771,9 +4771,9 @@
         waived = vvip === 'verified';
         showWellfam(vvip);
         if(submitBtn){ submitBtn.disabled = false; submitBtn.innerHTML = submitHtml; }
-        // A VVIP whose birthday is missing on Wellfam (or doesn't match) fixes that first,
+        // A VVIP whose birthday doesn't match (or isn't on Wellous's record) fixes that first,
         // rather than being sent to pay for a pass that should be free.
-        if(vvip === 'no_dob' || vvip === 'mismatch'){
+        if(vvip === 'mismatch'){
           if(wellfamNote) wellfamNote.scrollIntoView({behavior:'smooth', block:'center'});
           return;
         }
