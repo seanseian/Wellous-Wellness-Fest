@@ -1532,6 +1532,21 @@
     margin-top:8px; padding:10px 14px; border-radius:12px; background:var(--green-pale); color:var(--brand);
     font-weight:800; font-size:0.88rem; line-height:1.4; border:1.5px solid var(--green);
   }
+  /* verified VIP/VVIP: a bold, celebratory card */
+  .wellfam-note.verified{
+    display:flex; align-items:center; gap:14px; padding:16px 18px; border:none; border-radius:16px;
+    background:linear-gradient(120deg, #2E8B1E 0%, #4FB52C 60%, #7ED957 100%); color:#fff;
+    box-shadow:0 14px 30px -12px rgba(46,139,30,0.65); font-size:0.95rem;
+    animation:wellfamPop .55s cubic-bezier(.2,1.4,.4,1);
+  }
+  .wellfam-note.verified .wf-emoji{font-size:2rem; line-height:1; flex:none;}
+  .wellfam-note.verified .wf-text{display:flex; flex-direction:column; gap:3px;}
+  .wellfam-note.verified .wf-text b.wf-head{font-family:'Mark Pro'; font-size:1.15rem; letter-spacing:0.01em; color:#fff;}
+  .wellfam-note.verified .wf-text span{font-weight:700; color:#F2FFE8;}
+  .wellfam-note.verified .wf-text span b{color:#FFE45C;}
+  @keyframes wellfamPop{0%{transform:scale(.85); opacity:0;} 100%{transform:scale(1); opacity:1;}}
+  .wf-confetti{position:fixed; inset:0; width:100vw; height:100vh; pointer-events:none; z-index:9999;}
+  @media (prefers-reduced-motion:reduce){ .wellfam-note.verified{animation:none;} }
   .wellfam-note.warn{background:#FFF6DD; border-color:#E9B949; color:#5A4300;}
   .wellfam-note.checking{background:transparent; border-color:transparent; padding:0; color:var(--text-muted); font-weight:700;}
   .price-preview.waived span.amt{color:var(--green-dark);}
@@ -4727,7 +4742,7 @@
     priceAmt.innerHTML = wellfamMember ? '<s style="opacity:.5;font-size:.8em;">RM' + escapeHtml(picked.dataset.price) + '</s> RM0' : (picked.dataset.price === '0' ? 'FREE' : 'RM' + escapeHtml(picked.dataset.price));
   }
   var WELLFAM_MSG = {
-    verified: '&#127881; Wellfam member verified! Your <b>Wellness Experience Pass</b> is <b>free</b>, no payment needed.',
+    verified: '<span class="wf-emoji" aria-hidden="true">&#127881;</span><span class="wf-text"><b class="wf-head">Wellfam VIP / VVIP verified!</b><span>Your <b>Wellness Experience Pass</b> is <b>FREE</b>. No payment needed.</span></span>',
     // wording from the Wellous VVIP Check API documentation
     mismatch: 'Your date of birth does not match our membership records. Please update it in your membership profile, or contact our customer service if it has already been filled in.',
     error: 'We couldn&rsquo;t check Wellfam right now. Please try again in a moment.',
@@ -4743,9 +4758,41 @@
       wellfamNote.hidden = !WELLFAM_MSG[state];
       wellfamNote.classList.toggle('checking', state === 'checking');
       wellfamNote.classList.toggle('warn', state === 'mismatch' || state === 'error');
+      var wasVerified = wellfamNote.classList.contains('verified');
+      wellfamNote.classList.toggle('verified', state === 'verified');
       wellfamNote.innerHTML = WELLFAM_MSG[state] || '';
+      if(state === 'verified' && !wasVerified) wellfamConfetti(); // celebrate once per verification
     }
     applyWellfamPrice();
+  }
+  // A short confetti burst across the screen when a VIP/VVIP is verified (no library needed).
+  function wellfamConfetti(){
+    if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var c = document.createElement('canvas'); c.className = 'wf-confetti'; c.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(c);
+    var ctx = c.getContext('2d'), dpr = window.devicePixelRatio || 1, W = window.innerWidth, H = window.innerHeight;
+    c.width = W * dpr; c.height = H * dpr; ctx.scale(dpr, dpr);
+    var colours = ['#7ED957', '#2E8B1E', '#FFE45C', '#FFB703', '#FF6FA5', '#4CC9F0', '#FFFFFF'];
+    var bits = [];
+    for(var i = 0; i < 140; i++){
+      var fromLeft = i % 2 === 0;
+      bits.push({ x: fromLeft ? -10 : W + 10, y: H * (0.35 + Math.random() * 0.4),
+        vx: (fromLeft ? 1 : -1) * (4 + Math.random() * 7), vy: -(7 + Math.random() * 9),
+        w: 6 + Math.random() * 6, h: 4 + Math.random() * 6, r: Math.random() * 6.3, vr: (Math.random() - 0.5) * 0.4,
+        c: colours[i % colours.length] });
+    }
+    var start = performance.now();
+    (function frame(t){
+      var age = t - start;
+      ctx.clearRect(0, 0, W, H);
+      ctx.globalAlpha = age > 1800 ? Math.max(0, 1 - (age - 1800) / 700) : 1;
+      bits.forEach(function(b){
+        b.vy += 0.28; b.vx *= 0.985; b.x += b.vx; b.y += b.vy; b.r += b.vr;
+        ctx.save(); ctx.translate(b.x, b.y); ctx.rotate(b.r); ctx.fillStyle = b.c;
+        ctx.fillRect(-b.w / 2, -b.h / 2, b.w, b.h); ctx.restore();
+      });
+      if(age < 2500) requestAnimationFrame(frame); else c.remove();
+    })(start);
   }
   var wellfamTimer = null;
   function refreshWellfam(){
