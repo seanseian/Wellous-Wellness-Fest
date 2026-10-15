@@ -29,7 +29,7 @@ var WORKSHOPS = {
   'd2-pound': { name: 'Find Your Rhythm: AFYAA Pound Workshop', date: '2026-10-25', start: '08:00', end: '09:00', stage: 'Move Zone', host: 'AFYAA Wellness Session', capacity: 100 },
   'd2-yin-yoga': { name: 'Slow Down & Flow: Yin Yoga with Cindy', date: '2026-10-25', start: '09:00', end: '09:45', stage: 'Move Zone', host: 'With Cindy', capacity: 100 },
   'workshop6': { name: 'Create & Connect: DIY Creative Tent for Parents & Kids', date: '2026-10-25', start: '10:00', end: '10:45', stage: 'Move Zone', host: 'With SEIA', capacity: 100 },
-  'd2-hiit': { name: 'Ignite Your Energy: HIIT Workout with ZIN Cassy', date: '2026-10-25', start: '10:20', end: '11:00', stage: 'Main Zone', host: 'With ZIN Cassy', capacity: 50 },
+  'd2-hiit': { name: 'Ignite Your Energy: Dance Workshop with Angelina Wong', date: '2026-10-25', start: '10:20', end: '11:00', stage: 'Main Zone', host: 'With Angelina Wong', capacity: 50 },
   'd2-daddy-daughter': { name: 'Little Hands, Big Memories: Parent & Kids Bonding Workshop', date: '2026-10-25', start: '15:00', end: '15:30', stage: 'Main Zone', host: 'Melt Mellow \u00d7 Squishy Fun', capacity: 50 },
   'd2-hiit-strength': { name: 'Power Up: HIIT Strength with Vicky', date: '2026-10-25', start: '16:30', end: '17:15', stage: 'Move Zone', host: 'With Vicky', capacity: 100 },
   'd2-zumba': { name: 'Feel the Beat: Zumba with Grace', date: '2026-10-25', start: '17:30', end: '18:15', stage: 'Move Zone', host: 'With Grace', capacity: 100 },
