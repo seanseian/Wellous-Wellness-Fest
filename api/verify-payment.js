@@ -22,6 +22,10 @@
 //   WELLFAM_*          (optional) Wellfam VVIPs get a free pass: a phone lookup with no Stripe
 //                      payment still counts as paid when the number is a VVIP whose free pass
 //                      was confirmed in the sheet ({ waived: true }). See api/_wellfam.js.
+//
+// 1-Day Passes (D1/D2) were upgraded to the Wellness Experience Pass (both days) for free when
+// the new passes launched, so every paid 1-Day Pass is reported as BOTH (with freeUpgradeFrom).
+// The booking page and the booking Apps Script both read the pass from here.
 
 const { wellfamPass } = require('./_wellfam');
 
@@ -146,6 +150,12 @@ function asUpgraded(base, up) {
   });
 }
 
+// Every 1-Day Pass now counts as the Wellness Experience Pass (free upgrade).
+function freeUpgrade(result) {
+  if (!result || !result.paid || (result.pass !== 'D1' && result.pass !== 'D2')) return result;
+  return Object.assign({}, result, { pass: 'BOTH', attendance: PASS_LABELS.BOTH, freeUpgradeFrom: result.pass });
+}
+
 async function findByPhone(phone, passLinks) {
   const params = { status: 'complete', limit: '100' };
   if (process.env.LOOKUP_SINCE) {
@@ -208,6 +218,7 @@ module.exports = async function handler(req, res) {
   const internalKey = process.env.INTERNAL_API_KEY;
   const isInternal = Boolean(internalKey) && req.headers['x-internal-key'] === internalKey;
   const send = (result) => {
+    result = freeUpgrade(result);
     if (!isInternal) delete result.email; // never hand the payer's email to a browser
     return res.status(200).json(result);
   };
@@ -279,4 +290,4 @@ module.exports = async function handler(req, res) {
   }
 };
 
-module.exports._internal = { evaluateSession, normalisePhone, parsePassLinks, asUpgraded, REF_RE };
+module.exports._internal = { evaluateSession, freeUpgrade, normalisePhone, parsePassLinks, asUpgraded, REF_RE };
