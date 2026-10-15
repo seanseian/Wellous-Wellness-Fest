@@ -1482,11 +1482,11 @@
     display:block; font-weight:800; color:var(--text); margin-bottom:10px; font-size:0.98rem;
   }
   .f-group .hint{font-weight:600; color:var(--text-muted); font-size:0.82rem; margin-top:-4px; margin-bottom:10px; display:block;}
-  input[type=text], input[type=tel]{
+  input[type=text], input[type=tel], input[type=email]{
     width:100%; padding:13px 16px; border-radius:12px; border:1.5px solid var(--line);
     background:var(--surface-alt); font-family:'Nunito'; font-size:0.96rem; color:var(--text);
   }
-  input[type=text]:focus, input[type=tel]:focus{outline:3px solid rgba(47,168,79,0.3); border-color:var(--green);}
+  input[type=text]:focus, input[type=tel]:focus, input[type=email]:focus{outline:3px solid rgba(47,168,79,0.3); border-color:var(--green);}
   input[type=text]::placeholder, input[type=tel]::placeholder{color:var(--text-muted); opacity:0.75;}
   .choice-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px;}
   .choice-grid.narrow{grid-template-columns:repeat(2,1fr);}
@@ -1521,7 +1521,7 @@
   .form-note{color:var(--text-muted); font-size:0.82rem; margin-top:18px;}
   .field-error{color:var(--red); font-size:0.82rem; font-weight:700; margin-top:6px; display:none; line-height:1.45;}
   .field-error a{color:var(--green-dark); text-decoration:underline;}
-  .f-group.error input[type=text], .f-group.error input[type=tel]{border-color:var(--red);}
+  .f-group.error input[type=text], .f-group.error input[type=tel], .f-group.error input[type=email]{border-color:var(--red);}
   .f-group.error .field-error{display:block;}
 
   .confirm-panel{
@@ -2456,6 +2456,13 @@
         </div>
       </div>
 
+      <div class="f-group" id="g-email" hidden>
+        <label class="f-title" for="email">Email address</label>
+        <span class="hint">We&rsquo;ll email your free Wellness Explorer Pass here.</span>
+        <input type="email" id="email" name="email" placeholder="e.g. you@example.com" autocomplete="email">
+        <div class="field-error">Please enter a valid email address.</div>
+      </div>
+
       <div class="f-group" id="g-agree">
         <label class="agree-row">
           <input type="checkbox" id="agreeTerms" name="agreeTerms">
@@ -3215,6 +3222,8 @@
       if(r.checked){
         pricePreview.style.display = 'flex';
         priceAmt.textContent = r.dataset.price === '0' ? 'FREE' : 'RM' + r.dataset.price;
+        // free pass: no Stripe checkout to collect an email, so ask for one here
+        var g = document.getElementById('g-email'); if(g) g.hidden = r.value !== 'Explorer';
       }
     });
   });
@@ -3265,6 +3274,7 @@
       addField('fullName', data.fullName);
       addField('gender', data.gender);
       addField('contactNumber', data.contactNumber);
+      if(data.email) addField('email', data.email);
       if(data.referrerId) addField('referrerId', data.referrerId);
       (data.products || []).forEach(function(p){ addField('products', p); });
       addField('attendance', data.attendance);
@@ -4653,6 +4663,9 @@
       var genderErr = !gender;
       var contactErr = contact.replace(/[^0-9]/g,'').length < 7;
       var daysErr = !days;
+      var emailEl = document.getElementById('email');
+      var email = emailEl ? emailEl.value.trim() : '';
+      var emailErr = !!days && days.value === 'Explorer' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
       var agreeBox = document.getElementById('agreeTerms');
       var agreeErr = !!agreeBox && !agreeBox.checked;
       if(agreeBox) agreeBox.closest('.agree-row').classList.toggle('missing', agreeErr);
@@ -4661,9 +4674,10 @@
       setError('g-gender', genderErr);
       setError('g-contact', contactErr);
       setError('g-days', daysErr);
+      setError('g-email', emailErr);
       setError('g-agree', agreeErr);
 
-      if(nameErr || genderErr || contactErr || daysErr || agreeErr){
+      if(nameErr || genderErr || contactErr || daysErr || emailErr || agreeErr){
         var firstError = document.querySelector('.f-group.error');
         if(firstError) firstError.scrollIntoView({behavior:'smooth', block:'center'});
         return;
@@ -4713,6 +4727,7 @@
           products: products,
           attendance: days.value,
           passPrice: 'RM' + days.dataset.price,
+          email: days.value === 'Explorer' ? email : null, // Stripe collects it for the paid pass
           // free pass: registered straight away, no Stripe
           marketingConsent: (document.getElementById('marketingConsent') || {}).checked ? 'Yes' : 'No',
           submittedAt: new Date().toISOString()
