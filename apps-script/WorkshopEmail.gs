@@ -210,19 +210,24 @@ function sendPassConfirmation(pay) {
     var offerTopUp = !upgraded && pass !== 'BOTH' && props.getProperty('TOP_UP_ENABLED') !== 'false';
     var name = String(pay.fullName || '').trim() || 'there';
     var info = PASS_INFO[pass];
-    var paid = formatAmount_(pay.amount, pay.currency);
+    // Wellfam VIP/VVIP: free Wellness Experience Pass, marked paid at RM0 by /api/wellfam
+    var waived = !upgraded && String(pay.amount) === '0';
+    var paid = waived ? '' : formatAmount_(pay.amount, pay.currency);
 
     var body =
       '<p style="margin:0 0 16px;font-size:15px;">Hi ' + esc_(name) + ',</p>' +
       '<p style="margin:0 0 18px;font-size:15px;line-height:1.5;">' + (upgraded
         ? 'Great news, your top-up was successful! You now have the <b>Wellness Experience Pass</b>, which covers <b>both days</b> of the fest. See you there!'
-        : 'Thank you, your payment was successful and your ' + esc_(info.short) + ' is confirmed. See you at the fest!') + '</p>' +
+        : waived
+          ? 'As a <b>Wellfam member</b>, your <b>Wellness Experience Pass</b> is on us, so there\'s nothing to pay. Your pass is confirmed. See you at the fest!'
+          : 'Thank you, your payment was successful and your ' + esc_(info.short) + ' is confirmed. See you at the fest!') + '</p>' +
       '<div style="text-align:center;margin:4px 0 20px;"><img src="' + TICKET_URLS[pass] + '" width="320" alt="Your ' + esc_(info.short) + '" style="display:inline-block;width:320px;max-width:90%;height:auto;border:0;"></div>' +
       '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F2FAEC;border-radius:12px;">' +
         row_('Pass', esc_(info.name)) +
         row_('Valid on', esc_(info.days)) +
         row_('Event timing', '9:00 AM \u2013 7:00 PM daily') +
         row_('Venue', esc_(VENUE)) +
+        (waived ? row_('Price', 'Free <span style="color:' + GREEN + ';">\u2713 Wellfam member</span>') : '') +
         (paid ? row_(upgraded ? 'Top-up paid' : 'Amount paid', esc_(paid) + ' <span style="color:' + GREEN + ';">\u2713 Paid</span>') : '') +
         row_('Reference', '<span style="font-family:monospace;font-size:13px;">' + esc_(pay.regId) + '</span>') +
       '</table>' +
@@ -248,9 +253,9 @@ function sendPassConfirmation(pay) {
 
     MailApp.sendEmail({
       to: pay.email,
-      subject: (upgraded ? 'Top-up confirmed: you now have the Wellness Experience Pass' : 'Payment confirmed: your ' + info.short) + ' for Make Health Easier Wellness Fest 2026',
+      subject: (upgraded ? 'Top-up confirmed: you now have the Wellness Experience Pass' : waived ? 'Your free Wellness Experience Pass' : 'Payment confirmed: your ' + info.short) + ' for Make Health Easier Wellness Fest 2026',
       htmlBody: shell_(upgraded ? 'You\'re all set for both days' : 'Your pass is confirmed', body),
-      body: 'Hi ' + name + ',\n\nYour payment was successful and your pass is confirmed.\n\n' +
+      body: 'Hi ' + name + ',\n\n' + (waived ? 'As a Wellfam member, your Wellness Experience Pass is free and confirmed.' : 'Your payment was successful and your pass is confirmed.') + '\n\n' +
         'Pass: ' + info.name + '\nValid on: ' + info.days + '\nEvent timing: 9:00 AM - 7:00 PM daily\nVenue: ' + VENUE +
         (paid ? '\nAmount paid: ' + paid : '') + '\nReference: ' + pay.regId +
         (pass === 'BOTH' ? '\n\nYOUR PASS INCLUDES: a Wellous Trial Set (collect it at the counter) and workshop & workout class booking.' : '') +
@@ -621,4 +626,11 @@ function testWaitlistEmail() {
     workshopId: 'd1-zumba', fullName: 'Test Guest', contactNumber: '0123456789',
     email: me, pass: 'BOTH', promoted: true
   });
+}
+
+/** Run from the editor to see the free Wellfam VIP/VVIP pass email in your own inbox. */
+function testWellfamEmail() {
+  var me = Session.getEffectiveUser().getEmail();
+  sendPassConfirmation({ regId: 'WWF_BOTH_0123456789_TEST' + new Date().getTime() % 100000, email: me,
+    fullName: 'Test Guest', amount: '0', currency: 'myr' });
 }

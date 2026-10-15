@@ -19,6 +19,11 @@
 //                      request sends it in the X-Internal-Key header, the payer's email
 //                      (from Stripe Checkout) is included so the workshop confirmation
 //                      email can be sent. Browsers never get the email.
+//   WELLFAM_*          (optional) Wellfam VVIPs get a free pass: a phone lookup with no Stripe
+//                      payment still counts as paid when the number is a VVIP whose free pass
+//                      was confirmed in the sheet ({ waived: true }). See api/_wellfam.js.
+
+const { wellfamPass } = require('./_wellfam');
 
 const STRIPE_API = 'https://api.stripe.com/v1';
 
@@ -250,7 +255,14 @@ module.exports = async function handler(req, res) {
       if (phone.length < 9 || phone.length > 12) {
         return res.status(400).json({ paid: false, error: 'Please enter a valid phone number.' });
       }
-      const result = await findByPhone(phone, passLinks);
+      let result = await findByPhone(phone, passLinks);
+      if (!result) {
+        try {
+          result = await wellfamPass(phone);
+        } catch (e) {
+          console.error('verify-payment: Wellfam check failed:', e.message);
+        }
+      }
       if (!result) {
         return res.status(200).json({ paid: false, error: 'No completed payment found for that phone number.' });
       }
