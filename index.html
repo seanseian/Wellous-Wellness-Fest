@@ -1550,6 +1550,7 @@
   .wellfam-note.warn{background:#FFF6DD; border-color:#E9B949; color:#5A4300;}
   .wellfam-note.checking{background:transparent; border-color:transparent; padding:0; color:var(--text-muted); font-weight:700;}
   .price-preview.waived span.amt{color:var(--green-dark);}
+  .was-price{opacity:.5; font-size:.75em; font-weight:700; margin-right:4px;}
 
   .confirm-panel{
     display:none; background:var(--surface); color:var(--text); border-radius:28px; padding:44px;
@@ -4739,7 +4740,14 @@
     var picked = form && form.querySelector('input[name=days]:checked');
     if(pricePreview) pricePreview.classList.toggle('waived', wellfamMember);
     if(!picked || !priceAmt) return;
-    priceAmt.innerHTML = wellfamMember ? '<s style="opacity:.5;font-size:.8em;">RM' + escapeHtml(picked.dataset.price) + '</s> RM0' : (picked.dataset.price === '0' ? 'FREE' : 'RM' + escapeHtml(picked.dataset.price));
+    priceAmt.innerHTML = wellfamMember ? '<s class="was-price">RM' + escapeHtml(picked.dataset.price) + '</s> FREE ENTRY' : (picked.dataset.price === '0' ? 'FREE' : 'RM' + escapeHtml(picked.dataset.price));
+    // the Experience Pass option itself: RM50 crossed out, FREE for verified members
+    var expPrice = document.querySelector('#dayChoices input[value="Both days"]');
+    expPrice = expPrice && expPrice.closest('label').querySelector('.choice-price');
+    if(expPrice){
+      if(!expPrice.dataset.orig) expPrice.dataset.orig = expPrice.innerHTML;
+      expPrice.innerHTML = wellfamMember ? '<em>Wellfam perk</em><span><s class="was-price">RM50</s> FREE</span>' : expPrice.dataset.orig;
+    }
   }
   var WELLFAM_MSG = {
     verified: '<span class="wf-emoji" aria-hidden="true">&#127881;</span><span class="wf-text"><b class="wf-head">Wellfam VIP / VVIP verified!</b><span>Your <b>Wellness Experience Pass</b> is <b>FREE</b>. No payment needed.</span></span>',
@@ -4954,7 +4962,7 @@
           referrerId: referrerId || null,
           products: products,
           attendance: waived ? 'Both days' : days.value, // Wellfam VIP/VVIPs get the Experience Pass
-          passPrice: waived ? 'RM0 (Wellfam)' : 'RM' + days.dataset.price,
+          passPrice: waived ? 'FREE (Wellfam member)' : 'RM' + days.dataset.price,
           email: (days.value === 'Explorer' || waived) ? email : null, // Stripe collects it for the paid pass
           marketingConsent: (document.getElementById('marketingConsent') || {}).checked ? 'Yes' : 'No',
           wellfam: waived,
