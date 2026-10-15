@@ -404,9 +404,9 @@ function checkPass_(sessionId, phone) {
 
 /** D1 covers Day 1 workshops, D2 covers Day 2, BOTH covers everything. */
 function passCoversWorkshop_(pass, workshopId) {
-  var w = WORKSHOPS[workshopId];
-  if (!w || !pass || pass === 'BOTH') return true;
-  return (pass === 'D1' && w.date === '2026-10-24') || (pass === 'D2' && w.date === '2026-10-25');
+  // 1-Day Passes were upgraded to the Wellness Experience Pass for free, so every paid pass
+  // covers workshops on both days.
+  return true;
 }
 
 // ====================================================================
