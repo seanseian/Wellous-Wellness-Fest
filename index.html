@@ -366,9 +366,11 @@
   }
   .pv-ribbon svg{width:24px; height:24px;}
   .pv-media{border-radius:20px; overflow:hidden; height:190px;}
+  .pv-exp .pv-media{height:auto; aspect-ratio:16 / 9;}
+  .pv-exp .pv-media img{object-position:50% 30%;}
   .pv-media img{width:100%; height:100%; object-fit:cover; display:block;}
-  .pv-exp-head{display:grid; grid-template-columns:1fr auto; gap:14px; align-items:center; margin-top:-46px; position:relative; z-index:2;}
-  .pv-exp-title{padding-top:52px; min-width:0;}
+  .pv-exp-head{display:grid; grid-template-columns:1fr auto; gap:14px; align-items:center; margin-top:-30px; position:relative; z-index:2;}
+  .pv-exp-title{padding-top:36px; min-width:0;}
   .pv-exp-title h3{
     margin:0; font-family:'Mark Pro'; font-weight:800; text-transform:uppercase; line-height:0.98;
     font-size:clamp(1.5rem, 2.6vw, 2.05rem); color:#fff; letter-spacing:0.005em; text-shadow:0 2px 0 rgba(0,0,0,0.18);
@@ -435,11 +437,11 @@
   .pv-cta svg, .pv-cta-quiet svg{width:24px; height:24px;}
   .pv-fine{margin:2px 0 0; text-align:center; font-size:0.8rem; line-height:1.45; color:rgba(255,255,255,0.85);}
 
-  .pv-free{background:var(--surface); color:var(--text); border-radius:28px; padding:16px 18px 22px; box-shadow:0 22px 40px -26px rgba(15,42,25,0.4); border:1px solid var(--line); margin-top:22px;}
+  .pv-free{background:var(--surface); color:var(--text); border-radius:28px; padding:16px 18px 22px; box-shadow:0 22px 40px -26px rgba(15,42,25,0.4); border:1px solid var(--line);}
   .pv-free .pv-media{height:190px; margin-bottom:18px;}
   .pv-free-head{display:flex; justify-content:space-between; align-items:center; gap:12px;}
   .pv-free-head h3{margin:0; font-family:'Mark Pro'; font-weight:800; text-transform:uppercase; font-size:1.45rem; line-height:1.1; color:var(--text);}
-  .pv-free-badge{flex:none; max-width:150px; text-align:center; padding:6px 12px; border:2px solid var(--green); border-radius:12px; background:var(--green-pale); color:var(--green-dark); font-weight:800; font-size:0.9rem; line-height:1.2;}
+  .pv-free-badge{flex:none; text-align:center; padding:6px 16px; border:2px solid var(--green); border-radius:12px; background:var(--green-pale); color:var(--green-dark); font-family:'Mark Pro'; font-weight:800; font-size:1.5rem; letter-spacing:0.03em; line-height:1.1;}
   .pv-free-tag{margin:10px 0 16px; color:var(--text-muted); font-size:1rem;}
   .pv-list-free li{border-bottom:0; padding:9px 4px; font-weight:600; color:var(--text);}
   .pv-list-free li > svg{color:var(--green-dark);}
@@ -459,7 +461,7 @@
     .pv-exp{padding:14px 12px 18px; border-radius:24px;}
     .pv-ribbon{font-size:0.95rem; padding:6px 18px; top:-17px;}
     .pv-ribbon svg{width:20px; height:20px;}
-    .pv-media, .pv-free .pv-media{height:150px;}
+    .pv-free .pv-media{height:150px;}
     .pv-exp-head{grid-template-columns:1fr; margin-top:-30px;}
     .pv-exp-title{padding-top:0; order:2;}
     .pv-price{justify-self:end; min-width:0; width:170px; order:1;}
@@ -2051,7 +2053,7 @@
         </div>
         <div class="pv-free-head">
           <h3><span aria-hidden="true">&#127903;&#65039;</span> Wellness Explorer Pass</h3>
-          <span class="pv-free-badge">Included with Registration</span>
+          <span class="pv-free-badge">FREE</span>
         </div>
         <p class="pv-free-tag">A simple way to join the Fest.</p>
         <ul class="pv-list pv-list-free">
