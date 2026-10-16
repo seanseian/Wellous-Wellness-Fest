@@ -17,11 +17,12 @@
 
 // Workshop schedule (Malaysia time, UTC+8). Keep in sync with the website cards.
 var WORKSHOPS = {
+  'd1-run-club': { name: 'Make Health Easier Run Club: 5km Flag Off', date: '2026-10-24', start: '08:30', end: '09:30', stage: 'Main Zone', host: 'With Upbound', capacity: 100 },
   'd1-sound-bath': { name: 'Hear Your Inner Sound: The NOICE Sound Bath with Ghynna Hen', date: '2026-10-24', start: '09:00', end: '09:45', stage: 'Move Zone', host: 'With Ghynna Hen', capacity: 100 },
   'd1-zumba': { name: 'Feel the Beat, Feel the Energy: Zumba with Hannah Kamal', date: '2026-10-24', start: '09:55', end: '10:35', stage: 'Main Zone', host: 'With Hannah Kamal', capacity: 50 },
   'd1-strength-yoga': { name: 'Find Your Flow: Strength Yoga with Jessica Lim', date: '2026-10-24', start: '10:00', end: '10:45', stage: 'Move Zone', host: 'With Jessica Lim', capacity: 100 },
   'd1-chair-yoga': { name: 'Easy Exercise for Seniors: Chair Yoga with Cheryl Chung', date: '2026-10-24', start: '11:45', end: '12:15', stage: 'Main Zone', host: 'With Cheryl Chung', capacity: 50 },
-  'workshop2': { name: 'Good Food, Made Easy: Healthy Cooking Workshop with Tefal', date: '2026-10-24', start: '14:00', end: '14:40', stage: 'Main Zone', host: 'With Tefal Chef', capacity: 50 },
+  'workshop2': { name: 'Good Food, Made Easy: Healthy Cooking Tips & Techniques with Tefal Chef', date: '2026-10-24', start: '14:00', end: '14:40', stage: 'Main Zone', host: 'With Tefal Chef', capacity: 50 },
   'd1-yoga-mobility': { name: 'Move Freely: Yoga & Mobility with Niewei', date: '2026-10-24', start: '16:30', end: '17:15', stage: 'Move Zone', host: 'With Niewei', capacity: 100 },
   'd1-mat-pilates': { name: 'Align & Flow: Mat Pilates with Siow Yen', date: '2026-10-24', start: '17:30', end: '18:15', stage: 'Move Zone', host: 'With Siow Yen', capacity: 100 },
   'd1-floral': { name: 'Bloom with Meaning: Floral Workshop with Fleur Floristry', date: '2026-10-24', start: '17:35', end: '18:15', stage: 'Main Zone', host: 'With Fleur Floristry', capacity: 50 },
@@ -29,8 +30,7 @@ var WORKSHOPS = {
   'd2-pound': { name: 'Find Your Rhythm: AFYAA Pound Workshop', date: '2026-10-25', start: '08:00', end: '09:00', stage: 'Move Zone', host: 'AFYAA Wellness Session', capacity: 100 },
   'd2-yin-yoga': { name: 'Slow Down & Flow: Yin Yoga with Cindy', date: '2026-10-25', start: '09:00', end: '09:45', stage: 'Move Zone', host: 'With Cindy', capacity: 100 },
   'workshop6': { name: 'Create & Connect: DIY Creative Tent for Parents & Kids', date: '2026-10-25', start: '10:00', end: '10:45', stage: 'Move Zone', host: 'With SEIA', capacity: 100 },
-  'd2-hiit': { name: 'Ignite Your Energy: Dance Workshop with Angelina Wong', date: '2026-10-25', start: '10:20', end: '11:00', stage: 'Main Zone', host: 'With Angelina Wong', capacity: 50 },
-  'd2-daddy-daughter': { name: 'Little Hands, Big Memories: Parent & Kids Bonding Workshop', date: '2026-10-25', start: '15:00', end: '15:30', stage: 'Main Zone', host: 'Melt Mellow \u00d7 Squishy Fun', capacity: 50 },
+  'd2-hiit': { name: 'Ignite Your Energy: Dance Workout with Angelina Wong', date: '2026-10-25', start: '10:20', end: '11:00', stage: 'Main Zone', host: 'With Angelina Wong', capacity: 50 },
   'd2-hiit-strength': { name: 'Power Up: HIIT Strength with Vicky', date: '2026-10-25', start: '16:30', end: '17:15', stage: 'Move Zone', host: 'With Vicky', capacity: 100 },
   'd2-zumba': { name: 'Feel the Beat: Zumba with Grace', date: '2026-10-25', start: '17:30', end: '18:15', stage: 'Move Zone', host: 'With Grace', capacity: 100 },
   'd2-yoga-flow': { name: 'Flow Into Wellness: Yoga Flow with Edward Chung', date: '2026-10-25', start: '18:30', end: '19:15', stage: 'Move Zone', host: 'With Edward Chung', capacity: 100 }

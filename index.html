@@ -1728,6 +1728,8 @@
   .workshop-card:hover{transform:translateY(-3px); box-shadow:var(--shadow);}
   .workshop-card-media{aspect-ratio:16/10; overflow:hidden;}
   .workshop-card-media img{width:100%; height:100%; object-fit:cover; display:block;}
+  .workshop-card-media-logo{background:#fff; display:flex; align-items:center; justify-content:center;}
+  .workshop-card-media-logo img{object-fit:contain; width:62%; height:auto;}
   .workshop-card-body{padding:14px 16px 16px;}
   .workshop-card-body h4{font-family:'Mark Pro'; font-size:1.3rem; font-weight:800; color:var(--text); line-height:1.2; margin:0;}
   .workshop-card-meta{
@@ -2010,7 +2012,7 @@
         </div>
 
         <div class="pv-excl">
-          <span class="pv-excl-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="currentColor"/><path fill="#FFD84D" d="M12 6.5l1.6 3.4 3.7.4-2.8 2.5.8 3.7L12 14.6l-3.3 1.9.8-3.7-2.8-2.5 3.7-.4z"/></svg>Experience exclusive</span>
+          <span class="pv-excl-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="currentColor"/><path fill="#FFD84D" d="M12 6.5l1.6 3.4 3.7.4-2.8 2.5.8 3.7L12 14.6l-3.3 1.9.8-3.7-2.8-2.5 3.7-.4z"/></svg>Experience Pass only</span>
           <p class="pv-excl-main"><svg class="pv-tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg><span>Workshop &amp; Workout Class Booking <span class="pv-worth">&mdash; Worth RM300</span></span></p>
           <div class="pv-chips">
             <span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4.5" r="2"/><path d="M12 7v6M6 11l6 2 6-2M8 20c1-3 2.5-5 4-5s3 2 4 5M5 20h14"/></svg></i>Yoga</span>
@@ -2195,7 +2197,7 @@
         <li><img src="images/vendor-logo-tigrox.jpg" alt="Tigrox" loading="lazy"><div><b>TIGROX</b><span>Tiger Milk King Sachets × 2<br>Livetal Sachet × 1<br>Imuglo Sachet × 1</span></div></li>
         <li><img src="images/vendor-logo-femoire.jpg" alt="Femoire" loading="lazy"><div><b>FEMOIRE</b><span>Night Sachets × 2</span></div></li>
         <li><img src="images/vendor-logo-zenso.jpg" alt="Zenso" loading="lazy"><div><b>ZENSO</b><span>Kuro Daitto Choco Sachet × 1<br>Kuro Mizu Sachet × 1<br>Kuro Kosen Sachets × 2</span></div></li>
-        <li><img src="images/vendor-logo-afyaa.jpg" alt="AFYAA" loading="lazy"><div><b>AFYAA</b></div></li>
+        <li><img src="images/vendor-logo-afyaa.jpg" alt="AFYAA" loading="lazy"><div><b>AFYAA</b><span>Sahiyya Sachet × 1</span></div></li>
       </ol>
       <a href="#regForm" class="btn" style="margin-top:22px;">Get your pass &amp; your bag</a>
       <p class="bag-note">*Terms &amp; Conditions apply.</p>
@@ -2413,7 +2415,7 @@
             <li class="ag-row ag-k-launch"><span class="ag-time">9:30 – 9:55 AM</span><div class="ag-what"><b>Welcome to Make Health Easier Wellness Fest 2026</b><span class="ag-tag ag-launch">Highlight</span><span class="ag-detail">Official Launch Ceremony, featuring our Venue Sponsor Partner, Dato’ Sri Dr. Vincent Tiew</span></div></li>
             <li class="ag-row ag-k-fitness"><span class="ag-time">9:55 – 10:35 AM</span><div class="ag-what"><b>Feel the Beat, Feel the Energy: Zumba with Hannah Kamal</b><span class="ag-tag ag-fitness">Fitness</span></div></li>
             <li class="ag-row ag-k-forum"><span class="ag-time">10:35 – 11:35 AM</span><div class="ag-what"><b>After 40, Protect Your Mobility — Not Just Your Age</b><span class="ag-tag ag-forum">Talk</span><span class="ag-detail">40岁以后，真正要守住的不是年龄，是行动力 · Longevity &amp; Joint Health Forum 老年与关爱骨关节健康讲座</span></div></li>
-            <li class="ag-row ag-k-launch"><span class="ag-time">11:35 – 11:45 AM</span><div class="ag-what"><b>Age Has No Limits: 7 Athletes. 1 Challenge. A New Definition of Ageing.</b><span class="ag-tag ag-launch">Highlight</span><span class="ag-detail">Official MOU Signing Ceremony · Wellous × Malaysia HYROX Active Ageing Athletes</span></div></li>
+            <li class="ag-row ag-k-launch"><span class="ag-time">11:35 – 11:45 AM</span><div class="ag-what"><b>Wellous x Malaysian World Championship HYROX Athletes</b><span class="ag-tag ag-launch">Highlight</span><span class="ag-detail">Official MOU Signing Ceremony · Wellous × Malaysia HYROX Active Ageing Athletes</span></div></li>
             <li class="ag-row ag-k-fitness"><span class="ag-time">11:45 AM – 12:15 PM</span><div class="ag-what"><b>Easy Exercise for Seniors: Chair Yoga with Cheryl Chung</b><span class="ag-tag ag-fitness">Fitness</span></div></li>
             <li class="ag-row ag-k-break"><span class="ag-time">12:15 – 12:30 PM</span><div class="ag-what"><b>Health Experience Break</b><span class="ag-tag ag-break">Explore</span><span class="ag-detail">Free health screening · games · booth discovery</span></div></li>
             <li class="ag-row ag-k-forum"><span class="ag-time">12:30 – 1:30 PM</span><div class="ag-what"><b>Blood Sugar Talk: Korean Red Ginseng &amp; Everyday Wellness</b><span class="ag-tag ag-forum">Talk</span><span class="ag-detail">With JUNG KWAN JANG</span></div></li>
@@ -2451,13 +2453,13 @@
             <li class="ag-row ag-k-info"><span class="ag-time">8:00 – 9:00 AM</span><div class="ag-what"><b>Registration &amp; Wellness Exploration</b><span class="ag-detail">Check-in, health screening, booths &amp; wellness zones</span></div></li>
             <li class="ag-row ag-k-launch"><span class="ag-time">9:00 – 9:30 AM</span><div class="ag-what"><b>Welcome to Make Health Easier Wellness Fest 2026 — Day 2</b><span class="ag-tag ag-launch">Highlight</span></div></li>
             <li class="ag-row ag-k-forum"><span class="ag-time">9:30 – 10:20 AM</span><div class="ag-what"><b>AFYAA: Stories of Wellness &amp; Success Talk</b><span class="ag-tag ag-forum">Talk</span><span class="ag-detail">The secret of Sahiyya, real stories &amp; celebration</span></div></li>
-            <li class="ag-row ag-k-fitness"><span class="ag-time">10:20 – 11:00 AM</span><div class="ag-what"><b>Ignite Your Energy: Dance Workshop with Angelina Wong</b><span class="ag-tag ag-fitness">Fitness</span></div></li>
+            <li class="ag-row ag-k-fitness"><span class="ag-time">10:20 – 11:00 AM</span><div class="ag-what"><b>Ignite Your Energy: Dance Workout with Angelina Wong</b><span class="ag-tag ag-fitness">Fitness</span></div></li>
             <li class="ag-row ag-k-break"><span class="ag-time">11:00 – 11:15 AM</span><div class="ag-what"><b>Health Experience Break</b><span class="ag-tag ag-break">Explore</span><span class="ag-detail">Free health screening · games · booth discovery</span></div></li>
             <li class="ag-row ag-k-forum"><span class="ag-time">11:15 AM – 12:15 PM</span><div class="ag-what"><b>High Blood Pressure, Cholesterol &amp; Sugar Don’t Happen Overnight</b><span class="ag-tag ag-forum">Talk</span><span class="ag-detail">三高不是突然发生，是身体长期累积出来的警讯 · 3 Highs Health Check &amp; Expert Sharing · EVENON Official Launch</span></div></li>
             <li class="ag-row ag-k-break"><span class="ag-time">12:15 – 12:30 PM</span><div class="ag-what"><b>Health Experience Break</b><span class="ag-tag ag-break">Explore</span><span class="ag-detail">Free health screening · games · booth discovery</span></div></li>
             <li class="ag-row ag-k-forum"><span class="ag-time">12:30 – 1:00 PM</span><div class="ag-what"><b>How to Protect Your Family’s Airway Longevity — Building Healthier Airways from Young to Old (Haze)</b><span class="ag-tag ag-forum">Talk</span><span class="ag-detail">守护全家的呼吸健康—从孩子到长辈，一起养好呼吸道 · Family Airway Health Talk</span></div></li>
             <li class="ag-row ag-k-forum"><span class="ag-time">1:00 – 2:00 PM</span><div class="ag-what"><b>Healthy Kids, Stronger Families — Parenting Unfiltered</b><span class="ag-tag ag-forum">Talk</span><span class="ag-detail">儿童营养 × 全家健康 · Parenting Health Forum × Jack Lim × Games Session</span></div></li>
-            <li class="ag-row ag-k-launch"><span class="ag-time">2:00 – 2:40 PM</span><div class="ag-what"><b>《冲吧！小当家！》Start Family Meet &amp; Greet: Little Big × Tigrox</b><span class="ag-tag ag-launch">Highlight</span><span class="ag-detail">Official collaboration launch &amp; family games</span></div></li>
+            <li class="ag-row ag-k-launch"><span class="ag-time">2:00 – 2:40 PM</span><div class="ag-what"><b>《冲吧！小当家！》Meet &amp; Greet: Little Big × Tigrox</b><span class="ag-tag ag-launch">Highlight</span><span class="ag-detail">Official collaboration launch &amp; family games</span></div></li>
             <li class="ag-row ag-k-break"><span class="ag-time">2:40 – 3:00 PM</span><div class="ag-what"><b>Health Experience Break</b><span class="ag-tag ag-break">Explore</span><span class="ag-detail">Free health screening · games · booth discovery</span></div></li>
             <li class="ag-row ag-k-forum"><span class="ag-time">3:00 – 3:30 PM</span><div class="ag-what"><b>Beyond Sweating: The Science of Infrared Sauna for Recovery &amp; Longevity with Sweat Spa</b><span class="ag-tag ag-forum">Talk</span></div></li>
             <li class="ag-row ag-k-forum"><span class="ag-time">3:30 – 4:00 PM</span><div class="ag-what"><b>Confident Inside Out: Women’s Wellness &amp; Intimate Care Forum with Lafre</b><span class="ag-tag ag-forum">Talk</span></div></li>
@@ -2824,6 +2826,17 @@
         <span class="workshop-featured-eyebrow" id="workshopEyebrow">Confirmed Workshops</span>
         <h3 class="workshop-day-title">Day 1 &middot; Saturday, 24 Oct</h3>
         <div class="workshop-grid">
+          <div class="workshop-card" data-workshop-id="d1-run-club" data-day="1" data-start="08:30" data-end="09:30">
+            <div class="workshop-card-media workshop-card-media-logo"><img src="images/vendor-logo-upbound.jpg" alt="Make Health Easier Run Club: 5km Flag Off with Upbound" loading="lazy"><div class="workshop-full-overlay" aria-hidden="true"><b>Fully Booked!</b><span>You can try your luck by attending at the entrance of the workshop, or add yourself to the wait list. An email will be sent to you if someone else cancels and slots are available.</span></div></div>
+            <div class="workshop-card-body">
+              <h4>Make Health Easier Run Club: 5km Flag Off</h4>
+              <div class="workshop-card-meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M8 3v4M16 3v4" stroke-linecap="round"/></svg> <span class="wc-day">Day 1 &middot; Sat 24 Oct &middot; </span>8:30&ndash;9:30 AM</div>
+              <div class="workshop-card-org"><b>Main Zone</b> &middot; With Upbound</div>
+              <div class="workshop-slot-status" data-slot-status>Checking availability&hellip;</div>
+              <button type="button" class="workshop-reserve-btn" data-reserve-btn disabled>Reserve Slot</button>
+              <button type="button" class="workshop-cancel-btn" data-cancel-btn style="display:none;">Cancel reservation</button>
+            </div>
+          </div>
           <div class="workshop-card" data-workshop-id="d1-sound-bath" data-day="1" data-start="09:00" data-end="09:45">
             <div class="workshop-card-media"><img src="images/ws-d1-sound-bath-v2.jpg" alt="Hear Your Inner Sound: The NOICE Sound Bath with Ghynna Hen" loading="lazy"><div class="workshop-full-overlay" aria-hidden="true"><b>Fully Booked!</b><span>You can try your luck by attending at the entrance of the workshop, or add yourself to the wait list. An email will be sent to you if someone else cancels and slots are available.</span></div></div>
             <div class="workshop-card-body">
@@ -2869,9 +2882,9 @@
             </div>
           </div>
           <div class="workshop-card" data-workshop-id="workshop2" data-day="1" data-start="14:00" data-end="14:40">
-            <div class="workshop-card-media"><img src="images/ws-workshop2.jpg" alt="Good Food, Made Easy: Healthy Cooking Workshop with Tefal" loading="lazy"><div class="workshop-full-overlay" aria-hidden="true"><b>Fully Booked!</b><span>You can try your luck by attending at the entrance of the workshop, or add yourself to the wait list. An email will be sent to you if someone else cancels and slots are available.</span></div></div>
+            <div class="workshop-card-media"><img src="images/ws-workshop2.jpg" alt="Good Food, Made Easy: Healthy Cooking Tips &amp; Techniques with Tefal Chef" loading="lazy"><div class="workshop-full-overlay" aria-hidden="true"><b>Fully Booked!</b><span>You can try your luck by attending at the entrance of the workshop, or add yourself to the wait list. An email will be sent to you if someone else cancels and slots are available.</span></div></div>
             <div class="workshop-card-body">
-              <h4>Good Food, Made Easy: Healthy Cooking Workshop with Tefal</h4>
+              <h4>Good Food, Made Easy: Healthy Cooking Tips &amp; Techniques with Tefal Chef</h4>
               <div class="workshop-card-meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M8 3v4M16 3v4" stroke-linecap="round"/></svg> <span class="wc-day">Day 1 &middot; Sat 24 Oct &middot; </span>2:00&ndash;2:40 PM</div>
               <div class="workshop-card-org"><b>Main Zone</b> &middot; With Tefal Chef</div>
               <div class="workshop-slot-status" data-slot-status>Checking availability&hellip;</div>
@@ -2961,22 +2974,11 @@
             </div>
           </div>
           <div class="workshop-card" data-workshop-id="d2-hiit" data-day="2" data-start="10:20" data-end="11:00">
-            <div class="workshop-card-media"><img src="images/ws-d2-hiit.jpg" alt="Ignite Your Energy: Dance Workshop with Angelina Wong" loading="lazy"><div class="workshop-full-overlay" aria-hidden="true"><b>Fully Booked!</b><span>You can try your luck by attending at the entrance of the workshop, or add yourself to the wait list. An email will be sent to you if someone else cancels and slots are available.</span></div></div>
+            <div class="workshop-card-media"><img src="images/ws-d2-dance-angelina.jpg" alt="Ignite Your Energy: Dance Workout with Angelina Wong" loading="lazy"><div class="workshop-full-overlay" aria-hidden="true"><b>Fully Booked!</b><span>You can try your luck by attending at the entrance of the workshop, or add yourself to the wait list. An email will be sent to you if someone else cancels and slots are available.</span></div></div>
             <div class="workshop-card-body">
-              <h4>Ignite Your Energy: Dance Workshop with Angelina Wong</h4>
+              <h4>Ignite Your Energy: Dance Workout with Angelina Wong</h4>
               <div class="workshop-card-meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M8 3v4M16 3v4" stroke-linecap="round"/></svg> <span class="wc-day">Day 2 &middot; Sun 25 Oct &middot; </span>10:20&ndash;11:00 AM</div>
               <div class="workshop-card-org"><b>Main Zone</b></div>
-              <div class="workshop-slot-status" data-slot-status>Checking availability&hellip;</div>
-              <button type="button" class="workshop-reserve-btn" data-reserve-btn disabled>Reserve Slot</button>
-              <button type="button" class="workshop-cancel-btn" data-cancel-btn style="display:none;">Cancel reservation</button>
-            </div>
-          </div>
-          <div class="workshop-card" data-workshop-id="d2-daddy-daughter" data-day="2" data-start="15:00" data-end="15:30">
-            <div class="workshop-card-media"><img src="images/ws-d2-daddy-daughter.jpg" alt="Little Hands, Big Memories: Parent &amp; Kids Bonding Workshop" loading="lazy"><div class="workshop-full-overlay" aria-hidden="true"><b>Fully Booked!</b><span>You can try your luck by attending at the entrance of the workshop, or add yourself to the wait list. An email will be sent to you if someone else cancels and slots are available.</span></div></div>
-            <div class="workshop-card-body">
-              <h4>Little Hands, Big Memories: Parent &amp; Kids Bonding Workshop</h4>
-              <div class="workshop-card-meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M8 3v4M16 3v4" stroke-linecap="round"/></svg> <span class="wc-day">Day 2 &middot; Sun 25 Oct &middot; </span>3:00&ndash;3:30 PM</div>
-              <div class="workshop-card-org"><b>Main Zone</b> &middot; Melt Mellow × Squishy Fun</div>
               <div class="workshop-slot-status" data-slot-status>Checking availability&hellip;</div>
               <button type="button" class="workshop-reserve-btn" data-reserve-btn disabled>Reserve Slot</button>
               <button type="button" class="workshop-cancel-btn" data-cancel-btn style="display:none;">Cancel reservation</button>
@@ -3173,7 +3175,7 @@
 </ol>
 <h5>2.2 Programme eligibility</h5>
 <ol type="a" class="tnc-alpha">
-<li>Participation in Event programmes, including workshops, fitness classes, health talks, health screenings, recovery activities, games and contests, is restricted to persons aged 18 and above, except <strong>Create &amp; Connect: DIY Creative Tent for Parents &amp; Kids </strong>and<strong> Little Hands, Big Memories: A Parent &amp; Kids Bonding Workshop </strong>under 18 years of age may participate only in those workshops, subject to the published minimum age, booking, consent, supervision and safety requirements.</li>
+<li>Participation in Event programmes, including workshops, fitness classes, health talks, health screenings, recovery activities, games and contests, is restricted to persons aged 18 and above, except <strong>Create &amp; Connect: DIY Creative Tent for Parents &amp; Kids </strong>under 18 years of age may participate only in that workshop, subject to the published minimum age, booking, consent, supervision and safety requirements.</li>
 </ol>
 <h5>2.3 Children and parental responsibility</h5>
 <ol type="a" class="tnc-alpha">
