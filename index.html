@@ -114,9 +114,10 @@
   nav.links{display:flex; gap:28px; align-items:center;}
   nav.links a{
     text-decoration:none; color:var(--text); font-weight:700; font-size:0.95rem;
-    opacity:0.75; transition:opacity .15s ease;
+    opacity:0.75; transition:opacity .15s ease; white-space:nowrap;
   }
   nav.links a:hover{opacity:1;}
+  @media (max-width:1240px){ nav.links{gap:18px;} nav.links a{font-size:0.9rem;} }
   .nav-cta{
     background:var(--yellow); color:var(--brand); padding:10px 20px; border-radius:999px;
     font-weight:700; font-size:0.9rem; text-decoration:none; white-space:nowrap;
@@ -128,6 +129,8 @@
   .nav-cta:hover{transform:translateY(-1px) scale(1); box-shadow:0 12px 22px -8px rgba(88,194,51,0.6);}
   .burger{display:none; background:none; border:none; cursor:pointer; padding:6px; color:var(--text);}
   .burger svg{width:26px; height:26px;}
+  /* below this there isn't room for every link beside both logos: the burger menu takes over */
+  @media (max-width:1040px){ nav.links{display:none;} .nav-cta{display:none;} .burger{display:block;} }
   .mobile-panel{
     display:flex; flex-direction:column; gap:2px; padding:0 24px;
     max-height:0; opacity:0; overflow:hidden; transform:translateY(-6px);
@@ -1954,6 +1957,7 @@
       <a href="#about">About</a>
       <a href="#highlights">Highlights</a>
       <a href="#agenda">Agenda</a>
+      <a href="#workshops">Workshops</a>
       <a href="#venue">Venue</a>
       <a href="#wellous">Wellous</a>
       <a href="#book">My Bookings</a>
@@ -1967,6 +1971,7 @@
     <a href="#about">About</a>
     <a href="#highlights">Highlights</a>
     <a href="#agenda">Agenda</a>
+    <a href="#workshops">Workshops</a>
     <a href="#venue">Venue</a>
     <a href="#wellous">Wellous</a>
     <a href="#book">My Bookings</a>
@@ -2893,7 +2898,7 @@
             <span>Spots are limited, so pick your favourites below and <u>reserve your slot</u> to make sure you don&rsquo;t miss out. No booking? No worries, you&rsquo;re still welcome to try your luck at the door if there&rsquo;s space. 💚</span>
           </div>
         </div>
-        <span class="workshop-featured-eyebrow" id="workshopEyebrow">Confirmed Workshops</span>
+        <span class="workshop-featured-eyebrow" id="workshops">Confirmed Workshops</span>
         <h3 class="workshop-day-title">Day 1 &middot; Saturday, 24 Oct</h3>
         <div class="workshop-grid">
           <div class="workshop-card" data-workshop-id="d1-run-club" data-day="1" data-start="08:30" data-end="09:30">
@@ -4221,14 +4226,17 @@
   // registration form section, starting from its "Registration" label just below the sticky
   // header (when sales are closed, that's the "Pass sales are now closed" panel's label).
   function goToForm(){ goToSection('register'); }
-  var SECTION_LINKS = { '#register': 'register', '#regForm': 'register', '#book': 'book' };
+  var SECTION_LINKS = { '#register': 'register', '#regForm': 'register', '#book': 'book', '#workshops': 'workshops' };
   document.addEventListener('click', function(e){
-    var a = e.target.closest && e.target.closest('a[href="#register"], a[href="#regForm"], a[href="#book"]');
+    var a = e.target.closest && e.target.closest('a[href="#register"], a[href="#regForm"], a[href="#book"], a[href="#workshops"]');
     if(!a || e.defaultPrevented) return;
     var id = SECTION_LINKS[a.getAttribute('href')];
     e.preventDefault();
     try{ history.replaceState(null, '', '#' + id); }catch(err){}
-    if(id === 'register') goToForm(); else goToSection(id);
+    if(id === 'register') goToForm();
+    // "Workshops" in the menu: the top of the Confirmed Workshops list, starting from its label
+    else if(id === 'workshops') goToElement(document.getElementById('workshops'));
+    else goToSection(id);
   });
 
   // "Add a Day 2 pass to join": open the form with that day picked and their details filled in.
@@ -4718,7 +4726,7 @@
       grid.style.display = empty ? 'none' : '';
       if(title && title.classList.contains('workshop-day-title')) title.style.display = empty ? 'none' : '';
     });
-    var eyebrow = document.getElementById('workshopEyebrow');
+    var eyebrow = document.getElementById('workshops');
     if(eyebrow) eyebrow.textContent = hasBooked ? 'More workshops you can book' : 'Confirmed Workshops';
   }
 
