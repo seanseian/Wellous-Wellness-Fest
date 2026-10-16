@@ -942,6 +942,11 @@
   .bag-p-moveon{left:1%; top:40%; width:15%; z-index:8; --r:-22deg;}
   .bag-p-pouch{left:-3%; top:62%; width:42%; z-index:11; --r:-8deg;}
   .bag-p-pouch > img{filter:drop-shadow(0 20px 24px rgba(20,60,20,0.25));}
+  /* "Exclusive for Wellness Experience Pass" sticker: pops in beside the pouch once the scene is well in view */
+  .bag-p-sticker{left:15%; top:58%; width:20%; z-index:12;}
+  .bag-p-sticker > img{transform:rotate(-10deg); filter:drop-shadow(0 12px 16px rgba(10,50,20,0.3)); transition:transform .55s cubic-bezier(.34,1.56,.64,1), opacity .35s ease;}
+  .bag-stage.sticker-ready .bag-p-sticker > img{opacity:0; transform:rotate(-40deg) scale(.4);}
+  .bag-stage.sticker-ready.sticker-in .bag-p-sticker > img{opacity:1; transform:rotate(-10deg) scale(1);}
   /* the Trial Set pouch, set apart from the goodie bag list */
   .bag-pouch-box{display:grid; grid-template-columns:150px 1fr; gap:18px; align-items:start; margin-top:22px; padding:16px; border-radius:20px; background:#FBF6EA; border:1px solid #EADFC6;}
   .bag-pouch-img{width:100%; height:auto; display:block; margin-top:6px; filter:drop-shadow(0 10px 14px rgba(60,45,20,0.18));}
@@ -2257,6 +2262,7 @@
       <div class="bag-layer bag-p-sahiyya" data-depth="0.55"><img src="images/bag-sahiyya.webp" alt="" loading="lazy"></div>
       <div class="bag-layer bag-tote" data-depth="-0.12"><img src="images/bag-tote.webp" alt="" loading="lazy"></div>
       <div class="bag-layer bag-p-pouch" data-depth="-0.04"><img src="images/bag-pouch.webp" alt="" loading="lazy"></div>
+      <div class="bag-layer bag-p-sticker" data-depth="0.15"><img src="images/sticker-experience-only.svg" alt="" loading="lazy"></div>
     </div>
   </div>
 </section>
@@ -5674,12 +5680,15 @@
     if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     var layers = [].slice.call(stage.querySelectorAll('.bag-layer'));
     var ticking = false, active = false;
+    stage.classList.add('sticker-ready');
     function update(){
       ticking = false;
       var r = stage.getBoundingClientRect(), vh = window.innerHeight;
       // 0 when the stage's top enters at the bottom of the screen, 1 when its bottom leaves at the top
       var t = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));
       var range = r.width * 0.45;
+      // the Experience Pass sticker pops in once the scene is well on screen, and hides again if you scroll back up past it
+      stage.classList.toggle('sticker-in', t > 0.38);
       layers.forEach(function(l){
         var d = parseFloat(l.getAttribute('data-depth')) || 0;
         l.style.transform = 'translate3d(0,' + ((0.5 - t) * range * d).toFixed(1) + 'px,0)';
