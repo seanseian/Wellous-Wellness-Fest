@@ -929,6 +929,35 @@
   .bag-v1{left:13%; top:10%; width:31%; z-index:5; --r:-15deg;}
   .bag-v2{left:42%; top:3%; width:26%; z-index:3; --r:20deg;}
   .bag-v3{left:68%; top:13%; width:27%; z-index:6; --r:-20deg;}
+  /* Wellous Trial Set products rising with the goodies, and the pouch in front of the tote */
+  .bag-p-tigrox2{left:21%; top:19%; width:10.5%; z-index:5; --r:-6deg;}
+  .bag-p-livetal{left:30%; top:15%; width:9.5%; z-index:5; --r:4deg;}
+  .bag-p-imuglo{left:38.5%; top:12%; width:9.5%; z-index:5; --r:-3deg;}
+  .bag-p-daitto{left:47%; top:13%; width:9.5%; z-index:5; --r:7deg;}
+  .bag-p-mizu{left:55%; top:9%; width:7.5%; z-index:4; --r:12deg;}
+  .bag-p-peach{left:71%; top:15%; width:7.5%; z-index:8; --r:14deg;}
+  .bag-p-prune{left:78.5%; top:19%; width:7.5%; z-index:8; --r:22deg;}
+  .bag-p-femoire2{left:83%; top:31%; width:13%; z-index:7; --r:28deg;}
+  .bag-p-sahiyya{left:86%; top:46%; width:8%; z-index:8; --r:30deg;}
+  .bag-p-moveon{left:1%; top:40%; width:15%; z-index:8; --r:-22deg;}
+  .bag-p-pouch{left:-3%; top:62%; width:42%; z-index:11; --r:-8deg;}
+  .bag-p-pouch > img{filter:drop-shadow(0 20px 24px rgba(20,60,20,0.25));}
+  /* the Trial Set pouch, set apart from the goodie bag list */
+  .bag-pouch-box{display:grid; grid-template-columns:150px 1fr; gap:18px; align-items:start; margin-top:22px; padding:16px; border-radius:20px; background:#FBF6EA; border:1px solid #EADFC6;}
+  .bag-pouch-img{width:100%; height:auto; display:block; margin-top:6px; filter:drop-shadow(0 10px 14px rgba(60,45,20,0.18));}
+  .bag-pouch-body{min-width:0;}
+  .bag-pouch-box .bag-pouch-title{margin-top:0;}
+  .bag-pouch-note{margin:0 0 10px; font-size:0.84rem; color:var(--text-muted); line-height:1.4;}
+  .bag-items-pouch{grid-template-columns:1fr;}
+  @media (max-width:560px){
+    .bag-pouch-box{grid-template-columns:92px 1fr; gap:12px; padding:14px;}
+    .bag-pouch-body{display:contents;}
+    .bag-pouch-box .bag-pouch-title{grid-column:2; align-self:center; margin:0;}
+    .bag-pouch-img{grid-row:1 / span 2; margin:0;}
+    .bag-pouch-note{grid-column:2; margin:0;}
+    .bag-items-pouch{grid-column:1 / -1;}
+    .bag-pouch-title span{margin:4px 0 0;}
+  }
   .bag-voucher{position:relative;}
   .bag-voucher img{width:100%; display:block;}
   .bag-voucher span{
@@ -2191,14 +2220,20 @@
         <li><img src="images/vendor-logo-jkj.jpg" alt="Jung Kwan Jang" loading="lazy"><div><b>JUNG KWAN JANG</b><span>Korean Red Ginseng Manuka Sachet × 1</span></div></li>
         <li><img src="images/vendor-logo-niangjia.jpg" alt="Niang Jia" loading="lazy"><div><b>Niang Jia</b><span>Niang Jia Probiotics Sachet × 1</span></div></li>
       </ol>
-      <p class="bag-inside-title bag-pouch-title">Wellous Product Mini Pouch <span>worth over RM150</span></p>
-      <ol class="bag-items">
+      <div class="bag-pouch-box">
+      <img class="bag-pouch-img" src="images/bag-pouch.webp" width="916" height="900" alt="Wellous Trial Set pouch" loading="lazy">
+      <div class="bag-pouch-body">
+      <p class="bag-inside-title bag-pouch-title">Wellous Trial Set Pouch <span>worth over RM150</span></p>
+      <p class="bag-pouch-note">A separate Wellous pouch, packed with these product samples.</p>
+      <ol class="bag-items bag-items-pouch">
         <li><img src="images/vendor-logo-immority.jpg" alt="Immority" loading="lazy"><div><b>IMMORITY</b><span>LiveOn Sachet × 1<br>MoveOn Sachet × 1</span></div></li>
         <li><img src="images/vendor-logo-tigrox.jpg" alt="Tigrox" loading="lazy"><div><b>TIGROX</b><span>Tiger Milk King Sachets × 2<br>Livetal Sachet × 1<br>Imuglo Sachet × 1</span></div></li>
         <li><img src="images/vendor-logo-femoire.jpg" alt="Femoire" loading="lazy"><div><b>FEMOIRE</b><span>Night Sachets × 2</span></div></li>
         <li><img src="images/vendor-logo-zenso.jpg" alt="Zenso" loading="lazy"><div><b>ZENSO</b><span>Kuro Daitto Choco Sachet × 1<br>Kuro Mizu Sachet × 1<br>Kuro Kosen Sachets × 2</span></div></li>
         <li><img src="images/vendor-logo-afyaa.jpg" alt="AFYAA" loading="lazy"><div><b>AFYAA</b><span>Sahiyya Sachet × 1</span></div></li>
       </ol>
+      </div>
+      </div>
       <a href="#regForm" class="btn" style="margin-top:22px;">Get your pass &amp; your bag</a>
       <p class="bag-note">*Terms &amp; Conditions apply.</p>
     </div>
@@ -2211,7 +2246,18 @@
       <div class="bag-layer bag-v3" data-depth="1"><div class="bag-voucher"><img src="images/bag-voucher.png" alt=""><span>VOUCHER</span></div></div>
       <div class="bag-layer bag-liveon" data-depth="0.6"><img src="images/bag-liveon.webp" alt="" loading="lazy"></div>
       <div class="bag-layer bag-femoire" data-depth="0.8"><img src="images/bag-femoire.webp" alt="" loading="lazy"></div>
+      <div class="bag-layer bag-p-moveon" data-depth="0.5"><img src="images/bag-moveon.webp" alt="" loading="lazy"></div>
+      <div class="bag-layer bag-p-tigrox2" data-depth="0.85"><img src="images/bag-tigrox.webp" alt="" loading="lazy"></div>
+      <div class="bag-layer bag-p-livetal" data-depth="0.95"><img src="images/bag-livetal.webp" alt="" loading="lazy"></div>
+      <div class="bag-layer bag-p-imuglo" data-depth="1.05"><img src="images/bag-imuglo.webp" alt="" loading="lazy"></div>
+      <div class="bag-layer bag-p-daitto" data-depth="0.9"><img src="images/bag-kuro-daitto.webp" alt="" loading="lazy"></div>
+      <div class="bag-layer bag-p-mizu" data-depth="1"><img src="images/bag-kuro-mizu.webp" alt="" loading="lazy"></div>
+      <div class="bag-layer bag-p-peach" data-depth="0.8"><img src="images/bag-kosen-peach.webp" alt="" loading="lazy"></div>
+      <div class="bag-layer bag-p-prune" data-depth="0.7"><img src="images/bag-kosen-prune.webp" alt="" loading="lazy"></div>
+      <div class="bag-layer bag-p-femoire2" data-depth="0.65"><img src="images/bag-femoire.webp" alt="" loading="lazy"></div>
+      <div class="bag-layer bag-p-sahiyya" data-depth="0.55"><img src="images/bag-sahiyya.webp" alt="" loading="lazy"></div>
       <div class="bag-layer bag-tote" data-depth="-0.12"><img src="images/bag-tote.webp" alt="" loading="lazy"></div>
+      <div class="bag-layer bag-p-pouch" data-depth="-0.04"><img src="images/bag-pouch.webp" alt="" loading="lazy"></div>
     </div>
   </div>
 </section>
