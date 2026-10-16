@@ -42,9 +42,10 @@ var REGISTER_URL = 'https://makehealtheasierfest.wellous.com/#register';
 var LOGO_URL = 'https://makehealtheasierfest.wellous.com/images/masthead.png';
 // Pass ticket artwork shown in the "pass confirmed" email (PNG, hosted on the site)
 var TICKET_URLS = {
-  BOTH: 'https://makehealtheasierfest.wellous.com/images/ticket-2day.png',
-  D1: 'https://makehealtheasierfest.wellous.com/images/ticket-1day.png',
-  D2: 'https://makehealtheasierfest.wellous.com/images/ticket-1day.png'
+  BOTH: 'https://makehealtheasierfest.wellous.com/images/ticket-experience.png',
+  D1: 'https://makehealtheasierfest.wellous.com/images/ticket-experience.png',   // 1-Day passes are upgraded to Experience
+  D2: 'https://makehealtheasierfest.wellous.com/images/ticket-experience.png',
+  EXP: 'https://makehealtheasierfest.wellous.com/images/ticket-explorer.png'
 };
 
 var GREEN = '#2F8A17', BLUE = '#1F6FB2', INK = '#0F2A19', MUTED = '#5B6E62';
@@ -315,6 +316,7 @@ function sendExplorerConfirmation(reg) {
     var body =
       '<p style="margin:0 0 16px;font-size:15px;">Hi ' + esc_(name) + ',</p>' +
       '<p style="margin:0 0 18px;font-size:15px;line-height:1.5;">Thanks for registering! Your free <b>Wellness Explorer Pass</b> is confirmed. See you at the fest!</p>' +
+      '<div style="text-align:center;margin:4px 0 20px;"><img src="' + TICKET_URLS.EXP + '" width="320" alt="Your Wellness Explorer Pass" style="display:inline-block;width:320px;max-width:90%;height:auto;border:0;"></div>' +
       '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F2FAEC;border-radius:12px;">' +
         row_('Pass', esc_(info.name)) +
         row_('Valid on', esc_(info.days)) +
