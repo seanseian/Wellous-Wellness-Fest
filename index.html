@@ -1656,6 +1656,13 @@
     width:100%; padding:13px 16px; border-radius:12px; border:1.5px solid var(--line);
     background:var(--surface-alt); font-family:'Nunito'; font-size:0.96rem; color:var(--text);
   }
+  /* iOS Safari gives date inputs a wide intrinsic width and centred text; make it behave like the other fields */
+  input[type=date]{
+    display:block; min-width:0; max-width:100%; -webkit-appearance:none; appearance:none;
+    min-height:calc(0.96rem * 1.25 + 26px + 3px); line-height:1.25; text-align:left;
+  }
+  input[type=date]::-webkit-date-and-time-value{text-align:left; margin:0;}
+  input[type=date]::-webkit-datetime-edit{padding:0;}
   input[type=text]:focus, input[type=tel]:focus, input[type=email]:focus, input[type=date]:focus{outline:3px solid rgba(47,168,79,0.3); border-color:var(--green);}
   input[type=text]::placeholder, input[type=tel]::placeholder{color:var(--text-muted); opacity:0.75;}
   .choice-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px;}
