@@ -17,11 +17,12 @@
 
 // Workshop schedule (Malaysia time, UTC+8). Keep in sync with the website cards.
 var WORKSHOPS = {
+  'd1-run-club': { name: 'Make Health Easier Run Club: 5km Flag Off', date: '2026-10-24', start: '08:30', end: '09:30', stage: 'Main Zone', host: '', capacity: 60 },
   'd1-sound-bath': { name: 'Hear Your Inner Sound: The NOICE Sound Bath with Ghynna Hen', date: '2026-10-24', start: '09:00', end: '09:45', stage: 'Move Zone', host: 'With Ghynna Hen', capacity: 100 },
   'd1-zumba': { name: 'Feel the Beat, Feel the Energy: Zumba with Hannah Kamal', date: '2026-10-24', start: '09:55', end: '10:35', stage: 'Main Zone', host: 'With Hannah Kamal', capacity: 50 },
   'd1-strength-yoga': { name: 'Find Your Flow: Strength Yoga with Jessica Lim', date: '2026-10-24', start: '10:00', end: '10:45', stage: 'Move Zone', host: 'With Jessica Lim', capacity: 100 },
   'd1-chair-yoga': { name: 'Easy Exercise for Seniors: Chair Yoga with Cheryl Chung', date: '2026-10-24', start: '11:45', end: '12:15', stage: 'Main Zone', host: 'With Cheryl Chung', capacity: 50 },
-  'workshop2': { name: 'Good Food, Made Easy: Healthy Cooking Workshop with Tefal', date: '2026-10-24', start: '14:00', end: '14:40', stage: 'Main Zone', host: 'With Tefal Chef', capacity: 50 },
+  'workshop2': { name: 'Good Food, Made Easy: Healthy Cooking Tips & Techniques with Tefal Chef', date: '2026-10-24', start: '14:00', end: '14:40', stage: 'Main Zone', host: 'With Tefal Chef', capacity: 50 },
   'd1-yoga-mobility': { name: 'Move Freely: Yoga & Mobility with Niewei', date: '2026-10-24', start: '16:30', end: '17:15', stage: 'Move Zone', host: 'With Niewei', capacity: 100 },
   'd1-mat-pilates': { name: 'Align & Flow: Mat Pilates with Siow Yen', date: '2026-10-24', start: '17:30', end: '18:15', stage: 'Move Zone', host: 'With Siow Yen', capacity: 100 },
   'd1-floral': { name: 'Bloom with Meaning: Floral Workshop with Fleur Floristry', date: '2026-10-24', start: '17:35', end: '18:15', stage: 'Main Zone', host: 'With Fleur Floristry', capacity: 50 },
@@ -29,8 +30,7 @@ var WORKSHOPS = {
   'd2-pound': { name: 'Find Your Rhythm: AFYAA Pound Workshop', date: '2026-10-25', start: '08:00', end: '09:00', stage: 'Move Zone', host: 'AFYAA Wellness Session', capacity: 100 },
   'd2-yin-yoga': { name: 'Slow Down & Flow: Yin Yoga with Cindy', date: '2026-10-25', start: '09:00', end: '09:45', stage: 'Move Zone', host: 'With Cindy', capacity: 100 },
   'workshop6': { name: 'Create & Connect: DIY Creative Tent for Parents & Kids', date: '2026-10-25', start: '10:00', end: '10:45', stage: 'Move Zone', host: 'With SEIA', capacity: 100 },
-  'd2-hiit': { name: 'Ignite Your Energy: Dance Workshop with Angelina Wong', date: '2026-10-25', start: '10:20', end: '11:00', stage: 'Main Zone', host: 'With Angelina Wong', capacity: 50 },
-  'd2-daddy-daughter': { name: 'Little Hands, Big Memories: Parent & Kids Bonding Workshop', date: '2026-10-25', start: '15:00', end: '15:30', stage: 'Main Zone', host: 'Melt Mellow \u00d7 Squishy Fun', capacity: 50 },
+  'd2-hiit': { name: 'Ignite Your Energy: Dance Workout with Angelina Wong', date: '2026-10-25', start: '10:20', end: '11:00', stage: 'Main Zone', host: 'With Angelina Wong', capacity: 50 },
   'd2-hiit-strength': { name: 'Power Up: HIIT Strength with Vicky', date: '2026-10-25', start: '16:30', end: '17:15', stage: 'Move Zone', host: 'With Vicky', capacity: 100 },
   'd2-zumba': { name: 'Feel the Beat: Zumba with Grace', date: '2026-10-25', start: '17:30', end: '18:15', stage: 'Move Zone', host: 'With Grace', capacity: 100 },
   'd2-yoga-flow': { name: 'Flow Into Wellness: Yoga Flow with Edward Chung', date: '2026-10-25', start: '18:30', end: '19:15', stage: 'Move Zone', host: 'With Edward Chung', capacity: 100 }
@@ -42,9 +42,10 @@ var REGISTER_URL = 'https://makehealtheasierfest.wellous.com/#register';
 var LOGO_URL = 'https://makehealtheasierfest.wellous.com/images/masthead.png';
 // Pass ticket artwork shown in the "pass confirmed" email (PNG, hosted on the site)
 var TICKET_URLS = {
-  BOTH: 'https://makehealtheasierfest.wellous.com/images/ticket-2day.png',
-  D1: 'https://makehealtheasierfest.wellous.com/images/ticket-1day.png',
-  D2: 'https://makehealtheasierfest.wellous.com/images/ticket-1day.png'
+  BOTH: 'https://makehealtheasierfest.wellous.com/images/ticket-experience.png',
+  D1: 'https://makehealtheasierfest.wellous.com/images/ticket-experience.png',   // 1-Day passes are upgraded to Experience
+  D2: 'https://makehealtheasierfest.wellous.com/images/ticket-experience.png',
+  EXP: 'https://makehealtheasierfest.wellous.com/images/ticket-explorer.png'
 };
 
 var GREEN = '#2F8A17', BLUE = '#1F6FB2', INK = '#0F2A19', MUTED = '#5B6E62';
@@ -315,6 +316,7 @@ function sendExplorerConfirmation(reg) {
     var body =
       '<p style="margin:0 0 16px;font-size:15px;">Hi ' + esc_(name) + ',</p>' +
       '<p style="margin:0 0 18px;font-size:15px;line-height:1.5;">Thanks for registering! Your free <b>Wellness Explorer Pass</b> is confirmed. See you at the fest!</p>' +
+      '<div style="text-align:center;margin:4px 0 20px;"><img src="' + TICKET_URLS.EXP + '" width="320" alt="Your Wellness Explorer Pass" style="display:inline-block;width:320px;max-width:90%;height:auto;border:0;"></div>' +
       '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F2FAEC;border-radius:12px;">' +
         row_('Pass', esc_(info.name)) +
         row_('Valid on', esc_(info.days)) +
@@ -440,7 +442,7 @@ function detailsTable_(w) {
     row_('Date', formatDay_(w.date)) +
     row_('Time', formatTime_(w.start) + ' \u2013 ' + formatTime_(w.end)) +
     row_('Where', esc_(w.stage) + ', ' + esc_(VENUE)) +
-    row_('Details', esc_(w.host)) +
+    (w.host ? row_('Details', esc_(w.host)) : '') +
   '</table>';
 }
 
@@ -483,7 +485,7 @@ function moreWorkshops_(contactNumber, pass, heading) {
       cards +=
         '<tr><td style="padding:14px 16px;border-top:1px solid #E1EBDC;">' +
           '<div style="font-size:15px;font-weight:bold;color:' + INK + ';">' + esc_(w.name) + '</div>' +
-          '<div style="font-size:13px;color:' + MUTED + ';margin-top:4px;">' + dayLabel_(w.date) + ' \u00B7 ' + formatTime_(w.start) + ' \u2013 ' + formatTime_(w.end) + ' \u00B7 ' + esc_(w.stage) + ' \u00B7 ' + esc_(w.host) + '</div>' +
+          '<div style="font-size:13px;color:' + MUTED + ';margin-top:4px;">' + dayLabel_(w.date) + ' \u00B7 ' + formatTime_(w.start) + ' \u2013 ' + formatTime_(w.end) + ' \u00B7 ' + esc_(w.stage) + (w.host ? ' \u00B7 ' + esc_(w.host) : '') + '</div>' +
           '<div style="font-size:13px;margin-top:6px;">' + status + '</div>' +
           (left > 0 ? '<div style="margin-top:10px;"><a href="' + SITE_URL + '" style="display:inline-block;background:#74DE16;color:' + INK + ';text-decoration:none;font-weight:bold;padding:9px 16px;border-radius:999px;font-size:13px;">Book this slot</a></div>' : '') +
         '</td></tr>';
@@ -633,4 +635,19 @@ function testWellfamEmail() {
   var me = Session.getEffectiveUser().getEmail();
   sendPassConfirmation({ regId: 'WWF_BOTH_0123456789_TEST' + new Date().getTime() % 100000, email: me,
     fullName: 'Test Guest', amount: '0', currency: 'myr' });
+}
+
+/**
+ * One-off: adds the Run Club to the Workshops sheet so it can take bookings.
+ * Run it once from the editor. Running it again does nothing if the row is already there.
+ */
+function addRunClubWorkshopRow() {
+  var sheet = getWorkshopSheet();
+  var ids = sheet.getRange(1, 1, sheet.getLastRow(), 1).getValues().map(function(r){ return String(r[0]).trim(); });
+  if (ids.indexOf('d1-run-club') !== -1) {
+    console.log('Run Club row is already in the Workshops sheet, nothing to do.');
+    return;
+  }
+  sheet.appendRow(['d1-run-club', 'Make Health Easier Run Club: 5km Flag Off', 'Day 1', '8:30 AM - 9:30 AM', 60, 0]);
+  console.log('Added the Run Club row to the Workshops sheet (capacity 60).');
 }
