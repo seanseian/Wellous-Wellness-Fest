@@ -17,7 +17,7 @@
 
 // Workshop schedule (Malaysia time, UTC+8). Keep in sync with the website cards.
 var WORKSHOPS = {
-  'd1-run-club': { name: 'Make Health Easier Run Club: 5km Flag Off', date: '2026-10-24', start: '08:30', end: '09:30', stage: 'Main Zone', host: 'With Upbound', capacity: 100 },
+  'd1-run-club': { name: 'Make Health Easier Run Club: 5km Flag Off', date: '2026-10-24', start: '08:30', end: '09:30', stage: 'Main Zone', host: '', capacity: 60 },
   'd1-sound-bath': { name: 'Hear Your Inner Sound: The NOICE Sound Bath with Ghynna Hen', date: '2026-10-24', start: '09:00', end: '09:45', stage: 'Move Zone', host: 'With Ghynna Hen', capacity: 100 },
   'd1-zumba': { name: 'Feel the Beat, Feel the Energy: Zumba with Hannah Kamal', date: '2026-10-24', start: '09:55', end: '10:35', stage: 'Main Zone', host: 'With Hannah Kamal', capacity: 50 },
   'd1-strength-yoga': { name: 'Find Your Flow: Strength Yoga with Jessica Lim', date: '2026-10-24', start: '10:00', end: '10:45', stage: 'Move Zone', host: 'With Jessica Lim', capacity: 100 },
@@ -442,7 +442,7 @@ function detailsTable_(w) {
     row_('Date', formatDay_(w.date)) +
     row_('Time', formatTime_(w.start) + ' \u2013 ' + formatTime_(w.end)) +
     row_('Where', esc_(w.stage) + ', ' + esc_(VENUE)) +
-    row_('Details', esc_(w.host)) +
+    (w.host ? row_('Details', esc_(w.host)) : '') +
   '</table>';
 }
 
@@ -485,7 +485,7 @@ function moreWorkshops_(contactNumber, pass, heading) {
       cards +=
         '<tr><td style="padding:14px 16px;border-top:1px solid #E1EBDC;">' +
           '<div style="font-size:15px;font-weight:bold;color:' + INK + ';">' + esc_(w.name) + '</div>' +
-          '<div style="font-size:13px;color:' + MUTED + ';margin-top:4px;">' + dayLabel_(w.date) + ' \u00B7 ' + formatTime_(w.start) + ' \u2013 ' + formatTime_(w.end) + ' \u00B7 ' + esc_(w.stage) + ' \u00B7 ' + esc_(w.host) + '</div>' +
+          '<div style="font-size:13px;color:' + MUTED + ';margin-top:4px;">' + dayLabel_(w.date) + ' \u00B7 ' + formatTime_(w.start) + ' \u2013 ' + formatTime_(w.end) + ' \u00B7 ' + esc_(w.stage) + (w.host ? ' \u00B7 ' + esc_(w.host) : '') + '</div>' +
           '<div style="font-size:13px;margin-top:6px;">' + status + '</div>' +
           (left > 0 ? '<div style="margin-top:10px;"><a href="' + SITE_URL + '" style="display:inline-block;background:#74DE16;color:' + INK + ';text-decoration:none;font-weight:bold;padding:9px 16px;border-radius:999px;font-size:13px;">Book this slot</a></div>' : '') +
         '</td></tr>';
@@ -638,7 +638,7 @@ function testWellfamEmail() {
 }
 
 /**
- * One-off: adds the Upbound Run Club to the Workshops sheet so it can take bookings.
+ * One-off: adds the Run Club to the Workshops sheet so it can take bookings.
  * Run it once from the editor. Running it again does nothing if the row is already there.
  */
 function addRunClubWorkshopRow() {
@@ -648,6 +648,6 @@ function addRunClubWorkshopRow() {
     console.log('Run Club row is already in the Workshops sheet, nothing to do.');
     return;
   }
-  sheet.appendRow(['d1-run-club', 'Make Health Easier Run Club: 5km Flag Off', 'Day 1', '8:30 AM - 9:30 AM', 100, 0]);
-  console.log('Added the Run Club row to the Workshops sheet (capacity 100).');
+  sheet.appendRow(['d1-run-club', 'Make Health Easier Run Club: 5km Flag Off', 'Day 1', '8:30 AM - 9:30 AM', 60, 0]);
+  console.log('Added the Run Club row to the Workshops sheet (capacity 60).');
 }
