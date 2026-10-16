@@ -940,6 +940,9 @@
   .bag-p-femoire2{left:83%; top:31%; width:13%; z-index:7; --r:28deg;}
   .bag-p-sahiyya{left:86%; top:46%; width:8%; z-index:8; --r:30deg;}
   .bag-p-moveon{left:1%; top:40%; width:15%; z-index:8; --r:-22deg;}
+  .bag-p-heal{left:47%; top:36%; width:38%; z-index:8; --r:-12deg;}
+  .bag-p-jkj{left:3%; top:20%; width:8%; z-index:4; --r:-26deg;}
+  .bag-p-niangjia{left:91%; top:60%; width:6.5%; z-index:10; --r:14deg;}
   .bag-p-pouch{left:-3%; top:62%; width:42%; z-index:11; --r:-8deg;}
   .bag-p-pouch > img{filter:drop-shadow(0 20px 24px rgba(20,60,20,0.25));}
   /* "Exclusive for Wellness Experience Pass" sticker: pops in beside the pouch once the scene is well in view */
@@ -949,6 +952,8 @@
   .bag-stage.sticker-ready.sticker-in .bag-p-sticker > img{opacity:1; transform:rotate(-10deg) scale(1);}
   /* the Trial Set pouch, set apart from the goodie bag list */
   .bag-pouch-box{display:grid; grid-template-columns:150px 1fr; gap:18px; align-items:start; margin-top:22px; padding:16px; border-radius:20px; background:#FBF6EA; border:1px solid #EADFC6;}
+  .bag-pouch-art{position:relative; grid-row:1 / span 2;}
+  .bag-pouch-sticker{position:absolute; right:-16px; top:-14px; width:62%; height:auto; transform:rotate(-10deg); filter:drop-shadow(0 8px 10px rgba(10,50,20,0.28));}
   .bag-pouch-img{width:100%; height:auto; display:block; margin-top:6px; filter:drop-shadow(0 10px 14px rgba(60,45,20,0.18));}
   .bag-pouch-body{min-width:0;}
   .bag-pouch-box .bag-pouch-title{margin-top:0;}
@@ -958,7 +963,8 @@
     .bag-pouch-box{grid-template-columns:92px 1fr; gap:12px; padding:14px;}
     .bag-pouch-body{display:contents;}
     .bag-pouch-box .bag-pouch-title{grid-column:2; align-self:center; margin:0;}
-    .bag-pouch-img{grid-row:1 / span 2; margin:0;}
+    .bag-pouch-img{margin:0;}
+    .bag-pouch-sticker{right:-10px; top:-10px;}
     .bag-pouch-note{grid-column:2; margin:0;}
     .bag-items-pouch{grid-column:1 / -1;}
     .bag-pouch-title span{margin:4px 0 0;}
@@ -2225,7 +2231,10 @@
         <li><img src="images/vendor-logo-niangjia.jpg" alt="Niang Jia" loading="lazy"><div><b>Niang Jia</b><span>Niang Jia Probiotics Sachet × 1</span></div></li>
       </ol>
       <div class="bag-pouch-box">
-      <img class="bag-pouch-img" src="images/bag-pouch.webp" width="916" height="900" alt="Wellous Trial Set pouch" loading="lazy">
+      <div class="bag-pouch-art">
+        <img class="bag-pouch-img" src="images/bag-pouch.webp" width="916" height="900" alt="Wellous Trial Set pouch" loading="lazy">
+        <img class="bag-pouch-sticker" src="images/sticker-experience-only.svg" width="690" height="630" alt="Exclusive for Wellness Experience Pass" loading="lazy">
+      </div>
       <div class="bag-pouch-body">
       <p class="bag-inside-title bag-pouch-title">Wellous Trial Set Pouch <span>worth over RM150</span></p>
       <p class="bag-pouch-note">A separate Wellous pouch, packed with these product samples.</p>
@@ -2260,6 +2269,9 @@
       <div class="bag-layer bag-p-prune" data-depth="0.7"><img src="images/bag-kosen-prune.webp" alt="" loading="lazy"></div>
       <div class="bag-layer bag-p-femoire2" data-depth="0.65"><img src="images/bag-femoire.webp" alt="" loading="lazy"></div>
       <div class="bag-layer bag-p-sahiyya" data-depth="0.55"><img src="images/bag-sahiyya.webp" alt="" loading="lazy"></div>
+      <div class="bag-layer bag-p-jkj" data-depth="0.75"><img src="images/bag-jkj-manuka.webp" alt="" loading="lazy"></div>
+      <div class="bag-layer bag-p-heal" data-depth="0.4"><img src="images/bag-heal-bar.webp" alt="" loading="lazy"></div>
+      <div class="bag-layer bag-p-niangjia" data-depth="0.3"><img src="images/bag-niangjia.webp" alt="" loading="lazy"></div>
       <div class="bag-layer bag-tote" data-depth="-0.12"><img src="images/bag-tote.webp" alt="" loading="lazy"></div>
       <div class="bag-layer bag-p-pouch" data-depth="-0.04"><img src="images/bag-pouch.webp" alt="" loading="lazy"></div>
       <div class="bag-layer bag-p-sticker" data-depth="0.15"><img src="images/sticker-experience-only.svg" alt="" loading="lazy"></div>
