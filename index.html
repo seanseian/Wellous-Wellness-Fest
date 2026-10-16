@@ -371,6 +371,7 @@
   .pv-media img{width:100%; height:100%; object-fit:cover; display:block;}
   .pv-exp-head{display:grid; grid-template-columns:1fr auto; gap:14px; align-items:center; margin-top:-30px; position:relative; z-index:2;}
   .pv-exp-title{padding-top:36px; min-width:0;}
+  .pv-price-img{display:block; width:230px; height:auto; filter:drop-shadow(0 12px 18px rgba(0,0,0,0.35));}
   .pv-exp-title h3{
     margin:0; font-family:'Mark Pro'; font-weight:800; text-transform:uppercase; line-height:0.98;
     font-size:clamp(1.5rem, 2.6vw, 2.05rem); color:#fff; letter-spacing:0.005em; text-shadow:0 2px 0 rgba(0,0,0,0.18);
@@ -379,16 +380,6 @@
   .pv-crown{font-size:0.8em; margin-right:6px;}
   .pv-exp-title p{margin:8px 0 0; font-size:0.95rem; line-height:1.4; color:rgba(255,255,255,0.92);}
   .pv-exp-title p b{font-weight:800;}
-  .pv-price{
-    border-radius:18px; overflow:hidden; text-align:center; min-width:172px;
-    border:3px solid #FFE36A; box-shadow:0 14px 26px -12px rgba(0,0,0,0.55); transform:rotate(-1.5deg);
-  }
-  .pv-price-top{background:linear-gradient(180deg, #FFFCE4 0%, #FFF3A6 100%); color:#145A0C; padding:12px 14px 6px; display:grid; grid-template-columns:auto auto; justify-content:center; align-items:end; column-gap:6px;}
-  .pv-rm{font-family:'Mark Pro'; font-weight:800; font-size:1.7rem; line-height:1; padding-bottom:12px;}
-  .pv-amt{font-family:'Mark Pro'; font-weight:800; font-size:4rem; line-height:0.85; letter-spacing:-0.02em;}
-  .pv-only{grid-column:1 / -1; font-family:'Mark Pro'; font-weight:800; font-size:1.15rem; letter-spacing:0.04em; margin-top:4px;}
-  .pv-price-band{background:#0F4A0B; color:#fff; font-family:'Mark Pro'; font-weight:800; font-size:1.05rem; line-height:1.1; padding:9px 12px 10px;}
-  .pv-price-band b{color:#FFD84D; font-size:1.45rem; display:inline-block;}
   .pv-value{
     background:linear-gradient(180deg, #F6FFE9 0%, #E2F7C9 100%); color:#0F3B0B; border-radius:20px;
     padding:12px 14px 0; position:relative; text-align:center; margin-bottom:14px;
@@ -464,11 +455,7 @@
     .pv-free .pv-media{height:150px;}
     .pv-exp-head{grid-template-columns:1fr; margin-top:-30px;}
     .pv-exp-title{padding-top:0; order:2;}
-    .pv-price{justify-self:end; min-width:0; width:170px; order:1;}
-    .pv-amt{font-size:3.4rem;}
-    .pv-rm{font-size:1.35rem; padding-bottom:9px;}
-    .pv-price-band{font-size:0.9rem;}
-    .pv-price-band b{font-size:1.2rem;}
+    .pv-price-img{justify-self:end; width:190px; order:1;}
     .pv-value-row{flex-direction:column; align-items:stretch; gap:6px; padding:10px 12px 22px;}
     .pv-plus{display:none;}
     .pv-value-item{gap:12px;}
@@ -1995,10 +1982,7 @@
             <h3><span class="pv-crown" aria-hidden="true">&#128081;</span>Wellness <span>Experience Pass</span></h3>
             <p>Everything at the Fest, plus a <b>Wellous Trial Set</b> and <b>workshop booking</b>.</p>
           </div>
-          <div class="pv-price" aria-label="RM50 only, get RM650 plus value">
-            <div class="pv-price-top"><span class="pv-rm">RM</span><span class="pv-amt">50</span><span class="pv-only">ONLY</span></div>
-            <div class="pv-price-band">GET <b>RM650+</b> VALUE</div>
-          </div>
+          <img class="pv-price-img" src="images/pass-badge-rm50.png" width="640" height="471" alt="RM50 only. Get RM650+ value">
         </div>
 
         <div class="pv-value">
