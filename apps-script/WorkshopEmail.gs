@@ -636,3 +636,18 @@ function testWellfamEmail() {
   sendPassConfirmation({ regId: 'WWF_BOTH_0123456789_TEST' + new Date().getTime() % 100000, email: me,
     fullName: 'Test Guest', amount: '0', currency: 'myr' });
 }
+
+/**
+ * One-off: adds the Upbound Run Club to the Workshops sheet so it can take bookings.
+ * Run it once from the editor. Running it again does nothing if the row is already there.
+ */
+function addRunClubWorkshopRow() {
+  var sheet = getWorkshopSheet();
+  var ids = sheet.getRange(1, 1, sheet.getLastRow(), 1).getValues().map(function(r){ return String(r[0]).trim(); });
+  if (ids.indexOf('d1-run-club') !== -1) {
+    console.log('Run Club row is already in the Workshops sheet, nothing to do.');
+    return;
+  }
+  sheet.appendRow(['d1-run-club', 'Make Health Easier Run Club: 5km Flag Off', 'Day 1', '8:30 AM - 9:30 AM', 100, 0]);
+  console.log('Added the Run Club row to the Workshops sheet (capacity 100).');
+}
