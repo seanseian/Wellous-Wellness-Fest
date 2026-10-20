@@ -1955,6 +1955,17 @@
     if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', play); else play();
   })();
 </script>
+<!-- Meta Pixel (Wellous, 1901697383661699): PageView on every load; registration events are sent by metaTrack() below. -->
+<script>
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+  document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1901697383661699');
+  fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=1901697383661699&ev=PageView&noscript=1"/></noscript>
 </head>
 <body>
 
@@ -3733,6 +3744,21 @@
     return UPGRADE_LINK + '?client_reference_id=' + encodeURIComponent('WWF_UPG_' + phone + '_' + pass.sessionId);
   }
   var VERIFY_URL = '/api/verify-payment';
+
+  // ---------- Meta Pixel events ----------
+  // Lead: the registration form was submitted (any pass).
+  // CompleteRegistration: a pass is confirmed: a free pass on submit, a paid pass once Stripe
+  // confirms the payment on the way back to the site (that one also sends Purchase with the price).
+  // Each is sent once per registration / payment on this device, so refreshes don't double count.
+  var META_PRICES = { BOTH: 50, D1: 35, D2: 35, UPG: 15 };
+  function metaTrack(event, params, id){
+    try{
+      if(!window.fbq) return;
+      var key = 'wellnessfest_meta_' + event + '_' + id;
+      try{ if(localStorage.getItem(key)) return; localStorage.setItem(key, '1'); }catch(e){}
+      fbq('track', event, params || {}, { eventID: event + '_' + id });
+    }catch(e){}
+  }
   var REG_KEY = 'wellnessfest_registration';
   var PASS_KEY = 'wellnessfest_verified_pass';
   // 'Both days' is the RM50 Wellness Experience Pass (kept as the value the sheet, Stripe and
@@ -3895,6 +3921,11 @@
     pendingSessionId = sessionId;
     verifyPayment('session_id=' + encodeURIComponent(sessionId))
       .then(function(){
+        // Just came back from a Stripe checkout with a confirmed payment.
+        var pass = verifiedPass || {};
+        var meta = { content_name: PASS_NAMES[pass.pass] || pass.attendance || 'Pass', currency: 'MYR', value: META_PRICES[pass.pass] || 0 };
+        metaTrack('CompleteRegistration', Object.assign({ status: true }, meta), sessionId);
+        metaTrack('Purchase', meta, sessionId);
         // Clean the URL so a refresh doesn't re-run the check with the long id.
         try{ history.replaceState(null, '', location.pathname + '#book'); }catch(e){}
       })
@@ -5232,6 +5263,9 @@
         if(editingRegId) data.replacesRegId = editingRegId;
 
         submitToGoogleForm(data);
+        var metaPass = { content_name: passLabel(data.attendance), currency: 'MYR' };
+        metaTrack('Lead', metaPass, data.regId);
+        if(isFreePass(data.attendance) || waived) metaTrack('CompleteRegistration', Object.assign({ value: 0, status: true }, metaPass), data.regId);
         wellfamClaim = waived
           ? new Promise(function(r){ setTimeout(r, 1200); }).then(function(){ // let the row land first
               return fetch('/api/wellfam', { method: 'POST', headers: { 'Content-Type': 'application/json' },
