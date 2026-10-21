@@ -11,6 +11,8 @@
 // ====================================================================
 
 var RUN_CLUB_ID = 'd1-run-club';
+// The Run Club photo from the website's workshop card.
+var RUN_CLUB_IMAGE_URL = 'https://makehealtheasierfest.wellous.com/images/ws-d1-run-club.jpg';
 
 /** Active Run Club bookings, one per phone number, with the email we'll send to. */
 function runClubRecipients_() {
@@ -43,6 +45,7 @@ function runClubCancelEmail_(guest) {
     summary: w.name + ' · Wellness Fest 2026', description: 'This workshop has been cancelled.', location: VENUE
   });
   var body =
+    '<img src="' + RUN_CLUB_IMAGE_URL + '" width="504" alt="Make Health Easier Run Club: 5km Flag Off" style="display:block;width:100%;max-width:504px;height:auto;border:0;border-radius:12px;margin:0 0 22px;">' +
     '<p style="margin:0 0 16px;font-size:15px;">Hi ' + esc_(name) + ',</p>' +
     '<p style="margin:0 0 18px;font-size:15px;line-height:1.5;">We\'re sorry to let you know that the <b>Make Health Easier Run Club: 5km Flag Off</b> has been cancelled, so your reservation for it has been released:</p>' +
     detailsTable_(w) +
