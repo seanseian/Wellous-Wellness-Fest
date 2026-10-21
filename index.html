@@ -1641,6 +1641,18 @@
   .workshop-full-overlay b{font-family:'Mark Pro'; font-weight:800; font-size:clamp(1.7rem, 3vw, 2.2rem); line-height:1.05; letter-spacing:0.01em;}
   .workshop-full-overlay span{font-size:0.8rem; line-height:1.4; max-width:290px;}
   .workshop-card.is-full .workshop-full-overlay{display:flex;}
+  /* Cancelled workshop: stays on the page so guests can see it's off */
+  .workshop-cancelled-overlay{
+    position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:8px; padding:16px 18px; text-align:center; color:#fff; background:rgba(15,42,25,0.78);
+  }
+  .workshop-cancelled-overlay b{font-family:'Mark Pro'; font-weight:800; font-size:clamp(1.7rem, 3vw, 2.2rem); line-height:1.05; letter-spacing:0.01em;}
+  .workshop-cancelled-overlay span{font-size:0.8rem; line-height:1.4; max-width:290px;}
+  .workshop-card.is-cancelled{opacity:0.75;}
+  .workshop-card.is-cancelled:hover{transform:none; box-shadow:none;}
+  .workshop-card.is-cancelled h4{text-decoration:line-through;}
+  .ag-row.ag-cancelled b{text-decoration:line-through; opacity:0.6;}
+  .ag-cancelled-tag{background:#C1453D; color:#fff;}
 
   /* Your reserved workshops (after a pass is confirmed) */
   .my-reserved{
@@ -2508,7 +2520,7 @@
           <div class="ag-stage-head"><span class="ag-stage-name">Main Zone</span><span class="ag-stage-sub">Talks, forums, launches &amp; celebrations</span></div>
           <ol class="ag-list">
             <li class="ag-row ag-k-info"><span class="ag-time">8:00 – 9:30 AM</span><div class="ag-what"><b>Registration &amp; Wellness Exploration</b><span class="ag-detail">Check-in, health screening, booths &amp; wellness zones</span></div></li>
-            <li class="ag-row ag-k-fitness"><span class="ag-time">8:30 – 9:30 AM</span><div class="ag-what"><b>Make Health Easier Run Club: 5km Flag Off</b><span class="ag-tag ag-fitness">Fitness</span></div></li>
+            <li class="ag-row ag-k-fitness ag-cancelled"><span class="ag-time">8:30 – 9:30 AM</span><div class="ag-what"><b>Make Health Easier Run Club: 5km Flag Off</b><span class="ag-tag ag-cancelled-tag">Cancelled</span></div></li>
             <li class="ag-row ag-k-launch"><span class="ag-time">9:30 – 9:55 AM</span><div class="ag-what"><b>Welcome to Make Health Easier Wellness Fest 2026</b><span class="ag-tag ag-launch">Highlight</span><span class="ag-detail">Official Launch Ceremony, featuring our Venue Sponsor Partner, Dato’ Sri Dr. Vincent Tiew</span></div></li>
             <li class="ag-row ag-k-fitness"><span class="ag-time">9:55 – 10:35 AM</span><div class="ag-what"><b>Feel the Beat, Feel the Energy: Zumba with Hannah Kamal</b><span class="ag-tag ag-fitness">Fitness</span></div></li>
             <li class="ag-row ag-k-forum"><span class="ag-time">10:35 – 11:35 AM</span><div class="ag-what"><b>After 40, Protect Your Mobility — Not Just Your Age</b><span class="ag-tag ag-forum">Talk</span><span class="ag-detail">40岁以后，真正要守住的不是年龄，是行动力 · Longevity &amp; Joint Health Forum 老年与关爱骨关节健康讲座</span></div></li>
@@ -2923,14 +2935,14 @@
         <span class="workshop-featured-eyebrow" id="workshops">Confirmed Workshops</span>
         <h3 class="workshop-day-title">Day 1 &middot; Saturday, 24 Oct</h3>
         <div class="workshop-grid">
-          <div class="workshop-card" data-workshop-id="d1-run-club" data-day="1" data-start="08:30" data-end="09:30">
-            <div class="workshop-card-media"><img src="images/ws-d1-run-club.jpg" alt="Make Health Easier Run Club: 5km Flag Off" loading="lazy"><div class="workshop-full-overlay" aria-hidden="true"><b>Fully Booked!</b><span>You can try your luck by attending at the entrance of the workshop, or add yourself to the wait list. An email will be sent to you if someone else cancels and slots are available.</span></div></div>
+          <div class="workshop-card is-cancelled" data-workshop-id="d1-run-club" data-day="1" data-start="08:30" data-end="09:30" data-cancelled>
+            <div class="workshop-card-media"><img src="images/ws-d1-run-club.jpg" alt="Make Health Easier Run Club: 5km Flag Off" loading="lazy"><div class="workshop-cancelled-overlay"><b>Cancelled</b><span>Sorry, this session is no longer running. Please book another workshop instead.</span></div></div>
             <div class="workshop-card-body">
               <h4>Make Health Easier Run Club: 5km Flag Off</h4>
               <div class="workshop-card-meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M8 3v4M16 3v4" stroke-linecap="round"/></svg> <span class="wc-day">Day 1 &middot; Sat 24 Oct &middot; </span>8:30&ndash;9:30 AM</div>
               <div class="workshop-card-org"><b>Main Zone</b></div>
-              <div class="workshop-slot-status" data-slot-status>Checking availability&hellip;</div>
-              <button type="button" class="workshop-reserve-btn" data-reserve-btn disabled>Reserve Slot</button>
+              <div class="workshop-slot-status full">This workshop has been cancelled</div>
+              <button type="button" class="workshop-reserve-btn" disabled>Cancelled</button>
               <button type="button" class="workshop-cancel-btn" data-cancel-btn style="display:none;">Cancel reservation</button>
             </div>
           </div>
@@ -3643,7 +3655,7 @@
     if(!card.dataset.start) return null;
     document.querySelectorAll('#book .workshop-card').forEach(function(o){
       var oid = o.dataset.workshopId;
-      if(hit || oid === id || o.dataset.day !== day || !o.dataset.start || !getStoredToken(oid)) return;
+      if(hit || oid === id || o.dataset.day !== day || !o.dataset.start || o.hasAttribute('data-cancelled') || !getStoredToken(oid)) return;
       if(toMinutes(o.dataset.start) < e && s < toMinutes(o.dataset.end)) hit = o;
     });
     return hit;
@@ -4419,12 +4431,12 @@
       .then(function(json){
         (json.slots || []).forEach(function(slot){
           var card = document.querySelector('.workshop-card[data-workshop-id="' + slot.id + '"]');
-          if(!card) return;
+          if(!card || card.hasAttribute('data-cancelled')) return;
           renderSlot(card, slot);
         });
         // a workshop the booking sheet doesn't list yet can't be booked
         document.querySelectorAll('#book .workshop-card').forEach(function(card){
-          if(card._slot) return;
+          if(card._slot || card.hasAttribute('data-cancelled')) return;
           var st = card.querySelector('[data-slot-status]');
           if(st) st.textContent = 'Booking opens soon';
           var btn = card.querySelector('[data-reserve-btn]');
@@ -4751,7 +4763,7 @@
     var cards = Array.prototype.slice.call(document.querySelectorAll('#book .workshop-card'))
       .sort(function(a, b){ return a.dataset.order - b.dataset.order; });
     cards.forEach(function(card){
-      var mine = verifiedPass && getStoredToken(card.dataset.workshopId);
+      var mine = verifiedPass && !card.hasAttribute('data-cancelled') && getStoredToken(card.dataset.workshopId);
       var home = document.querySelector('#workshopArea .workshop-grid[data-day-grid="' + card.dataset.day + '"]');
       (mine ? bookedGrid(card.dataset.day) : home).appendChild(card);
     });
