@@ -11,8 +11,8 @@
 // ====================================================================
 
 var RUN_CLUB_ID = 'd1-run-club';
-// The Run Club photo from the website's workshop card.
-var RUN_CLUB_IMAGE_URL = 'https://makehealtheasierfest.wellous.com/images/ws-d1-run-club.jpg';
+// The Run Club photo, greyed out with a "Cancelled" stamp. It goes live on the site with PR #18, so merge that before sending.
+var RUN_CLUB_IMAGE_URL = 'https://makehealtheasierfest.wellous.com/images/ws-d1-run-club-cancelled.jpg';
 
 /** Active Run Club bookings, one per phone number, with the email we'll send to. */
 function runClubRecipients_() {
