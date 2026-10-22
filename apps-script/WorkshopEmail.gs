@@ -21,7 +21,7 @@ var WORKSHOPS = {
   'd1-sound-bath': { name: 'Hear Your Inner Sound: The NOICE Sound Bath with Ghynna Hen', date: '2026-10-24', start: '09:00', end: '09:45', stage: 'Move Zone', host: 'With Ghynna Hen', capacity: 100 },
   'd1-zumba': { name: 'Feel the Beat, Feel the Energy: Zumba with Hannah Kamal', date: '2026-10-24', start: '09:55', end: '10:35', stage: 'Main Zone', host: 'With Hannah Kamal', capacity: 50 },
   'd1-strength-yoga': { name: 'Find Your Flow: Strength Yoga with Jessica Lim', date: '2026-10-24', start: '10:00', end: '10:45', stage: 'Move Zone', host: 'With Jessica Lim', capacity: 100 },
-  'd1-chair-yoga': { name: 'Easy Exercise for Seniors: Chair Yoga with Cheryl Chung', date: '2026-10-24', start: '11:45', end: '12:15', stage: 'Main Zone', host: 'With Cheryl Chung', capacity: 50 },
+  'd1-chair-yoga': { name: 'Easy Exercise for Seniors: Chair Yoga with Cheryl Chung', date: '2026-10-24', start: '11:30', end: '11:50', stage: 'Main Zone', host: 'With Cheryl Chung', capacity: 50 },
   'workshop2': { name: 'Good Food, Made Easy: Healthy Cooking Tips & Techniques with Tefal Chef', date: '2026-10-24', start: '14:00', end: '14:40', stage: 'Main Zone', host: 'With Tefal Chef', capacity: 50 },
   'd1-yoga-mobility': { name: 'Move Freely: Yoga & Mobility with Niewei', date: '2026-10-24', start: '16:30', end: '17:15', stage: 'Move Zone', host: 'With Niewei', capacity: 100 },
   'd1-mat-pilates': { name: 'Align & Flow: Mat Pilates with Siow Yen', date: '2026-10-24', start: '17:30', end: '18:15', stage: 'Move Zone', host: 'With Siow Yen', capacity: 100 },
