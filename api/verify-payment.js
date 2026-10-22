@@ -41,12 +41,9 @@ const PASS_LABELS = { D1: 'Day 1', D2: 'Day 2', BOTH: 'Both days', UPG: 'Upgrade
 // WWF_UPG_<phone digits>_<the Checkout Session id of their 1-Day Pass>.
 const REF_RE = /^WWF_(D1|D2|BOTH|UPG)_(\d{6,15})_([A-Za-z0-9_]{4,220})$/;
 
-function normalisePhone(raw) {
-  let d = String(raw || '').replace(/\D/g, '');
-  if (d.startsWith('60')) d = d.slice(1); // +60 12-345 6789 → 0123456789
-  if (d && !d.startsWith('0')) d = '0' + d; // 12-345 6789 → 0123456789
-  return d;
-}
+// Malaysia 0123456789, elsewhere country code + number (Hong Kong 85264831263). See phone.js.
+const Phone = require('../phone.js');
+const normalisePhone = Phone.normalise;
 
 function parsePassLinks() {
   const map = {};
@@ -137,7 +134,7 @@ async function resolveUpgrade(up, passLinks) {
   const baseId = m && m[3];
   if (!baseId || !/^cs_(test|live)_[A-Za-z0-9]{10,200}$/.test(baseId)) return null;
   const base = evaluateSession(await stripeGet('/checkout/sessions/' + encodeURIComponent(baseId)), passLinks);
-  if (!base || base.pass === 'UPG' || normalisePhone(base.phone) !== normalisePhone(up.phone)) return null;
+  if (!base || base.pass === 'UPG' || !Phone.same(base.phone, up.phone)) return null;
   return asUpgraded(base, up);
 }
 function asUpgraded(base, up) {
@@ -183,8 +180,8 @@ async function findByPhone(phone, passLinks) {
         const ev = evaluateSession(s, passLinks);
         if (!ev) continue;
         const refPhone = ev.regId ? REF_RE.exec(ev.regId)[2] : null;
-        const custPhone = normalisePhone(s.customer_details && s.customer_details.phone);
-        if (normalisePhone(refPhone) !== phone && custPhone !== phone) continue;
+        const custPhone = s.customer_details && s.customer_details.phone;
+        if (!Phone.same(refPhone, phone) && !Phone.same(custPhone, phone)) continue;
         if (ev.pass === 'UPG') { if (!upgrade) upgrade = ev; continue; }
         seenPasses.add(ev.pass);
         if (!best || RANK[ev.pass] > RANK[best.pass]) best = ev;
@@ -263,7 +260,7 @@ module.exports = async function handler(req, res) {
 
     if (phoneRaw) {
       const phone = normalisePhone(phoneRaw);
-      if (phone.length < 9 || phone.length > 12) {
+      if (!Phone.plausible(phone)) {
         return res.status(400).json({ paid: false, error: 'Please enter a valid phone number.' });
       }
       let result = await findByPhone(phone, passLinks);
