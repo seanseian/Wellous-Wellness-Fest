@@ -73,13 +73,13 @@
   // Everywhere else: 4 to 14 digits. ex = the placeholder shown in the box.
   var RULES = {
     MY: { re: /^1\d{8,9}$/, ex: '012-345 6789', len: '10 or 11 digits starting with 01' },
-    SG: { re: /^[89]\d{7}$/, ex: '8123 4567', len: '8 digits starting with 8 or 9' },
+    SG: { re: /^[3689]\d{7}$/, ex: '8123 4567', len: '8 digits starting with 3, 6, 8 or 9' },
     BN: { re: /^[78]\d{6}$/, ex: '712 3456', len: '7 digits starting with 7 or 8' },
     ID: { re: /^8\d{7,11}$/, ex: '0812-3456-7890', len: '10 to 13 digits starting with 08' },
     TH: { re: /^[689]\d{8}$/, ex: '081 234 5678', len: '10 digits starting with 06, 08 or 09' },
     PH: { re: /^9\d{9}$/, ex: '0917 123 4567', len: '11 digits starting with 09' },
     VN: { re: /^[35789]\d{8}$/, ex: '091 234 56 78', len: '10 digits starting with 03, 05, 07, 08 or 09' },
-    HK: { re: /^[4-9]\d{7}$/, ex: '6123 4567', len: '8 digits' },
+    HK: { re: /^[2-9]\d{7}$/, ex: '6123 4567', len: '8 digits' },
     MO: { re: /^6\d{7}$/, ex: '6612 3456', len: '8 digits starting with 6' },
     TW: { re: /^9\d{8}$/, ex: '0912 345 678', len: '10 digits starting with 09' },
     CN: { re: /^1\d{10}$/, ex: '131 2345 6789', len: '11 digits starting with 1' },
