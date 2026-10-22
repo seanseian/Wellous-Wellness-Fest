@@ -9,7 +9,7 @@
 //   WELLFAM_API_SECRET  API secret from Wellous IT
 //   WELLFAM_API_URL     (optional) defaults to the production checkVvip endpoint below
 //   WELLFAM_PHONES      (optional) placeholder VVIPs for testing without the API, comma separated,
-//                       e.g. 0123456789:1990-05-12
+//                       e.g. 0123456789:1990-05-12,+85264831263:1985-01-31
 // With none of these set, nobody is a VVIP and the site works exactly as before.
 //
 // API: "Wellous Membership · VVIP Check API" v1.0 (POST, HMAC-SHA256 signed).
@@ -21,12 +21,10 @@ const DEFAULT_VVIP_URL = 'https://membership-api.wellous.com/openapi/member/chec
 const PASS_CODES = { 'Day 1': 'D1', 'Day 2': 'D2', 'Both days': 'BOTH' };
 const PASS_LABELS = { D1: 'Day 1', D2: 'Day 2', BOTH: 'Both days' };
 
-function normalisePhone(raw) {
-  let d = String(raw || '').replace(/\D/g, '');
-  if (d.startsWith('60')) d = d.slice(1); // +60 12-345 6789 → 0123456789
-  if (d && !d.startsWith('0')) d = '0' + d; // 12-345 6789 → 0123456789
-  return d;
-}
+// Phone numbers for every country, shared with the page: Malaysia 0123456789, elsewhere country
+// code + number (Hong Kong 85264831263). See phone.js.
+const Phone = require('../phone.js');
+const normalisePhone = Phone.normalise;
 
 // Any common date shape → "YYYY-MM-DD", or '' if it isn't a real date.
 // Day-first for slashes and dashes (12/05/1990 = 12 May), as written in Malaysia.
@@ -50,6 +48,11 @@ function wellfamConfigured() {
 // One signed call to the VVIP Check API: 'verified' | 'mismatch' | 'none'. Throws on anything else
 // (auth failure, bad request, timeout), which callers report as "couldn't check right now".
 async function callVvipApi(phone, dob) {
+  // The API matches by country code + number. Malaysian numbers keep the format that already
+  // worked (60 + 0123456789); others go as the dial code + the number without it (852 + 64831263).
+  const parts = Phone.split(phone);
+  const mobilePrefix = parts.cc || '60';
+  const mobile = mobilePrefix === '60' ? phone : parts.national;
   const apiKey = process.env.WELLFAM_API_KEY;
   const ts = Math.floor(Date.now() / 1000).toString();
   const nonce = crypto.randomBytes(12).toString('hex'); // new for every request, retries included
@@ -63,7 +66,7 @@ async function callVvipApi(phone, dob) {
       Authorization: `HMAC-SHA256 apikey=${apiKey} ts=${ts} nonce=${nonce} signature=${signature}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ mobilePrefix: '60', mobile: phone, birthday: dob }),
+    body: JSON.stringify({ mobilePrefix, mobile, birthday: dob }),
     signal: AbortSignal.timeout(10000),
   });
   let body = null;
@@ -78,11 +81,11 @@ async function callVvipApi(phone, dob) {
 async function checkVvip(rawPhone, rawDob) {
   const phone = normalisePhone(rawPhone);
   const dob = normaliseDob(rawDob);
-  if (phone.length < 9 || phone.length > 12 || !dob || !wellfamConfigured()) return 'none';
+  if (!Phone.plausible(phone) || !dob || !wellfamConfigured()) return 'none';
 
   for (const entry of String(process.env.WELLFAM_PHONES || '').split(/[,;\n]+/)) {
     const [p, d] = entry.split(/[:=]/);
-    if (p && normalisePhone(p) === phone) return normaliseDob(d) === dob ? 'verified' : 'mismatch';
+    if (p && Phone.same(p, phone)) return normaliseDob(d) === dob ? 'verified' : 'mismatch';
   }
   if (!process.env.WELLFAM_API_KEY || !process.env.WELLFAM_API_SECRET) return 'none';
   return callVvipApi(phone, dob);

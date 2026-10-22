@@ -1726,6 +1726,21 @@
   .field-error a{color:var(--green-dark); text-decoration:underline;}
   .f-group.error input[type=text], .f-group.error input[type=tel], .f-group.error input[type=email], .f-group.error input[type=date]{border-color:var(--red);}
   .f-group.error .field-error{display:block;}
+  /* Phone numbers: country code picker on the left, number on the right */
+  .phone-field{display:flex; gap:8px; align-items:stretch; min-width:0;}
+  .phone-field input[type=tel]{flex:1 1 auto; min-width:0; width:auto;}
+  .cc-pick{
+    position:relative; flex:none; min-width:88px; display:flex; align-items:center; justify-content:space-between; gap:8px;
+    padding:0 12px 0 14px; border-radius:12px; border:1.5px solid var(--line); background:var(--surface-alt);
+    font-family:'Nunito'; font-size:0.96rem; font-weight:700; color:var(--text);
+  }
+  .cc-pick::after{content:''; width:7px; height:7px; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg) translateY(-2px); opacity:0.55;}
+  .cc-pick select{position:absolute; inset:0; width:100%; height:100%; opacity:0; cursor:pointer; font-size:16px;}
+  .cc-pick:focus-within{outline:3px solid rgba(47,168,79,0.3); border-color:var(--green);}
+  .f-group.error .cc-pick{border-color:var(--red);}
+  .phone-note{color:var(--green-dark); font-size:0.82rem; font-weight:700; margin-top:6px; line-height:1.45;}
+  .book-returning-row .phone-field{flex:1 1 260px;}
+  .book-returning-row .phone-note{flex-basis:100%; order:3; margin-top:0;}
   /* Wellfam VVIPs: free pass, shown under the birthday */
   .wellfam-note{
     margin-top:8px; padding:10px 14px; border-radius:12px; background:var(--green-pale); color:var(--brand);
@@ -2717,8 +2732,9 @@
       </div>
 
       <div class="f-group" id="g-contact">
-        <label class="f-title" for="contactNumber">Contact number</label>
-        <input type="tel" id="contactNumber" name="contactNumber" placeholder="e.g. 012-345 6789">
+        <label class="f-title" for="contactNumber">Mobile number</label>
+        <span class="hint">Choose your country code first, then type your number.</span>
+        <input type="tel" id="contactNumber" name="contactNumber" placeholder="e.g. 012-345 6789" autocomplete="tel-national">
         <div class="field-error">Please enter a valid contact number.</div>
       </div>
 
@@ -3488,6 +3504,7 @@
   </div>
 </footer>
 
+<script src="/phone.js"></script>
 <script>
 (function(){
   // "See more" toggles next to each pricing card pointer, accordion-style,
@@ -3792,12 +3809,92 @@
   function storeSet(key, val){
     try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){}
   }
+  // ---------- Phone numbers (all countries, see /phone.js) ----------
+  // Stored as digits: Malaysia 0123456789 (as before), elsewhere country code + number,
+  // e.g. Hong Kong 85264831263. The Wellfam check matches by country code, so the guest picks
+  // their country first and the number is checked against that country's format.
+  var Phone = window.WWPhone || null;
   function normalisePhone(raw){
+    if(Phone) return Phone.normalise(raw);
     var d = String(raw || '').replace(/\D/g, '');
     if(d.indexOf('60') === 0) d = d.slice(1);
     if(d && d.charAt(0) !== '0') d = '0' + d;
     return d;
   }
+  function showPhone(raw){ return Phone ? Phone.display(raw) : normalisePhone(raw); }
+  var PHONE_CC_KEY = 'wwf_phone_country';
+  function phoneOptionsHtml(){
+    var top = Phone.TOP.map(function(iso){ return Phone.country(iso); });
+    var rest = Phone.COUNTRIES.slice().sort(function(a, b){ return a.name.localeCompare(b.name); });
+    function opt(c){ return '<option value="' + c.iso + '">' + escapeHtml(c.name) + ' (+' + c.cc + ')</option>'; }
+    return top.map(opt).join('') + '<option disabled>\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500</option>' + rest.map(opt).join('');
+  }
+  // Puts a country code picker in front of a phone input and gives it read / set.
+  function attachPhone(input){
+    if(!Phone || !input || input._phone) return;
+    var wrap = document.createElement('div'); wrap.className = 'phone-field';
+    var pick = document.createElement('div'); pick.className = 'cc-pick';
+    var label = document.createElement('span'); label.className = 'cc-label';
+    var sel = document.createElement('select');
+    sel.setAttribute('aria-label', 'Country code');
+    sel.innerHTML = phoneOptionsHtml();
+    pick.appendChild(label); pick.appendChild(sel);
+    input.parentNode.insertBefore(wrap, input);
+    wrap.appendChild(pick); wrap.appendChild(input);
+    var note = document.createElement('div'); note.className = 'phone-note'; note.setAttribute('role', 'status'); note.hidden = true;
+    wrap.parentNode.insertBefore(note, wrap.nextSibling);
+    function paint(){
+      var c = Phone.country(sel.value), r = Phone.RULES[c.iso];
+      label.textContent = '+' + c.cc;
+      input.placeholder = r ? 'e.g. ' + r.ex : 'Mobile number';
+    }
+    var start = 'MY';
+    try{ start = localStorage.getItem(PHONE_CC_KEY) || 'MY'; }catch(e){}
+    sel.value = Phone.country(start).iso; paint();
+    sel.addEventListener('change', function(){
+      try{ localStorage.setItem(PHONE_CC_KEY, sel.value); }catch(e){}
+      paint(); note.hidden = true;
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    input.addEventListener('input', function(e){ if(e.isTrusted) note.hidden = true; });
+    // Cleans up what was typed (repeated country code, +xx for another country) and says so.
+    function tidy(){
+      var r = Phone.parse(sel.value, input.value);
+      if(!r.ok || !r.fixed) return r;
+      var c = Phone.country(r.iso);
+      if(sel.value !== r.iso){ sel.value = r.iso; paint(); }
+      input.value = (r.iso === 'MY' ? '0' : '') + r.national;
+      note.textContent = r.fixed === 'switched'
+        ? 'That\u2019s a ' + c.name + ' number, so we\u2019ve set the country to ' + c.name + ' (+' + c.cc + ').'
+        : 'We took out the extra +' + c.cc + ' at the front, since it\u2019s already selected. Please check the number is right.';
+      note.hidden = false;
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      return r;
+    }
+    input.addEventListener('blur', function(){ if(input.value.trim()) tidy(); });
+    input._phone = {
+      read: function(){ return Phone.parse(sel.value, input.value); },
+      tidy: tidy,
+      set: function(raw){
+        var x = Phone.split(raw);
+        note.hidden = true;
+        if(!x){ input.value = ''; return; }
+        if(x.iso){ sel.value = x.iso; paint(); }
+        input.value = x.iso === 'MY' ? '0' + x.national : x.iso ? x.national : String(raw || '');
+      }
+    };
+  }
+  // -> { ok, phone (stored format), error }. tidy: also fix up the box (on submit).
+  function readPhone(input, tidy){
+    if(input && input._phone) return tidy ? input._phone.tidy() : input._phone.read();
+    var p = normalisePhone(input ? input.value : '');
+    return p.length >= 9 ? { ok: true, phone: p } : { ok: false, error: 'Please enter a valid phone number.' };
+  }
+  function setPhone(input, raw){
+    if(!input) return;
+    if(input._phone) input._phone.set(raw); else input.value = raw || '';
+  }
+  ['contactNumber', 'bookLookupPhone', 'cancelContactInput'].forEach(function(id){ attachPhone(document.getElementById(id)); });
   function makeRegId(attendance, phone){
     var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', rand = '';
     for(var i = 0; i < 6; i++) rand += chars.charAt(Math.floor(Math.random() * chars.length));
@@ -3973,7 +4070,7 @@
     // Registered here before but never confirmed a payment: ask them to check eligibility.
     if(reg && reg.contactNumber) setTimeout(openPayCheck, 2200); // after the hero intro
     var p = document.getElementById('bookLookupPhone');
-    if(reg && p && !p.value) p.value = reg.contactNumber || '';
+    if(reg && p && !p.value) setPhone(p, reg.contactNumber || '');
     if(location.hash === '#book') scrollToBook();
   }
 
@@ -3985,7 +4082,7 @@
       var reg = storeGet(REG_KEY);
       if(reg){
         var p = document.getElementById('bookLookupPhone');
-        if(p && !p.value) p.value = reg.contactNumber || '';
+        if(p && !p.value) setPhone(p, reg.contactNumber || '');
       }
       scrollToBook();
     });
@@ -4011,14 +4108,15 @@
   var bookLookupBtn = document.getElementById('bookLookupBtn');
   if(bookLookupBtn){
     bookLookupBtn.addEventListener('click', function(){
-      var phone = document.getElementById('bookLookupPhone').value.trim();
+      var lookup = readPhone(document.getElementById('bookLookupPhone'), true);
       var statusEl = document.getElementById('bookLookupStatus');
       statusEl.className = 'mybookings-status';
-      if(phone.replace(/\D/g, '').length < 9){
-        statusEl.textContent = 'Please enter the phone number you registered with.';
+      if(!lookup.ok){
+        statusEl.textContent = lookup.error === 'Please enter your mobile number.' ? 'Please enter the phone number you registered with.' : lookup.error;
         statusEl.classList.add('error');
         return;
       }
+      var phone = lookup.phone;
       bookLookupBtn.disabled = true;
       bookLookupBtn.textContent = 'Checking…';
       statusEl.textContent = '';
@@ -4094,7 +4192,7 @@
           (reg.fullName ? '<div><span>Name</span><b>' + escapeHtml(reg.fullName) + '</b></div>' : '') +
           '<div><span>Pass</span><b>' + escapeHtml(passLabel(reg.attendance)) + '</b></div>' +
           '<div><span>Price</span><b>' + price + '</b></div>' +
-          '<div><span>Phone</span><b>' + escapeHtml(normalisePhone(reg.contactNumber)) + '</b></div>' +
+          '<div><span>Phone</span><b>' + escapeHtml(showPhone(reg.contactNumber)) + '</b></div>' +
         '</div>' +
         '<a class="btn" href="' + link + '">Continue to payment</a>';
       // remember it here too, so the welcome-back check works on this device from now on
@@ -4133,7 +4231,7 @@
     f.style.display = '';
     var nameEl = document.getElementById('fullName'), phoneEl = document.getElementById('contactNumber');
     if(nameEl && !nameEl.value) nameEl.value = reg.fullName || '';
-    if(phoneEl && !phoneEl.value) phoneEl.value = normalisePhone(reg.contactNumber || '');
+    if(phoneEl && !phoneEl.value) setPhone(phoneEl, reg.contactNumber || '');
     var radio = f.querySelector('#dayChoices input[value="Both days"]');
     if(radio){ radio.checked = true; radio.dispatchEvent(new Event('change', { bubbles: true })); }
     if(f.closest('.fade-section')) f.closest('.fade-section').classList.add('is-in');
@@ -4161,7 +4259,7 @@
       });
   }
   function showUnpaidPopup(reg, phone){
-    document.getElementById('payCheckPhoneShown').textContent = phone;
+    document.getElementById('payCheckPhoneShown').textContent = showPhone(phone);
     var price = 'RM50'; // the only pass that is paid for
     document.getElementById('payCheckSummary').innerHTML =
       (reg.fullName ? '<div><span>Name</span><b>' + escapeHtml(reg.fullName) + '</b></div>' : '') +
@@ -4195,7 +4293,7 @@
       f.style.display = '';
       var nameEl = document.getElementById('fullName'), phoneEl = document.getElementById('contactNumber');
       if(nameEl && !nameEl.value) nameEl.value = reg.fullName || '';
-      if(phoneEl && !phoneEl.value) phoneEl.value = reg.contactNumber || '';
+      if(phoneEl && !phoneEl.value) setPhone(phoneEl, reg.contactNumber || '');
       var radio = f.querySelector('#dayChoices input[value="' + (reg.attendance || '') + '"]');
       if(radio){ radio.checked = true; radio.dispatchEvent(new Event('change', { bubbles: true })); }
       var target = document.getElementById('g-days') || f;
@@ -4304,7 +4402,7 @@
     if(f) f.style.display = '';
     var nameEl = document.getElementById('fullName'), phoneEl = document.getElementById('contactNumber');
     if(nameEl && !nameEl.value) nameEl.value = lastRegistrant.fullName || '';
-    if(phoneEl && !phoneEl.value) phoneEl.value = lastRegistrant.contactNumber || (verifiedPass && verifiedPass.phone) || '';
+    if(phoneEl && !phoneEl.value) setPhone(phoneEl, lastRegistrant.contactNumber || (verifiedPass && verifiedPass.phone) || '');
     var radio = document.querySelector('#dayChoices input[value="' + a.getAttribute('data-add-day') + '"]');
     if(radio){ radio.checked = true; radio.dispatchEvent(new Event('change', { bubbles: true })); }
     goToForm();
@@ -4883,12 +4981,12 @@
   }
   if(cancelByContactSubmit){
     cancelByContactSubmit.addEventListener('click', function(){
-      var raw = document.getElementById('cancelContactInput').value.trim();
-      if(raw.replace(/\D/g, '').length < 9){
-        cancelStatus('Please enter the phone number you used when reserving.', 'error');
+      var found = readPhone(document.getElementById('cancelContactInput'), true);
+      if(!found.ok){
+        cancelStatus(found.error === 'Please enter your mobile number.' ? 'Please enter the phone number you used when reserving.' : found.error, 'error');
         return;
       }
-      var phone = normalisePhone(raw);
+      var phone = found.phone;
       cancelByContactSubmit.disabled = true;
       cancelByContactSubmit.textContent = 'Searching…';
       cancelStatus('');
@@ -5021,7 +5119,7 @@
   var wellfamCache = {}; // "phone|dob" -> Promise<status>, only for final answers
   function checkWellfam(phone, dob){
     phone = normalisePhone(phone);
-    if(phone.length < 9 || phone.length > 12 || !dob) return Promise.resolve('none');
+    if(!/^\d{7,15}$/.test(phone) || !dob) return Promise.resolve('none');
     var key = phone + '|' + dob;
     if(wellfamCache[key]) return wellfamCache[key];
     var p = fetch('/api/wellfam?phone=' + encodeURIComponent(phone) + '&dob=' + encodeURIComponent(dob), { cache: 'no-store' })
@@ -5105,13 +5203,14 @@
   var wellfamTimer = null;
   function refreshWellfam(){
     clearTimeout(wellfamTimer);
-    var phone = normalisePhone(contactInput ? contactInput.value : '');
+    var typed = readPhone(contactInput);
+    var phone = typed.ok ? typed.phone : '';
     var dob = birthdayInput ? birthdayInput.value : '';
-    if(phone.length < 9 || !dob){ showWellfam('none'); return; }
+    if(!phone || !dob){ showWellfam('none'); return; }
     wellfamTimer = setTimeout(function(){
       if(!wellfamCache[phone + '|' + dob]) showWellfam('checking');
       checkWellfam(phone, dob).then(function(status){
-        if(normalisePhone(contactInput.value) === phone && birthdayInput.value === dob) showWellfam(status);
+        if(readPhone(contactInput).phone === phone && birthdayInput.value === dob) showWellfam(status);
       });
     }, 500);
   }
@@ -5172,13 +5271,15 @@
 
       var name = document.getElementById('fullName').value.trim();
       var gender = form.querySelector('input[name=gender]:checked');
-      var contact = document.getElementById('contactNumber').value.trim();
+      var contactRead = readPhone(contactInput, true);
+      var contact = contactRead.ok ? contactRead.phone : '';
       var birthday = birthdayInput ? birthdayInput.value : '';
       var days = form.querySelector('input[name=days]:checked');
 
       var nameErr = name.length < 2;
       var genderErr = !gender;
-      var contactErr = contact.replace(/[^0-9]/g,'').length < 7;
+      var contactErr = !contactRead.ok;
+      if(contactErr && contactErrEl) contactErrEl.textContent = contactRead.error || 'Please enter a valid mobile number.';
       var dobErr = !!birthdayInput && !/^\d{4}-\d{2}-\d{2}$/.test(birthday);
       var daysErr = !days;
       var emailEl = document.getElementById('email');

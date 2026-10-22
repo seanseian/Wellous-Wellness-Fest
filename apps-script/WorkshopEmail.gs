@@ -553,7 +553,13 @@ function formatDay_(date) { return Utilities.formatDate(toUtc_(date, '12:00'), '
 function dayLabel_(date) { return (date === '2026-10-24' ? 'Day 1' : 'Day 2') + ', ' + Utilities.formatDate(toUtc_(date, '12:00'), 'Asia/Kuala_Lumpur', 'EEE d MMM'); }
 function formatTime_(time) { return Utilities.formatDate(toUtc_('2026-10-24', time), 'Asia/Kuala_Lumpur', 'h:mm a'); }
 /** Phone as the guest typed it, with the leading 0 Sheets may have dropped. */
-function displayPhone_(raw) { var k = phoneKey(raw); return k ? '0' + k : String(raw || ''); }
+// Malaysian numbers as 0123456789 (as before); other countries as +852 64831263 style digits.
+function displayPhone_(raw) {
+  var d = String(raw || '').replace(/\D/g, '');
+  if (!d) return String(raw || '');
+  if (d.charAt(0) === '0' || d.indexOf('60') === 0 || (d.charAt(0) === '1' && d.length <= 10)) return '0' + phoneKey(raw);
+  return '+' + d;
+}
 function esc_(s) { return String(s || '').replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
 
 // ====================================================================
