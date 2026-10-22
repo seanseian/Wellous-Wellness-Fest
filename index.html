@@ -4464,6 +4464,7 @@
     if(cancelBtn) cancelBtn.style.display = 'none';
   }
 
+  function spotsLeft(n){ return n + (n === 1 ? ' spot left' : ' spots left'); }
   function renderSlot(card, slot){
     card._slot = slot;
     card.classList.toggle('is-full', slot.available <= 0);
@@ -4475,7 +4476,7 @@
         statusEl.textContent = pos ? 'Fully booked · you’re #' + pos + ' on the wait list' : 'Fully booked';
         statusEl.classList.add('full');
       }else{
-        statusEl.textContent = slot.available + ' / ' + slot.capacity + ' spots left';
+        statusEl.textContent = spotsLeft(slot.available);
         statusEl.classList.add(slot.available <= 10 ? 'low' : 'available');
       }
     }
@@ -4698,7 +4699,7 @@
             settleCard(card, 'booked');
             if(statusEl && typeof result.remaining === 'number'){
               statusEl.classList.remove('available', 'low', 'full');
-              statusEl.textContent = result.remaining + ' spots left';
+              statusEl.textContent = spotsLeft(result.remaining);
               statusEl.classList.add(result.remaining <= 10 ? 'low' : 'available');
             }else{
               loadWorkshopSlots(); // already booked earlier (e.g. on another device)
