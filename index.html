@@ -2819,7 +2819,7 @@
       <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12.5l2.5 2.5L16 9.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <h3>Almost there! Complete your payment to secure your pass 🎉</h3>
       <p>Thanks for signing up for Make Health Easier Wellness Fest 2026! Your details are saved, but <b>your pass is only confirmed once payment is made</b>. Registrations without payment aren't counted as a purchase, so finish checkout below to lock in your spot. Once Stripe confirms it, you'll come straight back here to reserve your workshop slots.</p>
-      <img class="pass-ticket confirm-ticket" id="confirmTicket" src="images/ticket-2day.png" alt="" hidden>
+      <img class="pass-ticket confirm-ticket" id="confirmTicket" src="images/ticket-experience.png" alt="" hidden>
       <div class="confirm-summary" id="confirmSummary"></div>
 
       <a href="#" class="btn" style="margin-top:28px;" id="paymentBtn">
@@ -2906,7 +2906,7 @@
     <div class="book-state" data-book-state="unlocked">
       <div class="pass-celebrate">
         <div class="pass-celebrate-emoji" aria-hidden="true">🎉</div>
-        <img class="pass-ticket" id="passTicket" src="images/ticket-2day.png" alt="" hidden>
+        <img class="pass-ticket" id="passTicket" src="images/ticket-experience.png" alt="" hidden>
         <h3 class="pass-celebrate-title">Congrats, you&rsquo;ve got your pass!</h3>
         <p class="pass-celebrate-text">Your pass gets you into all the booths, health screenings and activities running throughout the day. One more fun step: <b>workshops need booking</b>, and spots go fast, so grab the ones you love below!</p>
         <div class="pass-badge" id="passBadge"></div>
@@ -3965,11 +3965,12 @@
   }
   function scrollToBook(){ goToSection('book'); }
 
-  // Ticket artwork for the pass (2-Day or 1-Day)
-  function showTicket(img, twoDay){
+  // Ticket artwork for the pass: Explorer (free) or Experience (paid or Wellfam).
+  // 1-Day passes were upgraded to the Experience Pass, so they get the Experience art too.
+  function showTicket(img, explorer){
     if(!img) return;
-    img.src = twoDay ? 'images/ticket-2day.png' : 'images/ticket-1day.png';
-    img.alt = twoDay ? 'Your Wellness Experience Pass' : 'Your 1-Day Pass';
+    img.src = explorer ? 'images/ticket-explorer.png' : 'images/ticket-experience.png';
+    img.alt = explorer ? 'Your Wellness Explorer Pass' : 'Your Wellness Experience Pass';
     img.hidden = false;
   }
   // FAQ wording follows the top-up switch
@@ -3986,7 +3987,7 @@
   }
   function unlockBooking(pass){
     verifiedPass = pass;
-    showTicket(document.getElementById('passTicket'), pass.pass === 'BOTH');
+    showTicket(document.getElementById('passTicket'), pass.pass === 'EXP');
     try{ window.dispatchEvent(new Event('wwf:pass')); }catch(e){}
     storeSet(PASS_KEY, pass);
     if(pass.name && !lastRegistrant.fullName) lastRegistrant.fullName = pass.name;
@@ -5397,8 +5398,7 @@
         if(paymentBtn) paymentBtn.href = baseLink + '?client_reference_id=' + encodeURIComponent(data.regId);
         setConfirmFree(free);
         setConfirmMode(waived);
-        if(free) document.getElementById('confirmTicket').hidden = true;
-        else showTicket(document.getElementById('confirmTicket'), data.attendance === 'Both days');
+        showTicket(document.getElementById('confirmTicket'), free);
 
         confirmSummary.innerHTML =
           '<div><span>Name</span><b>' + escapeHtml(name) + '</b></div>' +
