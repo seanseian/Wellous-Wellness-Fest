@@ -30,6 +30,28 @@ function doPost(e) {
   return handleRegistration(e);
 }
 
+// Experience Pass sold out: new RM50 Wellness Experience Pass registrations are refused (the
+// website's EXPERIENCE_SOLD_OUT switch hides the option too). Wellfam VIP/VVIP free claims still go
+// through while WELLFAM_FREE_WHEN_SOLD_OUT is true, and a row the Stripe webhook already created
+// for a paid pass is still filled in. Set to false to reopen sales.
+var EXPERIENCE_SOLD_OUT = true;
+var WELLFAM_FREE_WHEN_SOLD_OUT = true;
+
+/** True when this registration post is for the sold-out Experience Pass and must be refused. */
+function experienceSoldOutBlocks_(p, sheet) {
+  if (!EXPERIENCE_SOLD_OUT || !/both/i.test(String(p.attendance || ''))) return false;
+  if (WELLFAM_FREE_WHEN_SOLD_OUT && p.wellfam === 'Yes') return false;
+  var regId = (p.regId || '').toString().trim();
+  if (regId && sheet.getLastRow() > 1) {
+    var rows = sheet.getRange(2, 8, sheet.getLastRow() - 1, 2).getValues();
+    for (var i = 0; i < rows.length; i++) {
+      // already paid (webhook row): let the form fill in the guest's details
+      if ((rows[i][0] || '').toString().trim() === regId && String(rows[i][1] || '').toLowerCase() === 'yes') return false;
+    }
+  }
+  return true;
+}
+
 function jsonOut(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj))
     .setMimeType(ContentService.MimeType.JSON);
@@ -62,6 +84,9 @@ function handleRegistration(e) {
   }
 
   var p = e.parameter;
+  if (experienceSoldOutBlocks_(p, sheet)) {
+    return jsonOut({ result: 'error', message: 'The Wellness Experience Pass is sold out.' });
+  }
   var productsArray = (e.parameters && e.parameters.products) ? e.parameters.products : [];
   // Free Wellness Explorer Pass: no Stripe checkout, so the form sends the guest's email itself.
   var isExplorer = p.attendance === 'Explorer';
