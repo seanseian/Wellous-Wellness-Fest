@@ -1037,6 +1037,24 @@
     content:'Sales closed'; position:absolute; top:-9px; right:12px; background:#6B7280; color:#fff;
     font-family:'Mark Pro'; font-weight:800; font-size:0.66rem; letter-spacing:0.03em; text-transform:uppercase; padding:3px 9px; border-radius:999px;
   }
+  /* ---------- Experience Pass sold out (EXPERIENCE_SOLD_OUT in the script) ---------- */
+  body.exp-sold-out .pv-exp .pv-media{position:relative;}
+  body.exp-sold-out .pv-exp .pv-media img{filter:grayscale(0.55) brightness(0.8);}
+  body.exp-sold-out .pv-exp .pv-media::after{
+    content:'SOLD OUT'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%) rotate(-8deg);
+    font-family:'Mark Pro'; font-weight:800; font-size:clamp(2rem, 6vw, 3.4rem); letter-spacing:0.08em; line-height:1;
+    color:#fff; background:#D7263D; padding:12px 26px; border:4px solid #fff; border-radius:14px;
+    box-shadow:0 14px 30px -10px rgba(0,0,0,0.6); white-space:nowrap;
+  }
+  body.exp-sold-out .pv-ribbon{background:#D7263D; color:#fff;}
+  body.exp-sold-out .pv-exp .buy-btn.pv-cta{background:#E5E7EB; color:#6B7280; box-shadow:none; cursor:not-allowed; pointer-events:none; justify-content:center;}
+  body.exp-sold-out .ticket-chip-featured{position:relative; overflow:visible; filter:grayscale(0.6); opacity:0.8; cursor:not-allowed; pointer-events:none;}
+  body.exp-sold-out .ticket-chip-featured .price{font-size:1.15rem; letter-spacing:0.04em;}
+  .sold-out-tag{display:inline-block; background:#D7263D; color:#fff; font-family:'Mark Pro'; font-weight:800; font-size:0.66rem; letter-spacing:0.06em; text-transform:uppercase; padding:3px 9px; border-radius:999px;}
+  body.exp-sold-out .choice.is-sold-out{cursor:not-allowed; background:var(--surface-alt); border-color:var(--line); box-shadow:none;}
+  body.exp-sold-out .choice.is-sold-out .choice-text{opacity:0.6;}
+  body.exp-sold-out .choice.is-sold-out .choice-price{color:#D7263D;}
+  body.exp-sold-out .choice.is-sold-out .choice-price em{background:#D7263D; color:#fff;}
   .buy-closed{background:var(--grey-pale) !important; color:var(--grey-ink) !important; box-shadow:none !important; border-color:transparent !important;}
   @media (max-width:640px){ .sales-closed-card{padding:30px 20px;} }
 
@@ -3246,7 +3264,7 @@
       <details class="faq-item"><summary>When and where is Make Health Easier Wellness Fest 2026 happening?</summary><div class="faq-a"><p>Make Health Easier Wellness Fest 2026 will take place on 24 &amp; 25 October 2026 at KL Wellness City Gallery, Bukit Jalil, Kuala Lumpur, from 9:00 AM to 7:00 PM daily. Some workout classes start a little earlier or end a little later, so check the <a href="#agenda">agenda</a> for exact times.</p><p>The festival will feature wellness activities, fitness classes, health and wellness experiences, workshops, games, F&amp;B, shopping and participating brand partners across both days.</p></div></details>
       <details class="faq-item"><summary>What is Make Health Easier Wellness Fest?</summary><div class="faq-a"><p>Make Health Easier Wellness Fest is a two-day wellness festival presented by Wellous, bringing together fitness, health, nutrition, recovery, lifestyle and family-friendly experiences in one space.</p><p>Visitors can explore wellness booths, enjoy F&amp;B, participate in selected activities and workshops, attend fitness classes, take part in games and discover products and services from our participating partners.</p></div></details>
       <details class="faq-item" hidden data-pending-legal><summary>Do I need a ticket to enter the festival?</summary><div class="faq-a"><p>General access to selected areas of the festival is open to visitors, while certain activities, classes and designated areas require a valid Event ticket, wristband or prior registration.</p><p>Please refer to the Event registration page for the latest access and ticketing information.</p></div></details>
-      <details class="faq-item"><summary>How much are the tickets?</summary><div class="faq-a"><p>There are two passes, and both cover 24 &amp; 25 October 2026:</p><p><b>Wellness Experience Pass: RM50 per person.</b> Everything at the Fest, plus the Wellous Trial Set and workshop and workout class booking.</p><p><b>Wellness Explorer Pass: free.</b> Festival access, health talks, health screening, the goodie bag, snacks, games and deals. It doesn&rsquo;t include the Wellous Trial Set or workshop booking.</p><p>Wellfam VIP &amp; VVIP members enjoy the Wellness Experience Pass for free.</p></div></details>
+      <details class="faq-item"><summary>How much are the tickets?</summary><div class="faq-a"><p>There are two passes, and both cover 24 &amp; 25 October 2026:</p><p><b>Wellness Experience Pass: RM50 per person.</b> Everything at the Fest, plus the Wellous Trial Set and workshop and workout class booking.</p><p><b>Wellness Explorer Pass: free.</b> Festival access, health talks, health screening, the goodie bag, snacks, games and deals. It doesn&rsquo;t include the Wellous Trial Set or workshop booking.</p><p>Wellfam VIP &amp; VVIP members enjoy the Wellness Experience Pass for free.</p><p id="faqExpSoldOut" hidden><b>Update:</b> the Wellness Experience Pass is now <b>sold out</b>. The free Wellness Explorer Pass is still open for registration.</p></div></details>
       <details class="faq-item" hidden data-pending-legal><summary>What is included with my ticket?</summary><div class="faq-a"><p>Your Event ticket gives you access to the applicable ticketed festival experiences, including selected fitness classes, activities and workshops, subject to availability and any specific activity requirements.</p><p>A festival pass does not guarantee a place in a particular class or workshop unless that booking is separately confirmed. Any additional fees will be stated before booking. The festival will also feature games, exclusive shopping opportunities, wellness experiences and complimentary items, subject to availability.</p></div></details>
       <details class="faq-item"><summary>What can I expect at the festival?</summary><div class="faq-a"><p>You can expect a mix of:</p><ul><li>Fitness classes and workouts</li><li>Wellness talks and workshops</li><li>Health screening and wellness consultations</li><li>Recovery experiences</li><li>Family and kids’ activities</li><li>Games and lucky draws</li><li>F&amp;B and healthy lifestyle offerings</li><li>Brand and wellness booths</li><li>Exclusive shopping and event promotions</li><li>Complimentary samples and goodies</li></ul><p>The programme and participating partners are subject to change.</p></div></details>
       <details class="faq-item"><summary>Can I join the fitness classes?</summary><div class="faq-a"><p>Yes! Selected fitness classes are available to registered participants, subject to the applicable age, capacity and activity requirements.</p><p>Some classes may require advance registration, while selected sessions may allow walk-ins if there are available spaces.</p></div></details>
@@ -3764,6 +3782,54 @@
   }
   applySalesClosed();
 
+  // ---------- EXPERIENCE PASS SOLD OUT ----------
+  // true: the RM50 Wellness Experience Pass can no longer be bought. Its card, the hero chips and
+  // the form option show SOLD OUT, its Stripe link is removed from the page, and the Explorer
+  // "upgrade for RM50" offers are hidden. The free Explorer Pass stays open. Passes already paid for
+  // keep working (workshop booking included). Wellfam VIP/VVIPs can still claim their free
+  // Experience Pass while WELLFAM_FREE_WHEN_SOLD_OUT is true.
+  // The Apps Script (Code.gs) has a matching EXPERIENCE_SOLD_OUT switch. To fully stop payments,
+  // also deactivate the RM50 payment link in Stripe (Payment links > Deactivate).
+  var EXPERIENCE_SOLD_OUT = true;
+  var WELLFAM_FREE_WHEN_SOLD_OUT = true;
+  if(EXPERIENCE_SOLD_OUT) STRIPE_LINKS = {};
+  function applyExperienceSoldOut(){
+    if(!EXPERIENCE_SOLD_OUT) return;
+    document.body.classList.add('exp-sold-out');
+    var ribbon = document.querySelector('.pv-exp .pv-ribbon'); if(ribbon) ribbon.textContent = 'SOLD OUT';
+    document.querySelectorAll('a[data-select-pass="Both days"]').forEach(function(a){
+      a.removeAttribute('data-select-pass');
+      a.removeAttribute('href');
+      a.setAttribute('aria-disabled', 'true');
+      if(a.classList.contains('ticket-chip')){
+        var price = a.querySelector('.price'); if(price) price.textContent = 'SOLD OUT';
+      }else if(a.classList.contains('pv-cta')){
+        a.textContent = 'SOLD OUT';
+      }else{
+        a.hidden = true;
+      }
+    });
+    var radio = document.querySelector('#dayChoices input[value="Both days"]');
+    if(radio){
+      radio.disabled = true; radio.checked = false;
+      var label = radio.closest('label');
+      if(label){
+        label.classList.add('is-sold-out');
+        var price = label.querySelector('.choice-price');
+        if(price) price.innerHTML = '<em>Sold out</em><span>RM50</span>';
+      }
+    }
+    var rule = document.querySelector('.pass-rule-note');
+    if(rule) rule.innerHTML = '&#9432; The <b>Wellness Experience Pass</b> is <b>sold out</b>. You can still register for the free <b>Wellness Explorer Pass</b>.';
+    var cta = document.querySelector('#book .book-cta-text');
+    if(cta) cta.innerHTML = '<b>The Wellness Experience Pass is sold out.</b><span>Already have one? Enter the phone number you registered with to see your pass and book your workshops.</span>';
+    var bar = document.querySelector('#passBar .pass-bar-text span');
+    if(bar) bar.innerHTML = '24 &amp; 25 Oct 2026 &middot; Free Explorer Pass &middot; Experience Pass sold out';
+    var faq = document.getElementById('faqExpSoldOut'); if(faq) faq.hidden = false;
+    var up = document.getElementById('explorerUpgrade'); if(up) up.remove();
+  }
+  applyExperienceSoldOut();
+
   // ---------- RM15 top-up (1-Day Pass -> both days) ----------
   // When on, offered to every 1-Day holder throughout their journey: right after paying, on the
   // other day's workshop cards and on the registration form. ON/OFF SWITCH: TOP_UP_ENABLED below.
@@ -3808,7 +3874,8 @@
   function isFreePass(attendance){ return attendance === 'Explorer'; }
   // An unpaid registration for a pass that is no longer sold (RM35 Day 1 / Day 2): it can't be paid,
   // so the guest picks a current pass instead (same form, replaces that registration).
-  function isRetiredPass(attendance){ return attendance === 'Day 1' || attendance === 'Day 2'; }
+  // While the Experience Pass is sold out, an unpaid Experience Pass registration is in the same spot.
+  function isRetiredPass(attendance){ return attendance === 'Day 1' || attendance === 'Day 2' || (EXPERIENCE_SOLD_OUT && attendance === 'Both days'); }
   var verifiedPass = null;
 
   function storeGet(key){
@@ -4220,6 +4287,11 @@
   // Free Explorer Pass holders are registered, but workshop booking is for the Experience Pass:
   // offer the upgrade, which reopens the form with their details and the Experience Pass picked.
   function paintExplorerUpgrade(container, reg){
+    if(EXPERIENCE_SOLD_OUT){
+      container.innerHTML = '<div class="pay-continue is-free"><p class="pay-continue-msg">This number has a free <b>Wellness Explorer Pass</b>, so you&rsquo;re all set to explore the Fest! Workshop booking is for <b>Wellness Experience Pass</b> holders, and that pass is now <b>sold out</b>.</p></div>';
+      if(!storeGet(REG_KEY)) storeSet(REG_KEY, { regId: reg.regId, fullName: reg.fullName || '', contactNumber: normalisePhone(reg.contactNumber), attendance: reg.attendance });
+      return;
+    }
     container.innerHTML = '<div class="pay-continue is-free"><p class="pay-continue-msg">This number has a free <b>Wellness Explorer Pass</b>, so you&rsquo;re all set to explore the Fest! Workshop booking and the Wellous Trial Set are for <b>Wellness Experience Pass</b> holders.</p>' +
       '<a class="btn" href="#regForm" data-upgrade-explorer>Upgrade to the Experience Pass (RM50)</a></div>';
     if(!storeGet(REG_KEY)) storeSet(REG_KEY, { regId: reg.regId, fullName: reg.fullName || '', contactNumber: normalisePhone(reg.contactNumber), attendance: reg.attendance });
@@ -4227,6 +4299,13 @@
     if(a) a.addEventListener('click', function(e){ e.preventDefault(); openUpgradeForm(reg); });
   }
   function paintRetiredPass(container, reg){
+    if(EXPERIENCE_SOLD_OUT){
+      container.innerHTML = '<div class="pay-continue is-free"><p class="pay-continue-msg">The <b>' + escapeHtml(passLabel(reg.attendance)) + '</b> is sold out, so this registration can&rsquo;t be paid. You can still register for the free <b>Wellness Explorer Pass</b>.</p>' +
+        '<a class="btn" href="#regForm" data-retired-pass>Get the free Explorer Pass</a></div>';
+      var b = container.querySelector('[data-retired-pass]');
+      if(b) b.addEventListener('click', function(e){ e.preventDefault(); openUpgradeForm(reg); });
+      return;
+    }
     container.innerHTML = '<div class="pay-continue is-free"><p class="pay-continue-msg">The 1-Day Pass is no longer available, so this registration can&rsquo;t be paid. Pick the <b>Wellness Experience Pass</b> (RM50, both days) or the free <b>Wellness Explorer Pass</b> instead.</p>' +
       '<a class="btn" href="#regForm" data-retired-pass>Choose my pass</a></div>';
     var a = container.querySelector('[data-retired-pass]');
@@ -4241,7 +4320,7 @@
     var nameEl = document.getElementById('fullName'), phoneEl = document.getElementById('contactNumber');
     if(nameEl && !nameEl.value) nameEl.value = reg.fullName || '';
     if(phoneEl && !phoneEl.value) setPhone(phoneEl, reg.contactNumber || '');
-    var radio = f.querySelector('#dayChoices input[value="Both days"]');
+    var radio = f.querySelector('#dayChoices input[value="' + (EXPERIENCE_SOLD_OUT ? 'Explorer' : 'Both days') + '"]');
     if(radio){ radio.checked = true; radio.dispatchEvent(new Event('change', { bubbles: true })); }
     if(f.closest('.fade-section')) f.closest('.fade-section').classList.add('is-in');
     (document.getElementById('g-days') || f).scrollIntoView({behavior:'smooth', block:'center'});
@@ -4304,7 +4383,7 @@
       if(nameEl && !nameEl.value) nameEl.value = reg.fullName || '';
       if(phoneEl && !phoneEl.value) setPhone(phoneEl, reg.contactNumber || '');
       var radio = f.querySelector('#dayChoices input[value="' + (reg.attendance || '') + '"]');
-      if(radio){ radio.checked = true; radio.dispatchEvent(new Event('change', { bubbles: true })); }
+      if(radio && !radio.disabled){ radio.checked = true; radio.dispatchEvent(new Event('change', { bubbles: true })); }
       var target = document.getElementById('g-days') || f;
       if(f.closest('.fade-section')) f.closest('.fade-section').classList.add('is-in');
       target.scrollIntoView({behavior:'smooth', block:'center'});
@@ -5056,7 +5135,7 @@
       : confirmLeadPaid;
     var payBtn = document.getElementById('paymentBtn'); if(payBtn) payBtn.style.display = free ? 'none' : '';
     var payNote = confirmPanel && confirmPanel.querySelector('.pay-note'); if(payNote) payNote.style.display = free ? 'none' : '';
-    var up = document.getElementById('explorerUpgrade'); if(up) up.hidden = !free;
+    var up = document.getElementById('explorerUpgrade'); if(up) up.hidden = !free || EXPERIENCE_SOLD_OUT;
   }
   var explorerUpgradeBtn = document.getElementById('explorerUpgradeBtn');
   if(explorerUpgradeBtn){
@@ -5168,7 +5247,14 @@
     wellfamMember = state === 'verified';
     // Wellfam VIP/VVIPs get the Wellness Experience Pass, so pick it for them
     var exp = document.querySelector('#dayChoices input[value="Both days"]');
+    if(EXPERIENCE_SOLD_OUT && !WELLFAM_FREE_WHEN_SOLD_OUT) wellfamMember = false;
     if(wellfamMember && exp && !exp.checked){ exp.checked = true; exp.dispatchEvent(new Event('change')); }
+    // sold out: only a verified Wellfam member can hold the Experience Pass option
+    if(EXPERIENCE_SOLD_OUT && !wellfamMember && exp && exp.checked){
+      exp.checked = false;
+      var explorer = document.querySelector('#dayChoices input[value="Explorer"]');
+      if(explorer){ explorer.checked = true; explorer.dispatchEvent(new Event('change')); }
+    }
     updateEmailField();
     if(wellfamNote){
       wellfamNote.hidden = !WELLFAM_MSG[state];
@@ -5329,6 +5415,13 @@
           if(wellfamNote) wellfamNote.scrollIntoView({behavior:'smooth', block:'center'});
           return;
         }
+        // Experience Pass sold out: only a verified Wellfam member can still get it (showWellfam has
+        // already switched the form to the Explorer Pass), so let the guest check and submit again.
+        if(EXPERIENCE_SOLD_OUT && !waived && days.value === 'Both days'){
+          setError('g-days', true);
+          document.getElementById('g-days').scrollIntoView({behavior:'smooth', block:'center'});
+          return;
+        }
         // verified just now: the free pass needs an email (the field has only just appeared)
         if(waived && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
           setError('g-email', true);
@@ -5404,7 +5497,7 @@
         var free = isFreePass(data.attendance);
         var paymentBtn = document.getElementById('paymentBtn');
         var baseLink = STRIPE_LINKS[data.attendance] || STRIPE_LINKS['Both days'];
-        if(paymentBtn) paymentBtn.href = baseLink + '?client_reference_id=' + encodeURIComponent(data.regId);
+        if(paymentBtn && baseLink) paymentBtn.href = baseLink + '?client_reference_id=' + encodeURIComponent(data.regId);
         setConfirmFree(free);
         setConfirmMode(waived);
         showTicket(document.getElementById('confirmTicket'), free);
